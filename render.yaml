@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: stream-overlay
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: CONTROL_KEY
+        generateValue: true

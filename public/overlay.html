@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Оверлей</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
+<style>
+:root{
+  --gold:#c9a45c; --gold2:#f2dca4; --gold3:#6d5a2e;
+  --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-serif:"Cormorant Garamond","Times New Roman",serif;
+  --cut:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+}
+html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:100%}
+#cv{position:absolute; left:0; top:0; width:1920px; height:1080px; transform-origin:0 0; font-family:var(--f-body); color:#fff}
+.cut{position:absolute; background:linear-gradient(135deg,var(--gold2),var(--gold) 45%,var(--gold3)); clip-path:var(--cut)}
+.cut > .in{position:absolute; inset:2px; clip-path:var(--cut); background:linear-gradient(180deg,#181d25,#0a0c10); display:flex; align-items:center}
+.sb{position:absolute; left:0; top:36px; width:100%; height:96px; filter:drop-shadow(0 14px 26px rgba(0,0,0,.55)); transition:opacity .5s, transform .5s}
+.sb .cut{top:0; height:96px}
+.t{width:320px} .s{width:88px} .m{width:170px}
+#pA{left:455px} #sA{left:781px} #mC{left:875px} #sB{left:1051px} #pB{left:1145px}
+.sb.hide{opacity:0; transform:translateY(-24px)}
+.team .in{gap:14px; padding:0 20px}
+.team.r .in{flex-direction:row-reverse; text-align:right}
+.logo{flex:none; width:56px; height:56px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:20px; letter-spacing:.04em;
+  background:radial-gradient(circle at 30% 25%,#2b3340,#0e1117); border:2px solid var(--gold); color:var(--gold2)}
+.tn{min-width:0; font-weight:800; font-size:22px; letter-spacing:.07em; text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.score .in{justify-content:center; font-size:58px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--gold2)}
+.score .in span{display:inline-block}
+.bump{animation:bump .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bump{0%{transform:scale(.6); opacity:.2}100%{transform:none; opacity:1}}
+.mid .in{flex-direction:column; justify-content:center; gap:2px; text-align:center}
+.mid b{font-size:16px; letter-spacing:.3em; color:var(--gold); font-weight:700}
+.mid i{font-style:normal; font-size:21px; font-weight:700; letter-spacing:.14em}
+.timer{left:40px; top:36px; width:360px; height:96px; filter:drop-shadow(0 14px 26px rgba(0,0,0,.55))}
+.timer .in{flex-direction:column; justify-content:center; align-items:flex-start; padding:0 24px; gap:0}
+.timer small{font-size:14px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:700}
+.timer strong{font-size:50px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.04em; line-height:1.05}
+.timer.zero strong{animation:pulse 1s infinite}
+@keyframes pulse{50%{color:var(--gold2); opacity:.55}}
+.cam{position:absolute; right:40px; top:36px; width:400px; height:225px}
+.cam i{position:absolute; width:34px; height:34px; border:3px solid var(--gold)}
+.cam i:nth-of-type(1){left:-6px; top:-6px; border-right:0; border-bottom:0}
+.cam i:nth-of-type(2){right:-6px; top:-6px; border-left:0; border-bottom:0}
+.cam i:nth-of-type(3){left:-6px; bottom:-6px; border-right:0; border-top:0}
+.cam i:nth-of-type(4){right:-6px; bottom:-6px; border-left:0; border-top:0}
+.plate{right:40px; top:270px; width:400px; height:46px}
+.plate .in{justify-content:center; font-weight:800; font-size:19px; letter-spacing:.34em; text-transform:uppercase}
+.lt{left:40px; bottom:104px; width:600px; height:116px; transform:translateX(-120%); transition:transform .7s cubic-bezier(.2,.9,.2,1); filter:drop-shadow(0 14px 26px rgba(0,0,0,.55))}
+.lt.on{transform:none}
+.lt .in{flex-direction:column; justify-content:center; align-items:flex-start; padding:0 32px; gap:4px}
+.lt strong{font-size:40px; font-weight:800; letter-spacing:.05em; line-height:1.1}
+.lt span{font-size:18px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); font-weight:700}
+.tick{position:absolute; left:0; right:0; bottom:0; height:60px; display:flex; align-items:center; gap:28px; padding-right:40px;
+  background:linear-gradient(180deg,rgba(10,12,16,.9),rgba(6,8,10,.97)); border-top:2px solid var(--gold3)}
+.tick .tag{height:100%; padding:0 40px; display:flex; align-items:center; background:linear-gradient(135deg,var(--gold2),var(--gold)); color:#14100a;
+  font-weight:800; font-size:20px; letter-spacing:.2em; text-transform:uppercase}
+.tick .sep{width:2px; height:24px; background:var(--gold3)}
+.tick .tx{font-size:20px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:#ddd7c8}
+.tick .game-name{margin-left:auto; font-family:var(--f-serif); font-style:italic; font-size:28px; color:var(--gold); letter-spacing:.04em; text-transform:none; font-weight:600}
+.scene{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px;
+  background:radial-gradient(70% 80% at 50% 45%, rgba(12,16,22,.9), rgba(5,6,8,.98)); opacity:0; pointer-events:none; transition:opacity .6s}
+.scene.on{opacity:1}
+.scene h2{margin:0; font-size:112px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; padding-left:.2em}
+.scene .sub{font-family:var(--f-serif); font-style:italic; font-size:50px; color:var(--gold); font-weight:600}
+.scene .big{font-size:230px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.04em; line-height:1; margin-top:10px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold) 60%,var(--gold3)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.scene .line{width:520px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:6px 0}
+.scene .res{font-size:30px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; color:#d9d3c4}
+</style>
+</head>
+<body>
+<div id="cv">
+  <div class="sb" id="sb">
+    <div class="cut team t" id="pA"><div class="in"><div class="logo" id="lgA"></div><div class="tn" id="tnA"></div></div></div>
+    <div class="cut score s" id="sA"><div class="in"><span id="scA">0</span></div></div>
+    <div class="cut mid m" id="mC"><div class="in"><b id="boT"></b><i id="mapT"></i></div></div>
+    <div class="cut score s" id="sB"><div class="in"><span id="scB">0</span></div></div>
+    <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
+  </div>
+  <div class="cut timer" id="timer"><div class="in"><small id="tLabel"></small><strong id="tVal">05:00</strong></div></div>
+  <div class="cam"><i></i><i></i><i></i><i></i></div>
+  <div class="cut plate"><div class="in" id="camName"></div></div>
+  <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
+  <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
+  <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div></div>
+</div>
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null;
+var ACC = {
+  gold:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e' },
+  steel:{ g:'#9db4c9', g2:'#e3eef8', g3:'#43586b' },
+  rose:{ g:'#c06a7a', g2:'#f2c6ce', g3:'#6a2f3b' }
+};
+function fit(){
+  var k = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  cv.style.transform = 'scale(' + k + ')';
+}
+window.addEventListener('resize', fit); fit();
+
+function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
+function bump(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+function remaining(){
+  var t = st.timer;
+  return t.run ? Math.max(0, Math.ceil((t.endAt - (Date.now() + offset)) / 1000)) : t.rem;
+}
+function drawTimer(){
+  if (!st) return;
+  var r = remaining();
+  $('tVal').textContent = mmss(r); $('scTime').textContent = mmss(r);
+  $('timer').classList.toggle('zero', r === 0);
+}
+function render(){
+  var a = ACC[st.accent] || ACC.gold, s = document.documentElement.style;
+  s.setProperty('--gold', a.g); s.setProperty('--gold2', a.g2); s.setProperty('--gold3', a.g3);
+  $('tnA').textContent = st.a.name || ' '; $('lgA').textContent = (st.a.tag || '').toUpperCase();
+  $('tnB').textContent = st.b.name || ' '; $('lgB').textContent = (st.b.tag || '').toUpperCase();
+  $('scA').textContent = st.a.score; $('scB').textContent = st.b.score;
+  if (prevA !== null && st.a.score !== prevA) bump($('scA'));
+  if (prevB !== null && st.b.score !== prevB) bump($('scB'));
+  prevA = st.a.score; prevB = st.b.score;
+  $('boT').textContent = 'BO' + st.bo; $('mapT').textContent = 'Карта ' + st.map;
+  $('tkTour').textContent = st.tour; $('tkStage').textContent = st.stage;
+  $('camName').textContent = st.cast; $('ltName').textContent = st.cast; $('ltRole').textContent = st.role;
+  $('lt').classList.toggle('on', !!st.lt);
+  $('tLabel').textContent = st.label;
+  $('scene').classList.toggle('on', st.scene !== 'game');
+  $('sb').classList.toggle('hide', st.scene === 'soon');
+  if (st.scene === 'soon'){ $('scTitle').textContent = 'Скоро начнём'; $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
+  if (st.scene === 'break'){ $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = st.a.name + '  ' + st.a.score + ' : ' + st.b.score + '  ' + st.b.name; $('scRes').textContent = 'Карта ' + st.map + ' · ' + st.stage; }
+  drawTimer();
+}
+setInterval(drawTimer, 200);
+
+var wait = 500;
+function connect(){
+  var ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
+  ws.onmessage = function(e){
+    var m; try { m = JSON.parse(e.data); } catch (_) { return; }
+    if (m.type === 'state'){ st = m.state; offset = m.now - Date.now(); wait = 500; render(); }
+  };
+  ws.onclose = function(){ setTimeout(connect, wait); wait = Math.min(wait * 2, 8000); };
+  ws.onerror = function(){ try { ws.close(); } catch (_) {} };
+}
+connect();
+})();
+</script>
+</body>
+</html>

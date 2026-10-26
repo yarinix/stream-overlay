@@ -87,6 +87,40 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .br.win .bs{color:var(--gold2); background:rgba(201,164,92,.2)}
 .br.lose{opacity:.55}
 .scene .res{font-size:30px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; color:#d9d3c4}
+
+/* ---------- плавные переходы между сценами ---------- */
+.scene > *{opacity:0; transform:translateY(26px); transition:opacity .3s, transform .3s}
+.scene.on > *{opacity:1; transform:none; transition:opacity .7s ease, transform .9s cubic-bezier(.2,.9,.2,1)}
+.scene.on > :nth-child(1){transition-delay:.15s}
+.scene.on > :nth-child(2){transition-delay:.3s}
+.scene.on > :nth-child(3){transition-delay:.42s; transform:none}
+.scene > .line{transform:scaleX(0)}
+.scene.on > .line{transform:scaleX(1)}
+.scene.on > :nth-child(4){transition-delay:.5s}
+.scene.on > :nth-child(5){transition-delay:.65s}
+
+.bscene .bh, .bscene .bm{opacity:0; transform:translateY(22px); transition:opacity .3s, transform .3s}
+.bscene.on .bh, .bscene.on .bm{opacity:1; transform:none;
+  transition:opacity .55s ease var(--d,0s), transform .75s cubic-bezier(.2,.9,.2,1) var(--d,0s)}
+.bscene .bt{opacity:0; transform:translateX(-36px); transition:opacity .3s, transform .3s}
+.bscene.on .bt{opacity:1; transform:none; transition:opacity .6s ease .1s, transform .8s cubic-bezier(.2,.9,.2,1) .1s}
+.bscene .blk{stroke-dasharray:1; stroke-dashoffset:1; transition:stroke-dashoffset .25s}
+.bscene.on .blk{stroke-dashoffset:0; transition:stroke-dashoffset .9s ease-in-out var(--d,.9s)}
+
+.sweep{position:absolute; top:-120px; bottom:-120px; left:0; width:360px; pointer-events:none; opacity:0;
+  background:linear-gradient(90deg, transparent 0%, var(--gold) 44%, #fff 50%, var(--gold) 56%, transparent 100%);
+  filter:blur(8px); transform:translateX(-460px) skewX(-14deg)}
+.sweep.go{animation:sweep 1.05s cubic-bezier(.55,0,.25,1) both}
+@keyframes sweep{
+  0%{opacity:0; transform:translateX(-460px) skewX(-14deg)}
+  12%{opacity:.5}
+  88%{opacity:.5}
+  100%{opacity:0; transform:translateX(2120px) skewX(-14deg)}
+}
+@media (prefers-reduced-motion: reduce){
+  .scene > *, .bscene .bh, .bscene .bm, .bscene .bt{transform:none !important}
+  .sweep{display:none}
+}
 </style>
 </head>
 <body>
@@ -108,12 +142,13 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div></div>
+  <div class="sweep" id="sweep"></div>
 </div>
 <script>
 (function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
-var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null;
+var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null, prevScene = null;
 var ACC = {
   gold:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e' },
   steel:{ g:'#9db4c9', g2:'#e3eef8', g3:'#43586b' },
@@ -151,6 +186,10 @@ function render(){
   $('camName').textContent = st.cast; $('ltName').textContent = st.cast; $('ltRole').textContent = st.role;
   $('lt').classList.toggle('on', !!st.lt);
   $('tLabel').textContent = st.label;
+  if (prevScene !== null && st.scene !== prevScene){
+    var sw = $('sweep'); sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
+  }
+  prevScene = st.scene;
   $('scene').classList.toggle('on', st.scene === 'soon' || st.scene === 'break');
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
@@ -175,10 +214,14 @@ var LINKS = [['pi1','ubs1'],['pi2','ubs2'],['ubs1','ubf'],['ubs2','ubf'],['ubf',
 var bEls = {};
 function buildBracket(){
   var host = $('bscene'), html = '', i;
-  HEADS.forEach(function(h){ html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px">' + h[0] + '</div>'; });
+  function colOf(x){ return Math.round((x - 40) / 480); }
+  HEADS.forEach(function(h){
+    html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px;--d:' + (0.2 + colOf(h[1]) * 0.12).toFixed(2) + 's">' + h[0] + '</div>';
+  });
   Object.keys(BR).forEach(function(id){
     var p = BR[id];
-    html += '<div class="cut bm" style="left:' + p.x + 'px;top:' + p.y + 'px"><div class="in">' +
+    var dly = (0.32 + colOf(p.x) * 0.12 + (p.y > 700 ? 0.08 : (p.y > 500 ? 0.04 : 0))).toFixed(2);
+    html += '<div class="cut bm" style="left:' + p.x + 'px;top:' + p.y + 'px;--d:' + dly + 's"><div class="in">' +
       '<div class="br" id="b_' + id + '_a"><span class="bn"></span><span class="bs"></span></div>' +
       '<div class="br" id="b_' + id + '_b"><span class="bn"></span><span class="bs"></span></div></div></div>';
   });
@@ -187,7 +230,7 @@ function buildBracket(){
   LINKS.forEach(function(l){
     var s = BR[l[0]], t = BR[l[1]];
     var x1 = s.x + BW, y1 = s.y + BH / 2, x2 = t.x, y2 = t.y + BH / 2, xm = (x1 + x2) / 2;
-    paths += '<path d="M' + x1 + ' ' + y1 + 'H' + xm + 'V' + y2 + 'H' + x2 + '" fill="none" stroke="var(--gold3)" stroke-width="3"/>';
+    paths += '<path class="blk" pathLength="1" style="--d:' + (0.75 + colOf(s.x) * 0.1).toFixed(2) + 's" d="M' + x1 + ' ' + y1 + 'H' + xm + 'V' + y2 + 'H' + x2 + '" fill="none" stroke="var(--gold3)" stroke-width="3"/>';
   });
   $('blinks').innerHTML = paths;
   Object.keys(BR).forEach(function(id){

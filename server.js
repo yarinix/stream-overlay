@@ -11,6 +11,11 @@ if (!KEY) {
   KEY = crypto.randomBytes(6).toString('hex');
   console.warn('CONTROL_KEY не задан. Временный ключ для этого запуска: ' + KEY);
 }
+const BOOT = crypto.randomBytes(4).toString('hex');
+let dirty = false;                     // false, пока никто не менял состояние после запуска
+const teams = new Map();               // библиотека команд: id -> { id, name, tag, v, mime, buf }
+const TEAM_ID = /^[a-z0-9]{6,16}$/;
+const LOGO_RE = /^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/;
 const hash = (s) => crypto.createHash('sha256').update(String(s)).digest();
 const keyOk = (s) => crypto.timingSafeEqual(hash(s), hash(KEY));
 
@@ -40,6 +45,8 @@ const state = {
 };
 
 const MATCH_IDS = ['pi1', 'pi2', 'ubs1', 'ubs2', 'ubf', 'gf', 'lbs', 'lbf'];
+for (const t of [state.a, state.b]) t.teamId = '';
+for (const id of Object.keys(state.bracket.m)) for (const sd of ['a', 'b']) state.bracket.m[id][sd].teamId = '';
 const str = (v, max) => String(v).slice(0, max);
 const int = (v, lo, hi) => Math.min(hi, Math.max(lo, parseInt(v, 10) || 0));
 
@@ -51,6 +58,7 @@ function applyPatch(p) {
       if ('name' in t) state[k].name = str(t.name, 18);
       if ('tag' in t) state[k].tag = str(t.tag, 3);
       if ('score' in t) state[k].score = int(t.score, 0, 9);
+      if ('teamId' in t) state[k].teamId = teams.has(t.teamId) ? t.teamId : '';
     }
   }
   if ('bo' in p && [1, 3, 5].includes(+p.bo)) state.bo = +p.bo;
@@ -67,7 +75,7 @@ function applyPatch(p) {
     const b = p.bracket;
     if ('title' in b) state.bracket.title = str(b.title, 24);
     if (b.reset) {
-      for (const id of MATCH_IDS) state.bracket.m[id] = { a: { name: '', score: 0 }, b: { name: '', score: 0 } };
+      for (const id of MATCH_IDS) state.bracket.m[id] = { a: { name: '', score: 0, teamId: '' }, b: { name: '', score: 0, teamId: '' } };
     }
     if (b.m && typeof b.m === 'object') {
       for (const id of MATCH_IDS) {
@@ -78,6 +86,7 @@ function applyPatch(p) {
           if (!t || typeof t !== 'object') continue;
           if ('name' in t) state.bracket.m[id][s].name = str(t.name, 16);
           if ('score' in t) state.bracket.m[id][s].score = int(t.score, 0, 9);
+          if ('teamId' in t) state.bracket.m[id][s].teamId = teams.has(t.teamId) ? t.teamId : '';
         }
       }
     }
@@ -111,6 +120,65 @@ app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache')
 }));
 
+function authHttp(req, res, next) {
+  const k = req.get('x-key');
+  if (typeof k === 'string' && keyOk(k)) return next();
+  res.status(401).json({ error: 'bad key' });
+}
+const teamMeta = (t) => ({ id: t.id, name: t.name, tag: t.tag, v: t.v, logo: !!t.buf });
+function newId() { return crypto.randomBytes(5).toString('hex'); }
+function eachSlot(fn) {
+  for (const k of ['a', 'b']) fn(state[k]);
+  for (const id of MATCH_IDS) for (const sd of ['a', 'b']) fn(state.bracket.m[id][sd]);
+}
+
+app.use('/api', express.json({ limit: '200kb' }));
+
+app.put('/api/team', authHttp, (req, res) => {
+  const b = req.body || {};
+  let id = typeof b.id === 'string' && TEAM_ID.test(b.id) ? b.id : newId();
+  const isNew = !teams.has(id);
+  if (isNew && teams.size >= 80) return res.status(400).json({ error: 'too many teams' });
+  const t = teams.get(id) || { id, name: '', tag: '', v: '', mime: '', buf: null };
+  let logo = null;
+  if (typeof b.logo === 'string') {
+    const m = LOGO_RE.exec(b.logo);
+    if (!m) return res.status(400).json({ error: 'bad logo' });
+    const buf = Buffer.from(m[2], 'base64');
+    if (!buf.length || buf.length > 100 * 1024) return res.status(400).json({ error: 'logo too large' });
+    logo = { buf, mime: m[1] };
+  }
+  const name = 'name' in b ? str(b.name, 18) : t.name;
+  if (!name.trim()) return res.status(400).json({ error: 'name required' });
+  t.name = name;
+  if ('tag' in b) t.tag = str(b.tag, 3);
+  if (b.clearLogo) { t.buf = null; t.mime = ''; t.v = Date.now().toString(36); }
+  if (logo) { t.buf = logo.buf; t.mime = logo.mime; t.v = Date.now().toString(36); }
+  teams.set(id, t);
+  eachSlot((slot) => { if (slot.teamId === id) { slot.name = t.name; if ('tag' in slot) slot.tag = t.tag; } });
+  dirty = true; broadcast();
+  res.json({ ok: true, team: teamMeta(t) });
+});
+
+app.delete('/api/team/:id', authHttp, (req, res) => {
+  const id = req.params.id;
+  if (!teams.delete(id)) return res.status(404).json({ error: 'not found' });
+  eachSlot((slot) => { if (slot.teamId === id) slot.teamId = ''; });
+  dirty = true; broadcast();
+  res.json({ ok: true });
+});
+
+app.get('/logo/:id', (req, res) => {
+  const t = teams.get(req.params.id);
+  if (!t || !t.buf) return res.sendStatus(404);
+  res.set({ 'Content-Type': t.mime, 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'public, max-age=31536000, immutable' });
+  res.send(t.buf);
+});
+
+app.use((err, _req, res, _next) => {
+  res.status(err.status === 413 ? 413 : 400).json({ error: 'bad request' });
+});
+
 const server = http.createServer(app);
 const wss = new WebSocketServer({ noServer: true, maxPayload: 4096 });
 
@@ -120,7 +188,13 @@ server.on('upgrade', (req, socket, head) => {
   wss.handleUpgrade(req, socket, head, (ws) => wss.emit('connection', ws));
 });
 
-function snapshot() { return JSON.stringify({ type: 'state', state, now: Date.now() }); }
+function snapshot() {
+  return JSON.stringify({
+    type: 'state',
+    state: Object.assign({}, state, { teams: [...teams.values()].map(teamMeta) }),
+    now: Date.now(), boot: BOOT, fresh: !dirty
+  });
+}
 function broadcast() {
   const msg = snapshot();
   for (const c of wss.clients) if (c.readyState === 1) c.send(msg);
@@ -144,6 +218,7 @@ wss.on('connection', (ws) => {
     if (m.type === 'patch') applyPatch(m.patch);
     else if (m.type === 'timer') applyTimer(m.action, m.mins);
     else return;
+    dirty = true;
     broadcast();
   });
 });

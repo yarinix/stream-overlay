@@ -46,6 +46,19 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
 .seg input:checked + span{background:var(--gold); color:#15100a; border-color:var(--gold)}
 .card.wide{grid-column:1 / -1}
+.tform{display:grid; grid-template-columns:auto minmax(0,1fr) 84px; gap:10px; align-items:end}
+.tform .thumb{grid-row:span 1}
+.thumb{width:64px; height:64px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); display:grid; place-items:center; overflow:hidden; font-weight:800; font-size:.8rem; color:var(--gold); flex:none}
+.thumb img{width:84%; height:84%; object-fit:contain; display:block}
+.tbtns{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+.tmsg{margin:0; font-size:.8rem; color:var(--muted); min-height:1.2em}
+.tgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr)); gap:8px}
+.tile{display:flex; align-items:center; gap:10px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px; min-width:0}
+.tile .thumb{width:46px; height:46px; font-size:.7rem}
+.tile .tt{flex:1; min-width:0; display:flex; flex-direction:column}
+.tile .tt b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.88rem}
+.tile .tt small{color:var(--muted)}
+.tile .btn{min-height:34px; padding:4px 10px; font-size:.78rem}
 .bhead{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end}
 .bhead .f{flex:1 1 220px}
 .bgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:10px}
@@ -67,6 +80,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 </style>
 </head>
 <body>
+<datalist id="teamNames"></datalist>
 
 <div class="login" id="login" hidden>
   <h1>Пульт оверлея</h1>
@@ -102,9 +116,9 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 
     <section class="card">
       <h3>Команды и счёт</h3>
-      <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="18"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="3"></div></div>
+      <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="18" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="3"></div></div>
       <div class="sc"><button class="btn" id="aMinus" type="button" aria-label="Минус очко команде A">−</button><output id="oA">0</output><button class="btn p" id="aPlus" type="button" aria-label="Плюс очко команде A">+</button></div>
-      <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="18"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="3"></div></div>
+      <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="18" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="3"></div></div>
       <div class="sc"><button class="btn" id="bMinus" type="button" aria-label="Минус очко команде B">−</button><output id="oB">0</output><button class="btn p" id="bPlus" type="button" aria-label="Плюс очко команде B">+</button></div>
       <div class="btns"><button class="btn" id="swap" type="button">Поменять местами</button><button class="btn" id="zero" type="button">Сбросить счёт</button></div>
     </section>
@@ -141,6 +155,25 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       <p class="hint">Победитель каждой пары подсвечивается сам по большему счёту. Названия и счёт меняются сразу, пока сетка на экране.</p>
     </section>
 
+    <section class="card wide">
+      <h3>Команды и значки</h3>
+      <div class="tform">
+        <div class="thumb" id="tfPrev" aria-hidden="true"></div>
+        <div class="f"><label for="tfName">Название команды</label><input id="tfName" maxlength="18" placeholder="Например, Nova Wolves"></div>
+        <div class="f"><label for="tfTag">Тег</label><input id="tfTag" maxlength="3" placeholder="NW"></div>
+      </div>
+      <div class="tbtns">
+        <button class="btn" id="tfPick" type="button">Выбрать значок</button>
+        <input id="tfFile" type="file" accept="image/*" hidden>
+        <button class="btn" id="tfClear" type="button" hidden>Убрать значок</button>
+        <button class="btn p" id="tfSave" type="button">Сохранить команду</button>
+        <button class="btn" id="tfNew" type="button" hidden>Отмена</button>
+      </div>
+      <p class="tmsg" id="tfMsg" role="status"></p>
+      <div class="tgrid" id="tList"></div>
+      <p class="hint">Значок подставляется, когда название в табло или сетке совпадает с названием команды из этого списка: начните вводить, и пульт предложит варианты. Лучше PNG с прозрачным фоном. Список запоминается на сервере и в этом браузере.</p>
+    </section>
+
     <section class="card">
       <h3>Ссылка для OBS</h3>
       <p class="hint">Добавьте источник «Браузер», вставьте эту ссылку, размер 1920 на 1080.</p>
@@ -153,7 +186,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 (function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
-var ws = null, st = null, key = '', wait = 500, authed = false, closing = false;
+var ws = null, st = null, key = '', wait = 500, authed = false, closing = false, seen = false, restoring = false;
 try { key = localStorage.getItem('ctlkey') || ''; } catch (_) {}
 
 function showLogin(msg){ $('app').hidden = true; $('login').hidden = false; $('err').textContent = msg || ''; $('key').focus(); }
@@ -168,7 +201,7 @@ function setStatus(on, txt){ $('dot').classList.toggle('on', on); $('stxt').text
 
 function connect(){
   ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
-  authed = false;
+  authed = false; seen = false;
   ws.onopen = function(){ ws.send(JSON.stringify({ type: 'auth', key: key })); };
   ws.onmessage = function(e){
     var m; try { m = JSON.parse(e.data); } catch (_) { return; }
@@ -176,7 +209,19 @@ function connect(){
       if (m.ok){ authed = true; wait = 500; try { localStorage.setItem('ctlkey', key); } catch (_) {} showApp(); setStatus(true, 'Подключено'); }
       return;
     }
-    if (m.type === 'state'){ st = m.state; sync(); }
+    if (m.type === 'state'){
+      st = m.state;
+      if (!seen){
+        seen = true;
+        var savedBoot = LS.get('ctlBoot', '');
+        if (m.fresh && savedBoot !== m.boot && hasLocal()){
+          restoring = true; LS.set('ctlBoot', m.boot);
+          restoreFromLocal().then(function(){ restoring = false; });
+        } else { LS.set('ctlBoot', m.boot); }
+      }
+      sync();
+      if (!restoring) saveSnap();
+    }
   };
   ws.onclose = function(ev){
     setStatus(false, 'Нет связи, переподключаюсь…');
@@ -209,7 +254,7 @@ var MATCHES = [
     el.className = 'mini';
     var h = '<h4>' + m[1] + '</h4>';
     ['a','b'].forEach(function(s){
-      h += '<div class="trow"><input id="bn_' + id + s + '" maxlength="16" aria-label="' + m[1] + ', команда ' + (s === 'a' ? '1' : '2') + '" placeholder="Команда">' +
+      h += '<div class="trow"><input id="bn_' + id + s + '" maxlength="18" list="teamNames" autocomplete="off" aria-label="' + m[1] + ', команда ' + (s === 'a' ? '1' : '2') + '" placeholder="Команда">' +
         '<button class="btn" type="button" data-m="' + id + '" data-s="' + s + '" data-d="-1" aria-label="Минус очко">−</button>' +
         '<output id="bo_' + id + s + '">0</output>' +
         '<button class="btn p" type="button" data-m="' + id + '" data-s="' + s + '" data-d="1" aria-label="Плюс очко">+</button></div>';
@@ -220,7 +265,7 @@ var MATCHES = [
         var v = e.target.value, key = 'bn_' + id + s;
         clearTimeout(timers[key]);
         timers[key] = setTimeout(function(){
-          var mm = {}; mm[id] = {}; mm[id][s] = { name: v };
+          var mm = {}; mm[id] = {}; mm[id][s] = bindSlot(v);
           patch({ bracket: { m: mm } });
         }, 250);
       });
@@ -241,6 +286,7 @@ function sync(){
   setVal('bo', st.bo); setVal('map', st.map); setVal('tour', st.tour); setVal('stg', st.stage);
   setVal('cast', st.cast); setVal('role', st.role); setVal('label', st.label); setVal('mins', st.timer.mins);
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
+  renderTeams();
   if (st.bracket){
     setVal('bTitle', st.bracket.title);
     MATCHES.forEach(function(m){
@@ -262,8 +308,8 @@ function typed(id, fn){
     timers[id] = setTimeout(function(){ fn(e.target.value); }, 250);
   });
 }
-typed('nameA', function(v){ patch({ a: { name: v } }); }); typed('tagA', function(v){ patch({ a: { tag: v } }); });
-typed('nameB', function(v){ patch({ b: { name: v } }); }); typed('tagB', function(v){ patch({ b: { tag: v } }); });
+typed('nameA', function(v){ var t = findTeam(v); patch({ a: t ? { name: t.name, tag: t.tag, teamId: t.id } : { name: v, teamId: '' } }); }); typed('tagA', function(v){ patch({ a: { tag: v } }); });
+typed('nameB', function(v){ var t = findTeam(v); patch({ b: t ? { name: t.name, tag: t.tag, teamId: t.id } : { name: v, teamId: '' } }); }); typed('tagB', function(v){ patch({ b: { tag: v } }); });
 typed('tour', function(v){ patch({ tour: v }); }); typed('stg', function(v){ patch({ stage: v }); });
 typed('cast', function(v){ patch({ cast: v }); }); typed('role', function(v){ patch({ role: v }); });
 typed('label', function(v){ patch({ label: v }); });
@@ -298,6 +344,183 @@ $('bReset').onclick = function(){
     b.dataset.armed = '0'; b.textContent = 'Очистить сетку'; patch({ bracket: { reset: true } });
   }
 };
+
+/* ---------- библиотека команд и значки ---------- */
+var LS = {
+  get: function(k, d){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (_) { return d; } },
+  set: function(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} }
+};
+var tc = LS.get('ctlTeams', {});            // локальная копия библиотеки вместе со значками
+var editId = null, newLogo = null, clearLogo = false, teamSig = '', caching = false, snapTimer = null;
+
+function findTeam(v){
+  var n = String(v || '').trim().toLowerCase();
+  if (!n || !st || !st.teams) return null;
+  for (var i = 0; i < st.teams.length; i++) if (st.teams[i].name.toLowerCase() === n) return st.teams[i];
+  return null;
+}
+function bindSlot(v){ var t = findTeam(v); return t ? { name: t.name, teamId: t.id } : { name: v, teamId: '' }; }
+
+function api(method, url, body){
+  return fetch(url, { method: method, headers: { 'x-key': key, 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined })
+    .then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if (!r.ok) throw new Error(j.error || ('ошибка ' + r.status));
+        return j;
+      });
+    });
+}
+function msg(t){ $('tfMsg').textContent = t || ''; }
+function initialsOf(n){
+  var w = String(n || '').trim().split(/\s+/).filter(Boolean);
+  if (!w.length) return '';
+  return (w.length === 1 ? w[0].slice(0, 2) : w.slice(0, 3).map(function(x){ return x[0]; }).join('')).toUpperCase();
+}
+function setThumb(el, src, fb){
+  el.textContent = '';
+  if (src){ var i = new Image(); i.alt = ''; i.src = src; el.appendChild(i); } else { el.textContent = fb || ''; }
+}
+function logoUrl(t){ return '/logo/' + t.id + '?v=' + encodeURIComponent(t.v); }
+
+function renderPreview(){
+  var t = editId && st && st.teams ? st.teams.filter(function(x){ return x.id === editId; })[0] : null;
+  var src = newLogo || (!clearLogo && t && t.logo ? logoUrl(t) : null);
+  setThumb($('tfPrev'), src, initialsOf($('tfName').value));
+  $('tfClear').hidden = !src;
+}
+function resetForm(){
+  editId = null; newLogo = null; clearLogo = false;
+  $('tfName').value = ''; $('tfTag').value = ''; $('tfNew').hidden = true; $('tfSave').textContent = 'Сохранить команду';
+  renderPreview();
+}
+function renderTeams(){
+  if (!st || !st.teams) return;
+  var sig = JSON.stringify(st.teams);
+  if (sig === teamSig) return;
+  teamSig = sig;
+  var dl = $('teamNames'); dl.innerHTML = '';
+  st.teams.forEach(function(t){ var o = document.createElement('option'); o.value = t.name; dl.appendChild(o); });
+  var host = $('tList'); host.innerHTML = '';
+  if (!st.teams.length){ host.innerHTML = '<p class="hint">Пока нет команд. Добавьте первую выше.</p>'; }
+  st.teams.forEach(function(t){
+    var el = document.createElement('div'); el.className = 'tile';
+    var th = document.createElement('div'); th.className = 'thumb'; setThumb(th, t.logo ? logoUrl(t) : null, (t.tag || initialsOf(t.name)).toUpperCase());
+    var tt = document.createElement('div'); tt.className = 'tt';
+    var b = document.createElement('b'); b.textContent = t.name; var sm = document.createElement('small'); sm.textContent = t.tag || '';
+    tt.appendChild(b); tt.appendChild(sm);
+    var e = document.createElement('button'); e.className = 'btn'; e.type = 'button'; e.textContent = 'Изменить'; e.dataset.act = 'edit'; e.dataset.id = t.id;
+    var d = document.createElement('button'); d.className = 'btn'; d.type = 'button'; d.textContent = 'Удалить'; d.dataset.act = 'del'; d.dataset.id = t.id;
+    el.appendChild(th); el.appendChild(tt); el.appendChild(e); el.appendChild(d); host.appendChild(el);
+  });
+  renderPreview();
+  cacheFromServer();
+}
+$('tList').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-act]'); if (!b || !st) return;
+  var id = b.dataset.id;
+  if (b.dataset.act === 'edit'){
+    var t = st.teams.filter(function(x){ return x.id === id; })[0]; if (!t) return;
+    editId = id; newLogo = null; clearLogo = false;
+    $('tfName').value = t.name; $('tfTag').value = t.tag; $('tfNew').hidden = false; $('tfSave').textContent = 'Сохранить изменения';
+    renderPreview(); $('tfName').focus(); msg('');
+  } else {
+    if (b.dataset.armed !== '1'){
+      b.dataset.armed = '1'; b.textContent = 'Точно?';
+      setTimeout(function(){ if (b.isConnected){ b.dataset.armed = '0'; b.textContent = 'Удалить'; } }, 3000);
+      return;
+    }
+    api('DELETE', '/api/team/' + id).then(function(){ delete tc[id]; LS.set('ctlTeams', tc); if (editId === id) resetForm(); msg('Команда удалена'); })
+      .catch(function(err){ msg('Не удалось удалить: ' + err.message); });
+  }
+});
+$('tfName').addEventListener('input', renderPreview);
+$('tfPick').onclick = function(){ $('tfFile').click(); };
+$('tfNew').onclick = function(){ resetForm(); msg(''); };
+$('tfClear').onclick = function(){ newLogo = null; clearLogo = true; renderPreview(); };
+$('tfFile').addEventListener('change', function(e){
+  var f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  if (!/^image\//.test(f.type)){ msg('Это не изображение. Выберите PNG, JPG или WebP.'); return; }
+  processLogo(f).then(function(url){ newLogo = url; clearLogo = false; renderPreview(); msg(''); })
+    .catch(function(){ msg('Не получилось открыть картинку. Попробуйте PNG или JPG.'); });
+});
+function processLogo(file){
+  return new Promise(function(resolve, reject){
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var sizes = [128, 96, 72], out = null;
+      for (var i = 0; i < sizes.length; i++){
+        var S = sizes[i], c = document.createElement('canvas'); c.width = c.height = S;
+        var w0 = img.naturalWidth || S, h0 = img.naturalHeight || S, k = Math.min(S / w0, S / h0);
+        var w = w0 * k, h = h0 * k;
+        c.getContext('2d').drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+        out = c.toDataURL('image/png');
+        if (out.length < 110000) break;
+      }
+      resolve(out);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('bad image')); };
+    img.src = url;
+  });
+}
+$('tfSave').onclick = function(){
+  var name = $('tfName').value.trim();
+  if (!name){ msg('Введите название команды.'); return; }
+  var body = { name: name, tag: $('tfTag').value.trim().slice(0, 3).toUpperCase() };
+  if (editId) body.id = editId;
+  if (newLogo) body.logo = newLogo; else if (clearLogo) body.clearLogo = true;
+  $('tfSave').disabled = true;
+  api('PUT', '/api/team', body).then(function(r){
+    var t = r.team, prev = tc[t.id] || {};
+    tc[t.id] = { id: t.id, name: t.name, tag: t.tag, v: t.v, logo: newLogo || (clearLogo ? null : (prev.logo || null)) };
+    LS.set('ctlTeams', tc); resetForm(); msg('Команда сохранена.');
+  }).catch(function(err){ msg('Не удалось сохранить: ' + err.message); })
+    .then(function(){ $('tfSave').disabled = false; });
+};
+
+function cacheFromServer(){
+  if (caching || !st || !st.teams) return;
+  var todo = st.teams.filter(function(t){ var c = tc[t.id]; return !c || c.v !== t.v || c.name !== t.name || c.tag !== t.tag; });
+  if (!todo.length) return;
+  caching = true;
+  var chain = Promise.resolve();
+  todo.forEach(function(t){
+    chain = chain.then(function(){
+      if (!t.logo){ tc[t.id] = { id: t.id, name: t.name, tag: t.tag, v: t.v, logo: null }; return; }
+      return fetch(logoUrl(t)).then(function(r){ return r.blob(); }).then(function(bl){
+        return new Promise(function(res){ var fr = new FileReader(); fr.onload = function(){ res(fr.result); }; fr.onerror = function(){ res(null); }; fr.readAsDataURL(bl); });
+      }).then(function(d){ tc[t.id] = { id: t.id, name: t.name, tag: t.tag, v: t.v, logo: d }; }).catch(function(){});
+    });
+  });
+  chain.then(function(){ LS.set('ctlTeams', tc); caching = false; });
+}
+
+function hasLocal(){ return Object.keys(tc).length > 0 || !!LS.get('ctlSnap', null); }
+function pickT(t){ return { name: t.name, tag: t.tag, score: t.score, teamId: t.teamId || '' }; }
+function saveSnap(){
+  clearTimeout(snapTimer);
+  snapTimer = setTimeout(function(){
+    if (!st || restoring) return;
+    var m = {};
+    Object.keys(st.bracket.m).forEach(function(id){ m[id] = { a: pickT(st.bracket.m[id].a), b: pickT(st.bracket.m[id].b) }; });
+    LS.set('ctlSnap', {
+      a: pickT(st.a), b: pickT(st.b), bo: st.bo, map: st.map, tour: st.tour, stage: st.stage, cast: st.cast,
+      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, m: m }
+    });
+  }, 800);
+}
+function restoreFromLocal(){
+  var chain = Promise.resolve();
+  Object.keys(tc).forEach(function(id){
+    var t = tc[id];
+    chain = chain.then(function(){
+      var b = { id: t.id, name: t.name, tag: t.tag };
+      if (t.logo) b.logo = t.logo;
+      return api('PUT', '/api/team', b).catch(function(){});
+    });
+  });
+  return chain.then(function(){ var snap = LS.get('ctlSnap', null); if (snap) patch(snap); });
+}
 
 $('url').textContent = location.origin + '/overlay';
 $('copyBtn').onclick = function(){

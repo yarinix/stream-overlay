@@ -25,6 +25,8 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .team.r .in{flex-direction:row-reverse; text-align:right}
 .logo{flex:none; width:56px; height:56px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:20px; letter-spacing:.04em;
   background:radial-gradient(circle at 30% 25%,#2b3340,#0e1117); border:2px solid var(--gold); color:var(--gold2)}
+.logo{overflow:hidden}
+.logo img{width:80%; height:80%; object-fit:contain; display:block}
 .tn{min-width:0; font-weight:800; font-size:22px; letter-spacing:.07em; text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .score .in{justify-content:center; font-size:58px; font-weight:800; font-variant-numeric:tabular-nums; color:var(--gold2)}
 .score .in span{display:inline-block}
@@ -84,7 +86,12 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .bm .in{flex-direction:column; align-items:stretch; padding:0; gap:0}
 .br{flex:1; display:flex; align-items:center; justify-content:space-between; padding:0 0 0 20px; min-width:0}
 .br + .br{border-top:1px solid rgba(255,255,255,.09)}
-.bn{font-size:26px; font-weight:600; letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
+.bl{flex:none; width:42px; height:42px; border-radius:50%; margin-right:14px; display:grid; place-items:center; overflow:hidden;
+  background:radial-gradient(circle at 30% 25%,#2b3340,#0e1117); border:1.5px solid var(--gold3);
+  font-size:13px; font-weight:800; letter-spacing:.04em; color:var(--gold2); font-style:normal}
+.bl img{width:82%; height:82%; object-fit:contain; display:block}
+.bl.none{visibility:hidden}
+.bn{flex:1; font-size:26px; font-weight:600; letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
 .bn.empty{color:rgba(255,255,255,.3)}
 .bs{width:72px; align-self:stretch; display:grid; place-items:center; font-weight:800; font-size:34px; font-variant-numeric:tabular-nums; background:rgba(255,255,255,.05)}
 .br.win .bn{font-weight:800; color:#fff}
@@ -184,8 +191,9 @@ function drawTimer(){
 function render(){
   var a = ACC[st.accent] || ACC.gold, s = document.documentElement.style;
   s.setProperty('--gold', a.g); s.setProperty('--gold2', a.g2); s.setProperty('--gold3', a.g3);
-  $('tnA').textContent = st.a.name || ' '; $('lgA').textContent = (st.a.tag || '').toUpperCase();
-  $('tnB').textContent = st.b.name || ' '; $('lgB').textContent = (st.b.tag || '').toUpperCase();
+  TM = {}; (st.teams || []).forEach(function(t){ TM[t.id] = t; });
+  $('tnA').textContent = st.a.name || ' '; setLogo($('lgA'), st.a.teamId ? TM[st.a.teamId] : null, (st.a.tag || '').toUpperCase());
+  $('tnB').textContent = st.b.name || ' '; setLogo($('lgB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());
   $('scA').textContent = st.a.score; $('scB').textContent = st.b.score;
   if (prevA !== null && st.a.score !== prevA) bump($('scA'));
   if (prevB !== null && st.b.score !== prevB) bump($('scB'));
@@ -209,6 +217,26 @@ function render(){
 }
 setInterval(drawTimer, 200);
 
+/* ---------- значки команд ---------- */
+var TM = {};
+function initials(n){
+  var w = String(n || '').trim().split(/\s+/).filter(Boolean);
+  if (!w.length) return '';
+  if (w.length === 1) return w[0].slice(0, 2).toUpperCase();
+  return w.slice(0, 3).map(function(x){ return x[0]; }).join('').toUpperCase();
+}
+function setLogo(el, team, fallback){
+  var key = team && team.logo ? team.id + ':' + team.v : 'i:' + fallback;
+  if (el.dataset.k === key) return;
+  el.dataset.k = key; el.textContent = '';
+  if (team && team.logo){
+    var img = new Image(); img.alt = ''; img.src = '/logo/' + team.id + '?v=' + encodeURIComponent(team.v);
+    el.appendChild(img);
+  } else {
+    el.textContent = fallback;
+  }
+}
+
 /* ---------- сетка плей-оффа ---------- */
 var BW = 400, BH = 112;
 var BR = {
@@ -231,8 +259,8 @@ function buildBracket(){
     var p = BR[id];
     var dly = (0.32 + colOf(p.x) * 0.12 + (p.y > 700 ? 0.08 : (p.y > 500 ? 0.04 : 0))).toFixed(2);
     html += '<div class="cut bm" style="left:' + p.x + 'px;top:' + p.y + 'px;--d:' + dly + 's"><div class="in">' +
-      '<div class="br" id="b_' + id + '_a"><span class="bn"></span><span class="bs"></span></div>' +
-      '<div class="br" id="b_' + id + '_b"><span class="bn"></span><span class="bs"></span></div></div></div>';
+      '<div class="br" id="b_' + id + '_a"><i class="bl"></i><span class="bn"></span><span class="bs"></span></div>' +
+      '<div class="br" id="b_' + id + '_b"><i class="bl"></i><span class="bn"></span><span class="bs"></span></div></div></div>';
   });
   host.insertAdjacentHTML('beforeend', html);
   var segs = '', T = 3;
@@ -255,7 +283,7 @@ function buildBracket(){
   Object.keys(BR).forEach(function(id){
     ['a','b'].forEach(function(s){
       var row = $('b_' + id + '_' + s);
-      bEls[id + s] = { row: row, n: row.children[0], sc: row.children[1] };
+      bEls[id + s] = { row: row, l: row.children[0], n: row.children[1], sc: row.children[2] };
     });
   });
 }
@@ -269,6 +297,9 @@ function renderBracket(){
       var e = bEls[id + x[0]], me = x[1], other = x[2];
       e.n.textContent = me.name || '—';
       e.n.classList.toggle('empty', !me.name);
+      var tm = me.teamId ? TM[me.teamId] : null;
+      e.l.classList.toggle('none', !me.name);
+      setLogo(e.l, tm, tm ? tm.tag.toUpperCase() : initials(me.name));
       e.sc.textContent = me.score;
       e.row.classList.toggle('win', me.score > other.score);
       e.row.classList.toggle('lose', me.score < other.score);

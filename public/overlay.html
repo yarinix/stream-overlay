@@ -67,16 +67,20 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .scene .big{font-size:230px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.04em; line-height:1; margin-top:10px;
   background:linear-gradient(180deg,var(--gold2),var(--gold) 60%,var(--gold3)); -webkit-background-clip:text; background-clip:text; color:transparent}
 .scene .line{width:520px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:6px 0}
-.bscene{position:absolute; inset:0; opacity:0; pointer-events:none; transition:opacity .6s;
-  background:radial-gradient(80% 90% at 50% 50%, #0e1219, #050608);
-  clip-path:path(evenodd,'M0 0H1920V1080H0Z M1466 24H1894V272H1466Z')}
+.bscene{position:absolute; inset:0; opacity:0; pointer-events:none; transition:opacity .6s}
+.bbg{position:absolute; background:#080b10}
+.blinks{position:absolute; left:0; top:0; width:1920px; height:1080px}
+.lk{position:absolute; background:var(--gold3); transform-origin:0 0; transform:scaleX(0); will-change:transform; transition:transform .2s}
+.lk.v{transform:scaleY(0)}
+.lk.vu{transform-origin:0 100%}
+.bscene.on .lk{transform:none; transition:transform .28s ease-out var(--d,.9s)}
 .bscene.on{opacity:1}
 .bt{position:absolute; left:40px; top:44px}
 .bt h2{margin:0; font-size:76px; font-weight:800; letter-spacing:.16em; text-transform:uppercase}
 .bt p{margin:6px 0 0; font-family:var(--f-serif); font-style:italic; font-size:42px; color:var(--gold); font-weight:600}
 .bh{position:absolute; width:400px; height:44px; display:grid; place-items:center; background:rgba(255,255,255,.05);
   border-bottom:2px solid var(--gold3); font-size:17px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; color:var(--gold)}
-.bm{width:400px; height:112px; filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.bm{width:400px; height:112px; will-change:transform,opacity}
 .bm .in{flex-direction:column; align-items:stretch; padding:0; gap:0}
 .br{flex:1; display:flex; align-items:center; justify-content:space-between; padding:0 0 0 20px; min-width:0}
 .br + .br{border-top:1px solid rgba(255,255,255,.09)}
@@ -104,12 +108,10 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   transition:opacity .55s ease var(--d,0s), transform .75s cubic-bezier(.2,.9,.2,1) var(--d,0s)}
 .bscene .bt{opacity:0; transform:translateX(-36px); transition:opacity .3s, transform .3s}
 .bscene.on .bt{opacity:1; transform:none; transition:opacity .6s ease .1s, transform .8s cubic-bezier(.2,.9,.2,1) .1s}
-.bscene .blk{stroke-dasharray:1; stroke-dashoffset:1; transition:stroke-dashoffset .25s}
-.bscene.on .blk{stroke-dashoffset:0; transition:stroke-dashoffset .9s ease-in-out var(--d,.9s)}
 
 .sweep{position:absolute; top:-120px; bottom:-120px; left:0; width:360px; pointer-events:none; opacity:0;
-  background:linear-gradient(90deg, transparent 0%, var(--gold) 44%, #fff 50%, var(--gold) 56%, transparent 100%);
-  filter:blur(8px); transform:translateX(-460px) skewX(-14deg)}
+  background:linear-gradient(90deg, transparent 0%, rgba(201,164,92,.10) 18%, rgba(201,164,92,.55) 42%, rgba(255,255,255,.9) 50%, rgba(201,164,92,.55) 58%, rgba(201,164,92,.10) 82%, transparent 100%);
+  will-change:transform,opacity; transform:translateX(-460px) skewX(-14deg)}
 .sweep.go{animation:sweep 1.05s cubic-bezier(.55,0,.25,1) both}
 @keyframes sweep{
   0%{opacity:0; transform:translateX(-460px) skewX(-14deg)}
@@ -138,7 +140,11 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
   <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
   <div class="bscene" id="bscene">
-    <svg id="blinks" width="1920" height="1080" style="position:absolute;left:0;top:0" aria-hidden="true"></svg>
+    <div class="bbg" style="left:0;top:0;width:1920px;height:24px"></div>
+    <div class="bbg" style="left:0;top:272px;width:1920px;height:808px"></div>
+    <div class="bbg" style="left:0;top:20px;width:1466px;height:256px"></div>
+    <div class="bbg" style="left:1894px;top:20px;width:26px;height:256px"></div>
+    <div class="blinks" id="blinks" aria-hidden="true"></div>
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div></div>
@@ -148,7 +154,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 (function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
-var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null, prevScene = null;
+var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null, prevScene = null, lastTime = '';
 var ACC = {
   gold:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e' },
   steel:{ g:'#9db4c9', g2:'#e3eef8', g3:'#43586b' },
@@ -168,9 +174,12 @@ function remaining(){
 }
 function drawTimer(){
   if (!st) return;
-  var r = remaining();
-  $('tVal').textContent = mmss(r); $('scTime').textContent = mmss(r);
-  $('timer').classList.toggle('zero', r === 0);
+  var r = remaining(), txt = mmss(r);
+  if (txt !== lastTime){
+    lastTime = txt;
+    $('tVal').textContent = txt; $('scTime').textContent = txt;
+    $('timer').classList.toggle('zero', r === 0);
+  }
 }
 function render(){
   var a = ACC[st.accent] || ACC.gold, s = document.documentElement.style;
@@ -226,13 +235,23 @@ function buildBracket(){
       '<div class="br" id="b_' + id + '_b"><span class="bn"></span><span class="bs"></span></div></div></div>';
   });
   host.insertAdjacentHTML('beforeend', html);
-  var paths = '';
+  var segs = '', T = 3;
+  function seg(cls, x, y, w, h, d){
+    return '<div class="lk ' + cls + '" style="left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;--d:' + d.toFixed(2) + 's"></div>';
+  }
   LINKS.forEach(function(l){
     var s = BR[l[0]], t = BR[l[1]];
-    var x1 = s.x + BW, y1 = s.y + BH / 2, x2 = t.x, y2 = t.y + BH / 2, xm = (x1 + x2) / 2;
-    paths += '<path class="blk" pathLength="1" style="--d:' + (0.75 + colOf(s.x) * 0.1).toFixed(2) + 's" d="M' + x1 + ' ' + y1 + 'H' + xm + 'V' + y2 + 'H' + x2 + '" fill="none" stroke="var(--gold3)" stroke-width="3"/>';
+    var x1 = s.x + BW, y1 = s.y + BH / 2, x2 = t.x, y2 = t.y + BH / 2, xm = Math.round((x1 + x2) / 2);
+    var d0 = 0.75 + colOf(s.x) * 0.1;
+    if (y1 === y2){
+      segs += seg('', x1, y1 - T / 2, x2 - x1, T, d0);
+    } else {
+      segs += seg('', x1, y1 - T / 2, xm - x1 + T / 2, T, d0);
+      segs += seg(y2 > y1 ? 'v' : 'v vu', xm - T / 2, Math.min(y1, y2) - T / 2, T, Math.abs(y2 - y1) + T, d0 + 0.22);
+      segs += seg('', xm, y2 - T / 2, x2 - xm, T, d0 + 0.44);
+    }
   });
-  $('blinks').innerHTML = paths;
+  $('blinks').innerHTML = segs;
   Object.keys(BR).forEach(function(id){
     ['a','b'].forEach(function(s){
       var row = $('b_' + id + '_' + s);

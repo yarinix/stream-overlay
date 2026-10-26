@@ -60,13 +60,32 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .tick .tx{font-size:20px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:#ddd7c8}
 .tick .game-name{margin-left:auto; font-family:var(--f-serif); font-style:italic; font-size:28px; color:var(--gold); letter-spacing:.04em; text-transform:none; font-weight:600}
 .scene{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px;
-  background:radial-gradient(70% 80% at 50% 45%, rgba(12,16,22,.9), rgba(5,6,8,.98)); opacity:0; pointer-events:none; transition:opacity .6s}
+  background:radial-gradient(70% 80% at 50% 45%, #0c1016, #050608); opacity:0; pointer-events:none; transition:opacity .6s}
 .scene.on{opacity:1}
 .scene h2{margin:0; font-size:112px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; padding-left:.2em}
 .scene .sub{font-family:var(--f-serif); font-style:italic; font-size:50px; color:var(--gold); font-weight:600}
 .scene .big{font-size:230px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.04em; line-height:1; margin-top:10px;
   background:linear-gradient(180deg,var(--gold2),var(--gold) 60%,var(--gold3)); -webkit-background-clip:text; background-clip:text; color:transparent}
 .scene .line{width:520px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:6px 0}
+.bscene{position:absolute; inset:0; opacity:0; pointer-events:none; transition:opacity .6s;
+  background:radial-gradient(80% 90% at 50% 50%, #0e1219, #050608);
+  clip-path:path(evenodd,'M0 0H1920V1080H0Z M1466 24H1894V272H1466Z')}
+.bscene.on{opacity:1}
+.bt{position:absolute; left:40px; top:44px}
+.bt h2{margin:0; font-size:76px; font-weight:800; letter-spacing:.16em; text-transform:uppercase}
+.bt p{margin:6px 0 0; font-family:var(--f-serif); font-style:italic; font-size:42px; color:var(--gold); font-weight:600}
+.bh{position:absolute; width:400px; height:44px; display:grid; place-items:center; background:rgba(255,255,255,.05);
+  border-bottom:2px solid var(--gold3); font-size:17px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; color:var(--gold)}
+.bm{width:400px; height:112px; filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.bm .in{flex-direction:column; align-items:stretch; padding:0; gap:0}
+.br{flex:1; display:flex; align-items:center; justify-content:space-between; padding:0 0 0 20px; min-width:0}
+.br + .br{border-top:1px solid rgba(255,255,255,.09)}
+.bn{font-size:26px; font-weight:600; letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
+.bn.empty{color:rgba(255,255,255,.3)}
+.bs{width:72px; align-self:stretch; display:grid; place-items:center; font-weight:800; font-size:34px; font-variant-numeric:tabular-nums; background:rgba(255,255,255,.05)}
+.br.win .bn{font-weight:800; color:#fff}
+.br.win .bs{color:var(--gold2); background:rgba(201,164,92,.2)}
+.br.lose{opacity:.55}
 .scene .res{font-size:30px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; color:#d9d3c4}
 </style>
 </head>
@@ -84,6 +103,10 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   <div class="cut plate"><div class="in" id="camName"></div></div>
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
   <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
+  <div class="bscene" id="bscene">
+    <svg id="blinks" width="1920" height="1080" style="position:absolute;left:0;top:0" aria-hidden="true"></svg>
+    <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
+  </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div></div>
 </div>
 <script>
@@ -128,13 +151,69 @@ function render(){
   $('camName').textContent = st.cast; $('ltName').textContent = st.cast; $('ltRole').textContent = st.role;
   $('lt').classList.toggle('on', !!st.lt);
   $('tLabel').textContent = st.label;
-  $('scene').classList.toggle('on', st.scene !== 'game');
-  $('sb').classList.toggle('hide', st.scene === 'soon');
+  $('scene').classList.toggle('on', st.scene === 'soon' || st.scene === 'break');
+  $('bscene').classList.toggle('on', st.scene === 'bracket');
+  $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
+  renderBracket();
   if (st.scene === 'soon'){ $('scTitle').textContent = 'Скоро начнём'; $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
   if (st.scene === 'break'){ $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = st.a.name + '  ' + st.a.score + ' : ' + st.b.score + '  ' + st.b.name; $('scRes').textContent = 'Карта ' + st.map + ' · ' + st.stage; }
   drawTimer();
 }
 setInterval(drawTimer, 200);
+
+/* ---------- сетка плей-оффа ---------- */
+var BW = 400, BH = 112;
+var BR = {
+  pi1:{x:40,y:356}, pi2:{x:40,y:520}, ubs1:{x:520,y:356}, ubs2:{x:520,y:520},
+  ubf:{x:1000,y:438}, gf:{x:1480,y:601}, lbs:{x:520,y:764}, lbf:{x:1000,y:764}
+};
+var HEADS = [
+  ['Плей-ин',40,290], ['Верхняя сетка · полуфинал',520,290], ['Верхняя сетка · финал',1000,290], ['Гранд-финал',1480,290],
+  ['Нижняя сетка · полуфинал',520,700], ['Нижняя сетка · финал',1000,700]
+];
+var LINKS = [['pi1','ubs1'],['pi2','ubs2'],['ubs1','ubf'],['ubs2','ubf'],['ubf','gf'],['lbf','gf'],['lbs','lbf']];
+var bEls = {};
+function buildBracket(){
+  var host = $('bscene'), html = '', i;
+  HEADS.forEach(function(h){ html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px">' + h[0] + '</div>'; });
+  Object.keys(BR).forEach(function(id){
+    var p = BR[id];
+    html += '<div class="cut bm" style="left:' + p.x + 'px;top:' + p.y + 'px"><div class="in">' +
+      '<div class="br" id="b_' + id + '_a"><span class="bn"></span><span class="bs"></span></div>' +
+      '<div class="br" id="b_' + id + '_b"><span class="bn"></span><span class="bs"></span></div></div></div>';
+  });
+  host.insertAdjacentHTML('beforeend', html);
+  var paths = '';
+  LINKS.forEach(function(l){
+    var s = BR[l[0]], t = BR[l[1]];
+    var x1 = s.x + BW, y1 = s.y + BH / 2, x2 = t.x, y2 = t.y + BH / 2, xm = (x1 + x2) / 2;
+    paths += '<path d="M' + x1 + ' ' + y1 + 'H' + xm + 'V' + y2 + 'H' + x2 + '" fill="none" stroke="var(--gold3)" stroke-width="3"/>';
+  });
+  $('blinks').innerHTML = paths;
+  Object.keys(BR).forEach(function(id){
+    ['a','b'].forEach(function(s){
+      var row = $('b_' + id + '_' + s);
+      bEls[id + s] = { row: row, n: row.children[0], sc: row.children[1] };
+    });
+  });
+}
+function renderBracket(){
+  var b = st.bracket; if (!b) return;
+  $('bTitle').textContent = b.title || ' ';
+  $('bTour').textContent = st.tour;
+  Object.keys(BR).forEach(function(id){
+    var m = b.m[id], A = m.a, B = m.b;
+    [['a', A, B], ['b', B, A]].forEach(function(x){
+      var e = bEls[id + x[0]], me = x[1], other = x[2];
+      e.n.textContent = me.name || '—';
+      e.n.classList.toggle('empty', !me.name);
+      e.sc.textContent = me.score;
+      e.row.classList.toggle('win', me.score > other.score);
+      e.row.classList.toggle('lose', me.score < other.score);
+    });
+  });
+}
+buildBracket();
 
 var wait = 500;
 function connect(){

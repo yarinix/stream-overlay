@@ -40,12 +40,21 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .sc{display:flex; align-items:center; gap:10px}
 .sc output{min-width:2ch; text-align:center; font-weight:800; font-size:1.4rem; font-variant-numeric:tabular-nums}
 .sc .btn{min-width:48px}
-.seg{display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:6px; overflow:hidden}
-.seg label{cursor:pointer; display:block}
+.seg{display:flex; flex-wrap:wrap; gap:6px}
+.seg label{cursor:pointer; display:block; flex:1 1 auto}
 .seg input{position:absolute; opacity:0; pointer-events:none; width:1px; min-height:0}
-.seg span{display:block; text-align:center; padding:11px 4px; background:var(--panel2); font-size:.8rem; font-weight:600}
-.seg label + label span{border-left:1px solid var(--line)}
-.seg input:checked + span{background:var(--gold); color:#15100a}
+.seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
+.seg input:checked + span{background:var(--gold); color:#15100a; border-color:var(--gold)}
+.card.wide{grid-column:1 / -1}
+.bhead{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end}
+.bhead .f{flex:1 1 220px}
+.bgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:10px}
+.mini{background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.mini h4{margin:0; font-size:.68rem; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; font-weight:700}
+.trow{display:grid; grid-template-columns:minmax(0,1fr) auto auto auto; gap:6px; align-items:center}
+.trow .btn{min-width:40px; padding:6px 10px; min-height:40px}
+.trow output{min-width:1.6ch; text-align:center; font-weight:800; font-size:1.15rem; font-variant-numeric:tabular-nums}
+.trow input{background:var(--ink)}
 .sw{display:flex; gap:8px}
 .sw button{width:40px; height:40px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
 .sw button[aria-pressed="true"]{border-color:#fff}
@@ -81,6 +90,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <label><input type="radio" name="scene" value="game"><span>Игра</span></label>
         <label><input type="radio" name="scene" value="soon"><span>Скоро начнём</span></label>
         <label><input type="radio" name="scene" value="break"><span>Перерыв</span></label>
+        <label><input type="radio" name="scene" value="bracket"><span>Сетка</span></label>
       </div>
       <h3>Стиль</h3>
       <div class="sw" id="sw">
@@ -119,6 +129,16 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       <div class="f"><label for="label">Подпись</label><input id="label" maxlength="24"></div>
       <div class="f"><label for="mins">Минут</label><input id="mins" type="number" min="1" max="99"></div>
       <div class="btns"><button class="btn p" id="tGo" type="button">Старт</button><button class="btn" id="tReset" type="button">Сбросить</button></div>
+    </section>
+
+    <section class="card wide">
+      <h3>Сетка плей-оффа</h3>
+      <div class="bhead">
+        <div class="f"><label for="bTitle">Заголовок на экране</label><input id="bTitle" maxlength="24"></div>
+        <div class="btns"><button class="btn p" id="bShow" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
+      </div>
+      <div class="bgrid" id="bgrid"></div>
+      <p class="hint">Победитель каждой пары подсвечивается сам по большему счёту. Названия и счёт меняются сразу, пока сетка на экране.</p>
     </section>
 
     <section class="card">
@@ -178,6 +198,42 @@ $('enter').onclick = function(){
 };
 $('key').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('enter').click(); });
 
+var MATCHES = [
+  ['pi1','Плей-ин · 1'], ['pi2','Плей-ин · 2'], ['ubs1','Верхняя сетка · полуфинал 1'], ['ubs2','Верхняя сетка · полуфинал 2'],
+  ['ubf','Верхняя сетка · финал'], ['lbs','Нижняя сетка · полуфинал'], ['lbf','Нижняя сетка · финал'], ['gf','Гранд-финал']
+];
+(function buildBracketUi(){
+  var host = $('bgrid');
+  MATCHES.forEach(function(m){
+    var id = m[0], el = document.createElement('div');
+    el.className = 'mini';
+    var h = '<h4>' + m[1] + '</h4>';
+    ['a','b'].forEach(function(s){
+      h += '<div class="trow"><input id="bn_' + id + s + '" maxlength="16" aria-label="' + m[1] + ', команда ' + (s === 'a' ? '1' : '2') + '" placeholder="Команда">' +
+        '<button class="btn" type="button" data-m="' + id + '" data-s="' + s + '" data-d="-1" aria-label="Минус очко">−</button>' +
+        '<output id="bo_' + id + s + '">0</output>' +
+        '<button class="btn p" type="button" data-m="' + id + '" data-s="' + s + '" data-d="1" aria-label="Плюс очко">+</button></div>';
+    });
+    el.innerHTML = h; host.appendChild(el);
+    ['a','b'].forEach(function(s){
+      $('bn_' + id + s).addEventListener('input', function(e){
+        var v = e.target.value, key = 'bn_' + id + s;
+        clearTimeout(timers[key]);
+        timers[key] = setTimeout(function(){
+          var mm = {}; mm[id] = {}; mm[id][s] = { name: v };
+          patch({ bracket: { m: mm } });
+        }, 250);
+      });
+    });
+  });
+  host.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-m]'); if (!b || !st) return;
+    var id = b.dataset.m, s = b.dataset.s, cur = st.bracket.m[id][s].score;
+    var mm = {}; mm[id] = {}; mm[id][s] = { score: cur + parseInt(b.dataset.d, 10) };
+    patch({ bracket: { m: mm } });
+  });
+})();
+var timers = {};
 function setVal(id, v){ var el = $(id); if (document.activeElement !== el) el.value = v; }
 function sync(){
   setVal('nameA', st.a.name); setVal('tagA', st.a.tag); setVal('nameB', st.b.name); setVal('tagB', st.b.tag);
@@ -185,13 +241,21 @@ function sync(){
   setVal('bo', st.bo); setVal('map', st.map); setVal('tour', st.tour); setVal('stg', st.stage);
   setVal('cast', st.cast); setVal('role', st.role); setVal('label', st.label); setVal('mins', st.timer.mins);
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
+  if (st.bracket){
+    setVal('bTitle', st.bracket.title);
+    MATCHES.forEach(function(m){
+      ['a','b'].forEach(function(s){
+        var t = st.bracket.m[m[0]][s];
+        setVal('bn_' + m[0] + s, t.name); $('bo_' + m[0] + s).textContent = t.score;
+      });
+    });
+  }
   document.querySelectorAll('#sw button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.a === st.accent ? 'true' : 'false'); });
   $('ltBtn').textContent = st.lt ? 'Скрыть плашку' : 'Показать плашку';
   $('ltBtn').setAttribute('aria-pressed', st.lt ? 'true' : 'false');
   $('tGo').textContent = st.timer.run ? 'Пауза' : 'Старт';
 }
 
-var timers = {};
 function typed(id, fn){
   $(id).addEventListener('input', function(e){
     clearTimeout(timers[id]);
@@ -222,6 +286,18 @@ document.querySelectorAll('input[name=scene]').forEach(function(r){
 document.querySelectorAll('#sw button').forEach(function(b){
   b.addEventListener('click', function(){ patch({ accent: b.dataset.a }); });
 });
+
+typed('bTitle', function(v){ patch({ bracket: { title: v } }); });
+$('bShow').onclick = function(){ patch({ scene: 'bracket' }); };
+$('bReset').onclick = function(){
+  var b = $('bReset');
+  if (b.dataset.armed !== '1'){
+    b.dataset.armed = '1'; b.textContent = 'Точно очистить?';
+    setTimeout(function(){ b.dataset.armed = '0'; b.textContent = 'Очистить сетку'; }, 3000);
+  } else {
+    b.dataset.armed = '0'; b.textContent = 'Очистить сетку'; patch({ bracket: { reset: true } });
+  }
+};
 
 $('url').textContent = location.origin + '/overlay';
 $('copyBtn').onclick = function(){

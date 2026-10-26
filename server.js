@@ -23,9 +23,23 @@ const state = {
   cast: 'BlackSid_Co', role: 'Комментатор',
   label: 'До начала драфта',
   lt: false, scene: 'game', accent: 'gold',
+  bracket: {
+    title: 'Плей-офф',
+    m: {
+      pi1:  { a: { name: 'Storm Riders', score: 3 }, b: { name: 'Silver Tide', score: 2 } },
+      pi2:  { a: { name: 'Night Owls', score: 3 },   b: { name: 'Polar Echo', score: 1 } },
+      ubs1: { a: { name: 'Nova Wolves', score: 3 },  b: { name: 'Storm Riders', score: 0 } },
+      ubs2: { a: { name: 'Iron Crown', score: 1 },   b: { name: 'Night Owls', score: 3 } },
+      ubf:  { a: { name: 'Nova Wolves', score: 3 },  b: { name: 'Night Owls', score: 2 } },
+      lbs:  { a: { name: 'Iron Crown', score: 3 },   b: { name: 'Storm Riders', score: 1 } },
+      lbf:  { a: { name: 'Night Owls', score: 1 },   b: { name: 'Iron Crown', score: 3 } },
+      gf:   { a: { name: 'Nova Wolves', score: 2 },  b: { name: 'Iron Crown', score: 4 } }
+    }
+  },
   timer: { mins: 5, rem: 300, run: false, endAt: 0 }
 };
 
+const MATCH_IDS = ['pi1', 'pi2', 'ubs1', 'ubs2', 'ubf', 'gf', 'lbs', 'lbf'];
 const str = (v, max) => String(v).slice(0, max);
 const int = (v, lo, hi) => Math.min(hi, Math.max(lo, parseInt(v, 10) || 0));
 
@@ -47,8 +61,27 @@ function applyPatch(p) {
   if ('role' in p) state.role = str(p.role, 26);
   if ('label' in p) state.label = str(p.label, 24);
   if ('lt' in p) state.lt = !!p.lt;
-  if ('scene' in p && ['game', 'soon', 'break'].includes(p.scene)) state.scene = p.scene;
+  if ('scene' in p && ['game', 'soon', 'break', 'bracket'].includes(p.scene)) state.scene = p.scene;
   if ('accent' in p && ['gold', 'steel', 'rose'].includes(p.accent)) state.accent = p.accent;
+  if (p.bracket && typeof p.bracket === 'object') {
+    const b = p.bracket;
+    if ('title' in b) state.bracket.title = str(b.title, 24);
+    if (b.reset) {
+      for (const id of MATCH_IDS) state.bracket.m[id] = { a: { name: '', score: 0 }, b: { name: '', score: 0 } };
+    }
+    if (b.m && typeof b.m === 'object') {
+      for (const id of MATCH_IDS) {
+        const m = b.m[id];
+        if (!m || typeof m !== 'object') continue;
+        for (const s of ['a', 'b']) {
+          const t = m[s];
+          if (!t || typeof t !== 'object') continue;
+          if ('name' in t) state.bracket.m[id][s].name = str(t.name, 16);
+          if ('score' in t) state.bracket.m[id][s].score = int(t.score, 0, 9);
+        }
+      }
+    }
+  }
   if ('swap' in p && p.swap) { const x = state.a; state.a = state.b; state.b = x; }
 }
 

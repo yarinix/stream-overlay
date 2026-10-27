@@ -149,6 +149,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       <h3>Плашка комментатора</h3>
       <div class="f"><label for="cast">Имя</label><input id="cast" maxlength="22"></div>
       <div class="f"><label for="role">Должность</label><input id="role" maxlength="26"></div>
+      <div class="f"><label for="social">Соцсеть на заставках</label><input id="social" maxlength="36" placeholder="twitch.tv/ник"></div>
       <div class="btns"><button class="btn p" id="ltBtn" type="button" aria-pressed="false">Показать плашку</button></div>
     </section>
 
@@ -343,7 +344,7 @@ function sync(){
   setVal('nameA', st.a.name); setVal('tagA', st.a.tag); setVal('nameB', st.b.name); setVal('tagB', st.b.tag);
   $('oA').textContent = st.a.score; $('oB').textContent = st.b.score;
   setVal('bo', st.bo); setVal('map', st.map); setVal('tour', st.tour); setVal('stg', st.stage);
-  setVal('cast', st.cast); setVal('role', st.role); setVal('label', st.label); setVal('mins', st.timer.mins);
+  setVal('cast', st.cast); setVal('role', st.role); setVal('social', st.social || ''); setVal('label', st.label); setVal('mins', st.timer.mins);
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
   renderTeams();
   if (st.bracket){
@@ -371,7 +372,7 @@ function typed(id, fn){
 typed('nameA', function(v){ var t = findTeam(v); patch({ a: t ? { name: t.name, tag: t.tag, teamId: t.id } : { name: v, teamId: '' } }); }); typed('tagA', function(v){ patch({ a: { tag: v } }); });
 typed('nameB', function(v){ var t = findTeam(v); patch({ b: t ? { name: t.name, tag: t.tag, teamId: t.id } : { name: v, teamId: '' } }); }); typed('tagB', function(v){ patch({ b: { tag: v } }); });
 typed('tour', function(v){ patch({ tour: v }); }); typed('stg', function(v){ patch({ stage: v }); });
-typed('cast', function(v){ patch({ cast: v }); }); typed('role', function(v){ patch({ role: v }); });
+typed('cast', function(v){ patch({ cast: v }); }); typed('role', function(v){ patch({ role: v }); }); typed('social', function(v){ patch({ social: v }); });
 typed('label', function(v){ patch({ label: v }); });
 typed('mins', function(v){ send({ type: 'timer', mins: v }); });
 
@@ -571,7 +572,7 @@ function saveSnap(){
     Object.keys(st.bracket.m).forEach(function(id){ m[id] = { a: pickT(st.bracket.m[id].a), b: pickT(st.bracket.m[id].b) }; });
     LS.set('ctlSnap', {
       a: pickT(st.a), b: pickT(st.b), bo: st.bo, map: st.map, tour: st.tour, stage: st.stage, cast: st.cast,
-      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, fmt: st.bracket.fmt, m: m }
+      role: st.role, social: st.social, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, fmt: st.bracket.fmt, m: m }
     });
   }, 800);
 }

@@ -31,7 +31,7 @@ const state = {
   b: { name: 'Iron Crown', tag: 'IC', score: 0 },
   bo: 3, map: 1,
   tour: 'BlackSid Invitational', stage: 'Групповой этап',
-  cast: 'BlackSid_Co', role: 'Комментатор',
+  cast: 'BlackSid_Co', role: 'Комментатор', social: 'twitch.tv/blacksid_co',
   label: 'До начала драфта',
   lt: false, scene: 'game', accent: 'gold',
   bracket: {
@@ -102,6 +102,7 @@ function applyPatch(p) {
   if ('stage' in p) state.stage = str(p.stage, 28);
   if ('cast' in p) state.cast = str(p.cast, 22);
   if ('role' in p) state.role = str(p.role, 26);
+  if ('social' in p) state.social = str(p.social, 36);
   if ('label' in p) state.label = str(p.label, 24);
   if ('lt' in p) state.lt = !!p.lt;
   if ('scene' in p && ['game', 'soon', 'break', 'bracket'].includes(p.scene)) state.scene = p.scene;
@@ -145,7 +146,7 @@ function statePatch() {
   for (const id of MATCH_IDS) m[id] = { a: slotOut(state.bracket.m[id].a), b: slotOut(state.bracket.m[id].b) };
   return {
     a: slotOut(state.a), b: slotOut(state.b), bo: state.bo, map: state.map, tour: state.tour, stage: state.stage,
-    cast: state.cast, role: state.role, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent,
+    cast: state.cast, role: state.role, social: state.social, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent,
     bracket: { title: state.bracket.title, auto: state.bracket.auto, fmt: state.bracket.fmt, m }, timerMins: state.timer.mins
   };
 }

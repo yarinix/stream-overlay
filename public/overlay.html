@@ -77,7 +77,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .lk.vu{transform-origin:0 100%}
 .bscene.on .lk{transform:none; transition:transform .28s ease-out var(--d,.9s)}
 .bscene.on{opacity:1}
-.bt{position:absolute; left:40px; top:44px}
+.bt{position:absolute; left:84px; top:58px}
 .bt h2{margin:0; font-size:76px; font-weight:800; letter-spacing:.16em; text-transform:uppercase}
 .bt p{margin:6px 0 0; font-family:var(--f-serif); font-style:italic; font-size:42px; color:var(--gold); font-weight:600}
 .bh{position:absolute; width:400px; height:44px; display:grid; place-items:center; background:rgba(255,255,255,.05);
@@ -227,6 +227,70 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .live b{width:10px; height:10px; border-radius:50%; background:#ff4157; box-shadow:0 0 10px #ff4157; animation:blink 1.4s infinite}
 @keyframes blink{50%{opacity:.35}}
 .bbg{background:#050a18}
+
+/* ---------- ПРЕМИУМ-проход: материалы, зерно, блики, глубина ---------- */
+:root{--noise:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cut{background:linear-gradient(135deg,#ffffff 0%,#a9ccff 16%,var(--gold) 36%,#0e2c60 54%,var(--gold3) 68%,#eaf1fb 86%,#8da2c4 100%)}
+.cut > .in{background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 2px,transparent 2px 7px),
+    linear-gradient(180deg,#17317a 0%,#0c1b45 48%,#050b1f 100%);
+  box-shadow:inset 0 0 0 1px rgba(190,220,255,.14), inset 0 1px 0 rgba(200,225,255,.45), inset 0 -24px 34px rgba(50,115,235,.16)}
+.cut > .in::before{content:''; position:absolute; inset:0; pointer-events:none; opacity:.95;
+  background:linear-gradient(112deg,rgba(255,255,255,.17) 0%,rgba(255,255,255,.05) 22%,transparent 40%), var(--noise); background-blend-mode:normal; mix-blend-mode:normal}
+.cut > .in::before{background:linear-gradient(112deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.04) 24%,transparent 42%)}
+.sb .cut > .in::after{content:''; position:absolute; top:-10px; bottom:-10px; left:-140px; width:70px; pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.20),transparent); transform:translateX(0) skewX(-22deg); animation:shine 8s ease-in-out infinite; will-change:transform}
+.sb #sA .in::after{animation-delay:.25s}.sb #mC .in::after{animation-delay:.5s}.sb #sB .in::after{animation-delay:.75s}.sb #pB .in::after{animation-delay:1s}
+@keyframes shine{0%,62%{transform:translateX(0) skewX(-22deg)}100%{transform:translateX(560px) skewX(-22deg)}}
+.logo{border:none; background:radial-gradient(circle at 32% 24%,#3a63b8,#0b1530 72%);
+  box-shadow:0 0 0 2px var(--gold),0 0 0 4px #07102a,0 0 0 5px rgba(235,244,255,.75),0 0 18px var(--glow)}
+.bl{border:none; box-shadow:0 0 0 1.5px var(--gold),0 0 0 3px #07102a,0 0 0 4px rgba(235,244,255,.55)}
+.bkl{border:none; box-shadow:0 0 0 2px var(--gold),0 0 0 4px #07102a,0 0 0 5px rgba(235,244,255,.75),0 0 18px var(--glow)}
+.score .in span{font-family:var(--f-head); font-weight:800; font-size:60px;
+  background:linear-gradient(180deg,#ffffff,#d3e5ff 50%,#79aaff); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 12px var(--glow))}
+.score .in{text-shadow:none; background:repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 2px,transparent 2px 7px),linear-gradient(180deg,#1f45a0,#0a1a45)}
+.emb-s{width:42px; height:42px}
+.mid .in{padding-top:12px; background:linear-gradient(180deg,#183a86,#09163a 70%,#050b1f)}
+.tn{font-size:23px; text-shadow:0 2px 10px rgba(0,0,0,.7), 0 0 14px rgba(110,170,255,.25)}
+.cam{box-shadow:inset 0 0 46px rgba(77,163,255,.30), 0 0 0 1px rgba(215,232,255,.65), 0 0 0 5px rgba(4,9,22,.75), 0 0 0 6px var(--gold3), 0 0 34px var(--glow)}
+.plate .in{letter-spacing:.38em}
+.tick{height:64px; background:linear-gradient(180deg,#10234e 0%,#060d22 62%,#040812 100%); border-top:none; box-shadow:0 -10px 34px var(--glow)}
+.tick::before{content:''; position:absolute; left:0; right:0; top:0; height:2px; background:linear-gradient(90deg,transparent,#e8f3ff 18%,var(--gold) 50%,#e8f3ff 82%,transparent); box-shadow:0 0 14px var(--glow)}
+.tick::after{content:''; position:absolute; inset:0; pointer-events:none; background:var(--noise); opacity:.05; mix-blend-mode:overlay}
+.tick .tag{clip-path:polygon(0 0,100% 0,calc(100% - 28px) 100%,0 100%); padding:0 66px 0 40px; background:linear-gradient(135deg,#ffffff,var(--gold2) 20%,var(--gold) 60%,var(--gold3))}
+.tick .sep{width:10px; height:10px; transform:rotate(45deg); background:var(--gold); box-shadow:0 0 10px var(--glow)}
+/* сцены */
+.grain{position:absolute; inset:0; opacity:.13; mix-blend-mode:overlay; background-image:var(--noise); pointer-events:none}
+.vig{position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 100% at 50% 45%,transparent 52%,rgba(0,0,0,.7))}
+.rings{animation:spin 110s linear infinite} .rings2{animation:spin 170s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.emb-w{position:absolute; left:50%; top:46px; width:180px; height:180px; margin-left:-90px}
+.emb-w .emb-l{position:relative; left:auto; top:auto; margin:0; width:180px; height:180px; filter:drop-shadow(0 0 30px var(--glow)) drop-shadow(0 10px 12px rgba(0,0,0,.7))}
+.flare{position:absolute; left:-300px; right:-300px; top:84px; height:3px; background:linear-gradient(90deg,transparent,rgba(200,230,255,.95),transparent); filter:blur(1px); animation:flare 5s ease-in-out infinite; mix-blend-mode:screen}
+@keyframes flare{0%,100%{opacity:.25; transform:scaleX(.55)}50%{opacity:1; transform:scaleX(1)}}
+.bok{position:absolute; border-radius:50%; background:radial-gradient(circle,rgba(150,205,255,.26),rgba(150,205,255,0) 70%); filter:blur(5px); animation:drift var(--t) ease-in-out infinite alternate; will-change:transform}
+@keyframes drift{to{transform:translate(var(--x),-70px)}}
+
+.scene > .soc{position:absolute; left:0; right:0; bottom:74px; margin:auto; width:max-content; display:flex; align-items:center; gap:16px; padding:13px 34px; border:1px solid rgba(160,205,255,.5);
+  background:linear-gradient(180deg,rgba(18,40,92,.78),rgba(5,12,32,.85)); clip-path:var(--cut); font-weight:700; font-size:24px; letter-spacing:.14em; filter:none}
+.soc::before{content:'СЛЕДИТЕ ЗА ТРАНСЛЯЦИЕЙ'; font-size:15px; letter-spacing:.34em; color:var(--gold2); padding-right:16px; border-right:1px solid rgba(160,205,255,.4)}
+.soc b{order:2; width:11px; height:11px; border-radius:50%; background:var(--gold); box-shadow:0 0 12px var(--glow)}
+.soc span{order:3}
+.scene > .soc.x{}
+.bkp{background:repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 2px,transparent 2px 7px),linear-gradient(180deg,#183a86,#070f26); border-width:2px}
+.scene .res{background:linear-gradient(180deg,rgba(24,50,110,.7),rgba(6,14,36,.8)); border:1px solid rgba(160,205,255,.5); clip-path:var(--cut)}
+/* сетка */
+.bfull{position:absolute; inset:0; background:
+   radial-gradient(70% 60% at 45% 55%, rgba(50,110,220,.20), transparent 70%),
+   url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 0 L56 16 V48 L28 64 L0 48 V16 Z M28 64 V97 M0 48 L-28 64 M56 48 L84 64' fill='none' stroke='%236aa8ff' stroke-opacity='.08'/%3E%3C/svg%3E"),
+   linear-gradient(180deg,#071230 0%,#050c20 55%,#03060f 100%);
+  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1466px 24px,1894px 24px,1894px 272px,1466px 272px,1466px 24px)}
+.bgrain{position:absolute; inset:0; opacity:.10; mix-blend-mode:overlay; background-image:var(--noise); pointer-events:none;
+  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1466px 24px,1894px 24px,1894px 272px,1466px 272px,1466px 24px)}
+.bframe{position:absolute; left:0; top:0; pointer-events:none}
+.bh{background:linear-gradient(180deg,rgba(90,150,255,.22),rgba(40,90,200,.06)); border-bottom:none; box-shadow:inset 0 1px 0 rgba(200,225,255,.4)}
+.bh::after{content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold) 15%,var(--gold2) 50%,var(--gold) 85%,transparent); box-shadow:0 0 10px var(--glow)}
+.br.win .bs{background:linear-gradient(180deg,rgba(110,170,255,.55),rgba(60,120,240,.30))}
 </style>
 </head>
 <body>
@@ -234,10 +298,15 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#b9c6dc"/><stop offset="1" stop-color="#5f7396"/></linearGradient>
   <symbol id="crest" viewBox="0 0 100 100">
-    <path d="M50 4 L61 28 L50 96 L39 28 Z" fill="url(#gs)"/>
-    <path d="M37 34 C26 30 14 33 3 14 C6 42 20 58 38 66 Z" fill="url(#gs)" opacity=".92"/>
-    <path d="M63 34 C74 30 86 33 97 14 C94 42 80 58 62 66 Z" fill="url(#gs)" opacity=".92"/>
-    <path d="M40 70 C30 74 20 72 12 66 C20 80 32 86 44 84 Z M60 70 C70 74 80 72 88 66 C80 80 68 86 56 84 Z" fill="url(#gs)" opacity=".75"/>
+    <path d="M50 3 L62 27 L50 97 L38 27 Z" fill="url(#gs)"/>
+    <path d="M50 3 L62 27 L50 97 Z" fill="#fff" opacity=".35"/>
+    <path d="M50 14 L55 30 L50 74 L45 30 Z" fill="#1d4f91" opacity=".55"/>
+    <path d="M36 33 C25 30 13 33 2 12 C5 42 19 59 38 67 Z" fill="url(#gs)"/>
+    <path d="M36 33 C28 38 18 40 6 30 C12 48 24 58 38 64 Z" fill="#fff" opacity=".28"/>
+    <path d="M64 33 C75 30 87 33 98 12 C95 42 81 59 62 67 Z" fill="url(#gs)"/>
+    <path d="M64 33 C72 38 82 40 94 30 C88 48 76 58 62 64 Z" fill="#000" opacity=".18"/>
+    <path d="M40 70 C30 75 19 73 10 66 C18 82 31 88 44 85 Z M60 70 C70 75 81 73 90 66 C82 82 69 88 56 85 Z" fill="url(#gs)" opacity=".85"/>
+    <circle cx="50" cy="44" r="4.5" fill="#cfe9ff"/><circle cx="50" cy="44" r="2" fill="#2b6bd6"/>
   </symbol>
 </defs></svg>
   <div class="sb" id="sb">
@@ -254,46 +323,90 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
   <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
   <div class="bscene" id="bscene">
-    <div class="bbg" style="left:0;top:0;width:1920px;height:24px"></div>
-    <div class="bbg" style="left:0;top:272px;width:1920px;height:808px"></div>
-    <div class="bbg" style="left:0;top:20px;width:1466px;height:256px"></div>
-    <div class="bbg" style="left:1894px;top:20px;width:26px;height:256px"></div>
+    <div class="bfull"></div>
+    <svg class="bframe" viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true"><g fill="none" stroke="#e8f3ff" stroke-linecap="square">
+      <path d="M28 1052 H120 M28 960 V1052 M1800 1052 H1892 V960" stroke-width="3" stroke-opacity=".9"/>
+      <path d="M28 28 V120 M28 28 H120" stroke-width="3" stroke-opacity=".9"/>
+      <path d="M44 976 V1036 H104 M1816 1036 H1876 V976 M44 104 V44 H104" stroke-width="1" stroke-opacity=".55"/>
+      <path d="M28 28 H1466 M28 1052 H1892" stroke-width="1" stroke-opacity=".22"/></g>
+      <path d="M28 20 l8 8 -8 8 -8 -8z M28 1044 l8 8 -8 8 -8 -8z M1892 1044 l8 8 -8 8 -8 -8z" fill="#e8f3ff"/></svg>
+    <div class="bgrain"></div>
     <div class="blinks" id="blinks" aria-hidden="true"></div>
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
   <div class="sart" id="sart" aria-hidden="true">
-    <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" width="1920" height="1080">
+    <svg viewBox="0 0 1920 1080" width="1920" height="1080">
       <defs>
-        <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd0ff" stop-opacity=".30"/><stop offset="1" stop-color="#9fd0ff" stop-opacity="0"/></linearGradient>
-        <linearGradient id="pil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050a1a"/><stop offset=".85" stop-color="#0d2046"/><stop offset="1" stop-color="#3d78d0"/></linearGradient>
-        <linearGradient id="pilr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#050a1a"/><stop offset=".85" stop-color="#0d2046"/><stop offset="1" stop-color="#3d78d0"/></linearGradient>
-        <linearGradient id="gate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe6ff" stop-opacity=".45"/><stop offset=".55" stop-color="#4f95ff" stop-opacity=".35"/><stop offset="1" stop-color="#0a1a3c" stop-opacity="0"/></linearGradient>
-        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c63c0" stop-opacity=".55"/><stop offset="1" stop-color="#050a18" stop-opacity="0"/></linearGradient>
+        <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe0ff" stop-opacity=".34"/><stop offset=".7" stop-color="#7fb4ff" stop-opacity=".07"/><stop offset="1" stop-color="#7fb4ff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="pil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#03060f"/><stop offset=".55" stop-color="#0a1836"/><stop offset=".9" stop-color="#2a5bb3"/><stop offset="1" stop-color="#8fc2ff"/></linearGradient>
+        <linearGradient id="pilr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#03060f"/><stop offset=".55" stop-color="#0a1836"/><stop offset=".9" stop-color="#2a5bb3"/><stop offset="1" stop-color="#8fc2ff"/></linearGradient>
+        <linearGradient id="gate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9ecff" stop-opacity=".55"/><stop offset=".5" stop-color="#5a9bff" stop-opacity=".25"/><stop offset="1" stop-color="#0a1a3c" stop-opacity="0"/></linearGradient>
+        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a74d6" stop-opacity=".65"/><stop offset=".35" stop-color="#16356f" stop-opacity=".45"/><stop offset="1" stop-color="#03060f" stop-opacity="0"/></linearGradient>
+        <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <mask id="mfade"><rect x="0" y="760" width="1920" height="320" fill="url(#fade)"/></mask>
+        <radialGradient id="halo"><stop offset="0" stop-color="#9fd0ff" stop-opacity=".5"/><stop offset="1" stop-color="#9fd0ff" stop-opacity="0"/></radialGradient>
+        <pattern id="flute" width="14" height="10" patternUnits="userSpaceOnUse"><rect width="1.5" height="10" fill="#8fc2ff" opacity=".16"/></pattern>
+        <pattern id="hex" width="56" height="97" patternUnits="userSpaceOnUse" patternTransform="scale(1)"><path d="M28 0 L56 16 V48 L28 64 L0 48 V16 Z M28 64 V97 M0 48 L-28 64 M56 48 L84 64" fill="none" stroke="#6aa8ff" stroke-opacity=".07" stroke-width="1"/></pattern>
+        <filter id="bl20"><feGaussianBlur stdDeviation="16"/></filter>
+        <filter id="bl6"><feGaussianBlur stdDeviation="5"/></filter>
+        <g id="pillars">
+          <rect x="0" y="0" width="190" height="780" fill="url(#pil)"/><rect x="0" y="0" width="190" height="780" fill="url(#flute)"/>
+          <rect x="0" y="716" width="214" height="44" fill="#0c1d42"/><rect x="0" y="716" width="214" height="3" fill="#8fc2ff" opacity=".6"/>
+          <rect x="226" y="70" width="104" height="690" fill="url(#pil)" opacity=".85"/><rect x="226" y="70" width="104" height="690" fill="url(#flute)"/>
+          <rect x="214" y="52" width="128" height="22" fill="#0d2250"/><rect x="214" y="52" width="128" height="2" fill="#8fc2ff" opacity=".7"/>
+          <rect x="372" y="150" width="62" height="610" fill="url(#pil)" opacity=".6"/>
+          <rect x="1730" y="0" width="190" height="780" fill="url(#pilr)"/><rect x="1730" y="0" width="190" height="780" fill="url(#flute)"/>
+          <rect x="1706" y="716" width="214" height="44" fill="#0c1d42"/><rect x="1706" y="716" width="214" height="3" fill="#8fc2ff" opacity=".6"/>
+          <rect x="1590" y="70" width="104" height="690" fill="url(#pilr)" opacity=".85"/><rect x="1590" y="70" width="104" height="690" fill="url(#flute)"/>
+          <rect x="1578" y="52" width="128" height="22" fill="#0d2250"/><rect x="1578" y="52" width="128" height="2" fill="#8fc2ff" opacity=".7"/>
+          <rect x="1486" y="150" width="62" height="610" fill="url(#pilr)" opacity=".6"/>
+        </g>
       </defs>
-      <path d="M760 760 V430 Q760 250 960 250 Q1160 250 1160 430 V760 Z" fill="url(#gate)"/>
-      <path d="M760 760 V430 Q760 250 960 250 Q1160 250 1160 430 V760" fill="none" stroke="#8fc2ff" stroke-opacity=".55" stroke-width="3"/>
-      <path d="M690 760 V420 Q690 200 960 200 Q1230 200 1230 420 V760" fill="none" stroke="#5c9bf0" stroke-opacity=".35" stroke-width="2"/>
-      <polygon points="780,0 1140,0 1500,760 420,760" fill="url(#beam)"/>
-      <polygon points="900,0 1020,0 1180,760 740,760" fill="url(#beam)" opacity=".7"/>
-      <rect x="0" y="0" width="150" height="800" fill="url(#pil)"/>
-      <rect x="190" y="60" width="95" height="720" fill="url(#pil)" opacity=".85"/>
-      <rect x="320" y="150" width="60" height="640" fill="url(#pil)" opacity=".6"/>
-      <rect x="1770" y="0" width="150" height="800" fill="url(#pilr)"/>
-      <rect x="1635" y="60" width="95" height="720" fill="url(#pilr)" opacity=".85"/>
-      <rect x="1540" y="150" width="60" height="640" fill="url(#pilr)" opacity=".6"/>
-      <rect x="0" y="760" width="1920" height="320" fill="url(#floor)"/>
-      <g stroke="#6aa8ff" stroke-opacity=".28" stroke-width="2" fill="none">
-        <path d="M0 780 H1920 M0 830 H1920 M0 900 H1920 M0 990 H1920"/>
-        <path d="M960 760 L-200 1080 M960 760 L100 1080 M960 760 L460 1080 M960 760 L960 1080 M960 760 L1460 1080 M960 760 L1820 1080 M960 760 L2120 1080"/>
+      <rect width="1920" height="1080" fill="url(#hex)"/>
+      <circle cx="960" cy="470" r="520" fill="url(#halo)"/>
+      <path d="M740 770 V440 Q740 236 960 236 Q1180 236 1180 440 V770 Z" fill="url(#gate)"/>
+      <path d="M740 770 V440 Q740 236 960 236 Q1180 236 1180 440 V770" fill="none" stroke="#a9d3ff" stroke-opacity=".7" stroke-width="3"/>
+      <path d="M700 770 V430 Q700 196 960 196 Q1220 196 1220 430 V770" fill="none" stroke="#6aa8ff" stroke-opacity=".4" stroke-width="2"/>
+      <path d="M660 770 V424 Q660 156 960 156 Q1260 156 1260 424 V770" fill="none" stroke="#6aa8ff" stroke-opacity=".2" stroke-width="2"/>
+      <g class="sway" filter="url(#bl20)">
+        <polygon points="800,-40 1120,-40 1560,780 360,780" fill="url(#beam)"/>
+        <polygon points="450,-40 560,-40 900,780 330,780" fill="url(#beam)" opacity=".5"/>
+        <polygon points="1360,-40 1470,-40 1590,780 1020,780" fill="url(#beam)" opacity=".5"/>
       </g>
-      <rect x="0" y="758" width="1920" height="4" fill="#8fc2ff" opacity=".6"/>
+      <g class="rings" style="transform-origin:960px 470px">
+        <circle cx="960" cy="470" r="360" fill="none" stroke="#9fd0ff" stroke-opacity=".30" stroke-width="2" stroke-dasharray="2 14"/>
+        <circle cx="960" cy="470" r="388" fill="none" stroke="#9fd0ff" stroke-opacity=".5" stroke-width="1"/>
+      </g>
+      <g class="rings2" style="transform-origin:960px 470px">
+        <circle cx="960" cy="470" r="420" fill="none" stroke="#6aa8ff" stroke-opacity=".34" stroke-width="6" stroke-dasharray="90 40 6 40"/>
+        <circle cx="960" cy="470" r="446" fill="none" stroke="#6aa8ff" stroke-opacity=".2" stroke-width="1"/>
+      </g>
+      <use href="#pillars"/>
+      <use href="#pillars" transform="translate(0,1520) scale(1,-1)" mask="url(#mfade)" opacity=".7"/>
+      <rect x="0" y="760" width="1920" height="320" fill="url(#floor)"/>
+      <g stroke="#7ab4ff" stroke-opacity=".30" stroke-width="2" fill="none">
+        <path d="M0 782 H1920 M0 836 H1920 M0 910 H1920 M0 1004 H1920"/>
+        <path d="M960 760 L-300 1080 M960 760 L60 1080 M960 760 L440 1080 M960 760 L960 1080 M960 760 L1480 1080 M960 760 L1860 1080 M960 760 L2220 1080"/>
+      </g>
+      <ellipse cx="960" cy="764" rx="520" ry="26" fill="#9fd0ff" opacity=".35" filter="url(#bl6)"/>
+      <rect x="0" y="758" width="1920" height="3" fill="#cfe6ff" opacity=".8"/>
+      <rect x="28" y="28" width="1864" height="1024" fill="none" stroke="#9fd0ff" stroke-opacity=".28" stroke-width="1"/>
+      <g fill="none" stroke="#e8f3ff" stroke-linecap="square">
+        <path d="M28 120 V28 H120 M1800 28 H1892 V120 M28 960 V1052 H120 M1800 1052 H1892 V960" stroke-width="3" stroke-opacity=".9"/>
+        <path d="M44 104 V44 H104 M1816 44 H1876 V104 M44 976 V1036 H104 M1816 1036 H1876 V976" stroke-width="1" stroke-opacity=".55"/>
+      </g>
+      <g fill="#e8f3ff"><path d="M28 20 l8 8 -8 8 -8 -8z M1892 20 l8 8 -8 8 -8 -8z M28 1044 l8 8 -8 8 -8 -8z M1892 1044 l8 8 -8 8 -8 -8z"/></g>
+      <path d="M760 28 H1160 L1130 44 H790 Z" fill="#8fc2ff" fill-opacity=".55"/><path d="M760 1052 H1160 L1130 1036 H790 Z" fill="#8fc2ff" fill-opacity=".35"/>
     </svg>
+    <i class="bok" style="left:8%;top:62%;width:120px;height:120px;--t:16s;--x:40px"></i><i class="bok" style="left:78%;top:20%;width:90px;height:90px;--t:19s;--x:-36px"></i>
+    <i class="bok" style="left:62%;top:70%;width:160px;height:160px;--t:22s;--x:30px"></i><i class="bok" style="left:20%;top:18%;width:70px;height:70px;--t:14s;--x:-28px"></i>
     <i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
-    <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i>
-    <svg class="emb-l" viewBox="0 0 100 100"><use href="#crest"/></svg>
+    <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
+    <div class="emb-w"><svg class="emb-l" viewBox="0 0 100 100"><use href="#crest"/></svg><i class="flare"></i></div>
+    <div class="grain"></div><div class="vig"></div>
   </div>
-  <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div></div>
+  <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>
   <div class="sweep" id="sweep"></div>
 </div>
 <script>
@@ -350,6 +463,7 @@ function render(){
   var sceneOn = st.scene === 'soon' || st.scene === 'break';
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
   $('scene').classList.toggle('isbreak', st.scene === 'break');
+  $('socT').textContent = st.social || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
   renderBracket();

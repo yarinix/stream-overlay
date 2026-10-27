@@ -102,7 +102,7 @@
    "lbs": {
     "a": {
      "name": "Team Vamos",
-     "score": 0,
+     "score": 2,
      "teamId": "910b8fc1de"
     },
     "b": {
@@ -113,9 +113,9 @@
    },
    "lbf": {
     "a": {
-     "name": "",
+     "name": "Team Vamos",
      "score": 0,
-     "teamId": ""
+     "teamId": "910b8fc1de"
     },
     "b": {
      "name": "Team Rey",

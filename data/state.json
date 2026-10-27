@@ -27,8 +27,8 @@
   "fmt": {
    "pi": 5,
    "ubs": 5,
-   "ubf": 5,
-   "lbs": 7,
+   "ubf": 7,
+   "lbs": 5,
    "lbf": 7,
    "gf": 7
   },
@@ -95,9 +95,9 @@
    },
    "gf": {
     "a": {
-     "name": "Selangor Red Giants",
+     "name": "",
      "score": 0,
-     "teamId": "57cb1a6239"
+     "teamId": ""
     },
     "b": {
      "name": "",
@@ -124,9 +124,9 @@
      "teamId": ""
     },
     "b": {
-     "name": "Team Rey",
+     "name": "",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     }
    }
   }

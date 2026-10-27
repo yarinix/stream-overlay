@@ -30,7 +30,7 @@
    "pi1": {
     "a": {
      "name": "Team Vamos",
-     "score": 0,
+     "score": 2,
      "teamId": "910b8fc1de"
     },
     "b": {
@@ -58,9 +58,9 @@
      "teamId": "57cb1a6239"
     },
     "b": {
-     "name": "",
+     "name": "Team Vamos",
      "score": 0,
-     "teamId": ""
+     "teamId": "910b8fc1de"
     }
    },
    "ubs2": {

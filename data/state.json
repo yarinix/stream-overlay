@@ -35,69 +35,69 @@
   "m": {
    "pi1": {
     "a": {
-     "name": "Team Vamos",
-     "score": 3,
-     "teamId": "910b8fc1de"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Team Flash",
+     "name": "",
      "score": 0,
-     "teamId": "1aceb5ac1a"
+     "teamId": ""
     }
    },
    "pi2": {
     "a": {
-     "name": "Invictus Gaming",
+     "name": "",
      "score": 0,
-     "teamId": "180e21de90"
+     "teamId": ""
     },
     "b": {
-     "name": "Bigetron MY by Vitality",
-     "score": 3,
-     "teamId": "c6fb972c8b"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     }
    },
    "ubs1": {
     "a": {
-     "name": "Selangor Red Giants",
-     "score": 3,
-     "teamId": "57cb1a6239"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Team Vamos",
+     "name": "",
      "score": 0,
-     "teamId": "910b8fc1de"
+     "teamId": ""
     }
    },
    "ubs2": {
     "a": {
-     "name": "Team Rey",
-     "score": 3,
-     "teamId": "00dc9c87bd"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Bigetron MY by Vitality",
+     "name": "",
      "score": 0,
-     "teamId": "c6fb972c8b"
+     "teamId": ""
     }
    },
    "ubf": {
     "a": {
-     "name": "Selangor Red Giants",
-     "score": 5,
-     "teamId": "57cb1a6239"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Team Rey",
+     "name": "",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     }
    },
    "gf": {
     "a": {
-     "name": "Selangor Red Giants",
+     "name": "",
      "score": 0,
-     "teamId": "57cb1a6239"
+     "teamId": ""
     },
     "b": {
      "name": "",
@@ -107,14 +107,14 @@
    },
    "lbs": {
     "a": {
-     "name": "Team Vamos",
+     "name": "",
      "score": 0,
-     "teamId": "910b8fc1de"
+     "teamId": ""
     },
     "b": {
-     "name": "Bigetron MY by Vitality",
+     "name": "",
      "score": 0,
-     "teamId": "c6fb972c8b"
+     "teamId": ""
     }
    },
    "lbf": {
@@ -124,9 +124,9 @@
      "teamId": ""
     },
     "b": {
-     "name": "Team Rey",
+     "name": "",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     }
    }
   }

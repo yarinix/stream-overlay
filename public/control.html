@@ -63,6 +63,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .tile .btn{min-height:34px; padding:4px 10px; font-size:.78rem}
 .bhead{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end}
 .bhead .f{flex:1 1 220px}
+.fmtrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:12px}
 .bgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:10px}
 .mini{background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:8px; min-width:0}
 .mini h4{margin:0; font-size:.68rem; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; font-weight:700}
@@ -155,11 +156,10 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       </div>
       <div class="bhead">
         <label class="chk"><input type="checkbox" id="bAuto"><span>Авто-переход победителей</span></label>
-        <div class="f"><label for="bWin">Матч до побед</label><select id="bWin"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
-        <div class="f"><label for="bWinGf">Гранд-финал до побед</label><select id="bWinGf"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
       </div>
+      <div class="fmtrow" id="fmtRow"></div>
       <div class="bgrid" id="bgrid"></div>
-      <p class="hint">Когда у команды набрано нужное число побед, она сама встаёт в следующий матч (проигравшие верхней сетки уходят в нижнюю). Если счёт поправить, переход откатывается. Названия и счёт меняются сразу, пока сетка на экране.</p>
+      <p class="hint">Формат (BO) задаётся для каждой стадии отдельно. Когда у команды набрано нужное число побед, она сама встаёт в следующий матч (проигравшие верхней сетки уходят в нижнюю). Если счёт поправить, переход откатывается. Названия и счёт меняются сразу, пока сетка на экране.</p>
     </section>
 
     <section class="card wide">
@@ -256,6 +256,19 @@ var MATCHES = [
   ['pi1','Плей-ин · 1'], ['pi2','Плей-ин · 2'], ['ubs1','Верхняя сетка · полуфинал 1'], ['ubs2','Верхняя сетка · полуфинал 2'],
   ['ubf','Верхняя сетка · финал'], ['lbs','Нижняя сетка · полуфинал'], ['lbf','Нижняя сетка · финал'], ['gf','Гранд-финал']
 ];
+var FMTS = [['pi','Плей-ин'],['ubs','Верх · полуфинал'],['ubf','Верх · финал'],['lbs','Низ · полуфинал'],['lbf','Низ · финал'],['gf','Гранд-финал']];
+(function buildFmt(){
+  var h = '';
+  FMTS.forEach(function(f){
+    h += '<div class="f"><label for="fmt_' + f[0] + '">' + f[1] + '</label><select id="fmt_' + f[0] + '" data-k="' + f[0] + '">' +
+      [1,3,5,7,9].map(function(n){ return '<option value="' + n + '">BO' + n + '</option>'; }).join('') + '</select></div>';
+  });
+  $('fmtRow').innerHTML = h;
+  $('fmtRow').addEventListener('change', function(e){
+    var k = e.target.dataset.k; if (!k) return;
+    var f = {}; f[k] = +e.target.value; patch({ bracket: { fmt: f } });
+  });
+})();
 (function buildBracketUi(){
   var host = $('bgrid');
   MATCHES.forEach(function(m){
@@ -298,7 +311,7 @@ function sync(){
   renderTeams();
   if (st.bracket){
     setVal('bTitle', st.bracket.title);
-    $('bAuto').checked = !!st.bracket.auto; setVal('bWin', st.bracket.win); setVal('bWinGf', st.bracket.winGf);
+    $('bAuto').checked = !!st.bracket.auto; FMTS.forEach(function(f){ setVal('fmt_' + f[0], st.bracket.fmt[f[0]]); });
     MATCHES.forEach(function(m){
       ['a','b'].forEach(function(s){
         var t = st.bracket.m[m[0]][s];
@@ -345,8 +358,6 @@ document.querySelectorAll('#sw button').forEach(function(b){
 
 typed('bTitle', function(v){ patch({ bracket: { title: v } }); });
 $('bAuto').onchange = function(){ patch({ bracket: { auto: $('bAuto').checked } }); };
-$('bWin').onchange = function(){ patch({ bracket: { win: +$('bWin').value } }); };
-$('bWinGf').onchange = function(){ patch({ bracket: { winGf: +$('bWinGf').value } }); };
 $('bShow').onclick = function(){ patch({ scene: 'bracket' }); };
 $('bReset').onclick = function(){
   var b = $('bReset');
@@ -523,7 +534,7 @@ function saveSnap(){
     Object.keys(st.bracket.m).forEach(function(id){ m[id] = { a: pickT(st.bracket.m[id].a), b: pickT(st.bracket.m[id].b) }; });
     LS.set('ctlSnap', {
       a: pickT(st.a), b: pickT(st.b), bo: st.bo, map: st.map, tour: st.tour, stage: st.stage, cast: st.cast,
-      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, win: st.bracket.win, winGf: st.bracket.winGf, m: m }
+      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, fmt: st.bracket.fmt, m: m }
     });
   }, 800);
 }

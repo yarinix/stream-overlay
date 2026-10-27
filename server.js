@@ -35,7 +35,7 @@ const state = {
   label: 'До начала драфта',
   lt: false, scene: 'game', accent: 'gold',
   bracket: {
-    title: 'Плей-офф', auto: true, win: 2, winGf: 4,
+    title: 'Плей-офф', auto: true, fmt: { pi: 3, ubs: 3, ubf: 5, lbs: 3, lbf: 5, gf: 7 },
     m: {
       pi1:  { a: { name: 'Storm Riders', score: 3 }, b: { name: 'Silver Tide', score: 2 } },
       pi2:  { a: { name: 'Night Owls', score: 3 },   b: { name: 'Polar Echo', score: 1 } },
@@ -60,10 +60,12 @@ const DEST = {
   ubs1: { w: ['ubf', 'a'], l: ['lbs', 'a'] }, ubs2: { w: ['ubf', 'b'], l: ['lbs', 'b'] },
   lbs: { w: ['lbf', 'a'] }, ubf: { w: ['gf', 'a'], l: ['lbf', 'b'] }, lbf: { w: ['gf', 'b'] }
 };
+const STAGE = { pi1: 'pi', pi2: 'pi', ubs1: 'ubs', ubs2: 'ubs', ubf: 'ubf', lbs: 'lbs', lbf: 'lbf', gf: 'gf' };
+const STAGE_KEYS = ['pi', 'ubs', 'ubf', 'lbs', 'lbf', 'gf'];
 const same = (x, y) => (x.teamId && x.teamId === y.teamId) || (x.name && x.name.trim().toLowerCase() === y.name.trim().toLowerCase());
 function propagate(id, depth = 0) {
   const d = DEST[id]; if (!d || depth > 8) return;
-  const br = state.bracket, m = br.m[id], need = id === 'gf' ? br.winGf : br.win;
+  const br = state.bracket, m = br.m[id], need = Math.ceil(br.fmt[STAGE[id]] / 2);
   let w = null;
   if (m.a.score !== m.b.score) {
     const hi = m.a.score > m.b.score ? 'a' : 'b';
@@ -109,8 +111,9 @@ function applyPatch(p) {
     if ('title' in b) state.bracket.title = str(b.title, 24);
     let reflow = false;
     if ('auto' in b) { state.bracket.auto = !!b.auto; reflow = true; }
-    if ('win' in b) { state.bracket.win = int(b.win, 1, 5) || 1; reflow = true; }
-    if ('winGf' in b) { state.bracket.winGf = int(b.winGf, 1, 5) || 1; reflow = true; }
+    if (b.fmt && typeof b.fmt === 'object') {
+      for (const k of STAGE_KEYS) if (k in b.fmt && [1, 3, 5, 7, 9].includes(+b.fmt[k])) { state.bracket.fmt[k] = +b.fmt[k]; reflow = true; }
+    }
     const touched = new Set();
     if (b.reset) {
       for (const id of MATCH_IDS) state.bracket.m[id] = { a: { name: '', score: 0, teamId: '' }, b: { name: '', score: 0, teamId: '' } };
@@ -143,7 +146,7 @@ function statePatch() {
   return {
     a: slotOut(state.a), b: slotOut(state.b), bo: state.bo, map: state.map, tour: state.tour, stage: state.stage,
     cast: state.cast, role: state.role, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent,
-    bracket: { title: state.bracket.title, auto: state.bracket.auto, win: state.bracket.win, winGf: state.bracket.winGf, m }, timerMins: state.timer.mins
+    bracket: { title: state.bracket.title, auto: state.bracket.auto, fmt: state.bracket.fmt, m }, timerMins: state.timer.mins
   };
 }
 let saveTimer = null, libTimer = null;

@@ -110,6 +110,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .scene.on > :nth-child(4){transition-delay:.5s}
 .scene.on > :nth-child(5){transition-delay:.65s}
 
+.bh{position:absolute; box-sizing:border-box; padding:0 84px 0 14px; font-size:15px; letter-spacing:.1em; text-align:center} .bh span{white-space:nowrap} .bh em{position:absolute; right:12px; top:50%; transform:translateY(-50%); font-style:normal; font-size:15px; font-weight:800; letter-spacing:.08em; padding:3px 8px; border:1px solid var(--gold); color:var(--gold); background:rgba(0,0,0,.35)}
 .bscene .bh, .bscene .bm{opacity:0; transform:translateY(22px); transition:opacity .3s, transform .3s}
 .bscene.on .bh, .bscene.on .bm{opacity:1; transform:none;
   transition:opacity .55s ease var(--d,0s), transform .75s cubic-bezier(.2,.9,.2,1) var(--d,0s)}
@@ -259,8 +260,8 @@ var BR = {
   ubf:{x:1000,y:438}, gf:{x:1480,y:601}, lbs:{x:520,y:764}, lbf:{x:1000,y:764}
 };
 var HEADS = [
-  ['Плей-ин',40,290], ['Верхняя сетка · полуфинал',520,290], ['Верхняя сетка · финал',1000,290], ['Гранд-финал',1480,290],
-  ['Нижняя сетка · полуфинал',520,700], ['Нижняя сетка · финал',1000,700]
+  ['Плей-ин',40,290,'pi'], ['Верхняя сетка · полуфинал',520,290,'ubs'], ['Верхняя сетка · финал',1000,290,'ubf'], ['Гранд-финал',1480,290,'gf'],
+  ['Нижняя сетка · полуфинал',520,700,'lbs'], ['Нижняя сетка · финал',1000,700,'lbf']
 ];
 var LINKS = [['pi1','ubs1'],['pi2','ubs2'],['ubs1','ubf'],['ubs2','ubf'],['ubf','gf'],['lbf','gf'],['lbs','lbf']];
 var bEls = {};
@@ -268,7 +269,7 @@ function buildBracket(){
   var host = $('bscene'), html = '', i;
   function colOf(x){ return Math.round((x - 40) / 480); }
   HEADS.forEach(function(h){
-    html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px;--d:' + (0.2 + colOf(h[1]) * 0.12).toFixed(2) + 's">' + h[0] + '</div>';
+    html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px;--d:' + (0.2 + colOf(h[1]) * 0.12).toFixed(2) + 's"><span>' + h[0] + '</span><em id="bf_' + h[3] + '"></em></div>';
   });
   Object.keys(BR).forEach(function(id){
     var p = BR[id];
@@ -306,6 +307,7 @@ function renderBracket(){
   var b = st.bracket; if (!b) return;
   $('bTitle').textContent = b.title || ' ';
   $('bTour').textContent = st.tour;
+  if (b.fmt) Object.keys(b.fmt).forEach(function(k){ var e = $('bf_' + k); if (e) e.textContent = 'BO' + b.fmt[k]; });
   Object.keys(BR).forEach(function(id){
     var m = b.m[id], A = m.a, B = m.b;
     [['a', A, B], ['b', B, A]].forEach(function(x){

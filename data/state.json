@@ -21,7 +21,7 @@
  "endText": "Увидимся на следующей трансляции",
  "label": "До начала драфта",
  "lt": false,
- "scene": "soon",
+ "scene": "game",
  "accent": "rose",
  "preset": "shards",
  "bracket": {

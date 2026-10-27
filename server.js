@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
+const createStorage = require('./storage');
 
 const PORT = process.env.PORT || 3000;
 let KEY = process.env.CONTROL_KEY;
@@ -16,6 +17,11 @@ let dirty = false;                     // false, пока никто не мен
 const teams = new Map();               // библиотека команд: id -> { id, name, tag, v, mime, buf }
 const TEAM_ID = /^[a-z0-9]{6,16}$/;
 const LOGO_RE = /^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/;
+const storage = createStorage({
+  token: process.env.GITHUB_TOKEN,
+  repo: process.env.GITHUB_REPO || process.env.RENDER_GIT_REPO_SLUG || 'yarinix/stream-overlay',
+  branch: process.env.GITHUB_DATA_BRANCH || 'data'
+});
 const hash = (s) => crypto.createHash('sha256').update(String(s)).digest();
 const keyOk = (s) => crypto.timingSafeEqual(hash(s), hash(KEY));
 
@@ -44,6 +50,7 @@ const state = {
   timer: { mins: 5, rem: 300, run: false, endAt: 0 }
 };
 
+const EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
 const MATCH_IDS = ['pi1', 'pi2', 'ubs1', 'ubs2', 'ubf', 'gf', 'lbs', 'lbf'];
 for (const t of [state.a, state.b]) t.teamId = '';
 for (const id of Object.keys(state.bracket.m)) for (const sd of ['a', 'b']) state.bracket.m[id][sd].teamId = '';
@@ -94,6 +101,28 @@ function applyPatch(p) {
   if ('swap' in p && p.swap) { const x = state.a; state.a = state.b; state.b = x; }
 }
 
+const slotOut = (t) => ({ name: t.name, tag: t.tag, score: t.score, teamId: t.teamId });
+function statePatch() {
+  const m = {};
+  for (const id of MATCH_IDS) m[id] = { a: slotOut(state.bracket.m[id].a), b: slotOut(state.bracket.m[id].b) };
+  return {
+    a: slotOut(state.a), b: slotOut(state.b), bo: state.bo, map: state.map, tour: state.tour, stage: state.stage,
+    cast: state.cast, role: state.role, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent,
+    bracket: { title: state.bracket.title, m }, timerMins: state.timer.mins
+  };
+}
+let saveTimer = null, libTimer = null;
+function scheduleSave() {
+  if (!storage.enabled) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => storage.saveState(statePatch()), 4000);
+}
+function scheduleLibrary() {
+  if (!storage.enabled) return;
+  clearTimeout(libTimer);
+  libTimer = setTimeout(() => storage.saveLibrary([...teams.values()]), 1500);
+}
+
 function applyTimer(action, mins) {
   const t = state.timer, now = Date.now();
   if (mins !== undefined) {
@@ -139,8 +168,8 @@ app.put('/api/team', authHttp, (req, res) => {
   let id = typeof b.id === 'string' && TEAM_ID.test(b.id) ? b.id : newId();
   const isNew = !teams.has(id);
   if (isNew && teams.size >= 80) return res.status(400).json({ error: 'too many teams' });
-  const t = teams.get(id) || { id, name: '', tag: '', v: '', mime: '', buf: null };
-  let logo = null;
+  const t = teams.get(id) || { id, name: '', tag: '', v: '', mime: '', ext: '', buf: null };
+  let logo = null, oldExt = t.ext;
   if (typeof b.logo === 'string') {
     const m = LOGO_RE.exec(b.logo);
     if (!m) return res.status(400).json({ error: 'bad logo' });
@@ -152,9 +181,14 @@ app.put('/api/team', authHttp, (req, res) => {
   if (!name.trim()) return res.status(400).json({ error: 'name required' });
   t.name = name;
   if ('tag' in b) t.tag = str(b.tag, 3);
-  if (b.clearLogo) { t.buf = null; t.mime = ''; t.v = Date.now().toString(36); }
-  if (logo) { t.buf = logo.buf; t.mime = logo.mime; t.v = Date.now().toString(36); }
+  if (b.clearLogo) { t.buf = null; t.mime = ''; t.ext = ''; t.v = Date.now().toString(36); storage.deleteLogo(id, oldExt); }
+  if (logo) {
+    t.buf = logo.buf; t.mime = logo.mime; t.ext = EXT[logo.mime]; t.v = Date.now().toString(36);
+    if (oldExt && oldExt !== t.ext) storage.deleteLogo(id, oldExt);
+    storage.saveLogo(t);
+  }
   teams.set(id, t);
+  scheduleLibrary();
   eachSlot((slot) => { if (slot.teamId === id) { slot.name = t.name; if ('tag' in slot) slot.tag = t.tag; } });
   dirty = true; broadcast();
   res.json({ ok: true, team: teamMeta(t) });
@@ -162,7 +196,10 @@ app.put('/api/team', authHttp, (req, res) => {
 
 app.delete('/api/team/:id', authHttp, (req, res) => {
   const id = req.params.id;
+  const gone = teams.get(id);
   if (!teams.delete(id)) return res.status(404).json({ error: 'not found' });
+  if (gone) storage.deleteLogo(id, gone.ext);
+  scheduleLibrary();
   eachSlot((slot) => { if (slot.teamId === id) slot.teamId = ''; });
   dirty = true; broadcast();
   res.json({ ok: true });
@@ -192,10 +229,11 @@ function snapshot() {
   return JSON.stringify({
     type: 'state',
     state: Object.assign({}, state, { teams: [...teams.values()].map(teamMeta) }),
-    now: Date.now(), boot: BOOT, fresh: !dirty
+    now: Date.now(), boot: BOOT, fresh: !dirty, store: storage.info()
   });
 }
 function broadcast() {
+  scheduleSave();
   const msg = snapshot();
   for (const c of wss.clients) if (c.readyState === 1) c.send(msg);
 }
@@ -235,4 +273,50 @@ setInterval(() => {
   }
 }, 25000);
 
-server.listen(PORT, () => console.log('Оверлей запущен на порту ' + PORT));
+/* ---------- загрузка сохранённых данных и запуск ---------- */
+function applyLoaded(data, force) {
+  for (const t of data.teams) if (force || !teams.has(t.id)) teams.set(t.id, t);
+  if (data.state && (force || !dirty)) {
+    applyPatch(data.state);
+    if (data.state.timerMins) applyTimer(undefined, data.state.timerMins);
+  }
+  if (data.teams.length || data.state) dirty = true;
+}
+function withTimeout(p, ms) {
+  return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('таймаут')), ms))]);
+}
+async function start() {
+  if (storage.enabled) {
+    try {
+      applyLoaded(await withTimeout(storage.load(), 25000), true);
+      console.log('Данные загружены из GitHub: команд ' + teams.size);
+    } catch (e) {
+      // не затираем сохранённое значениями по умолчанию, пока не получилось прочитать
+      console.warn('Не удалось загрузить данные из GitHub: ' + e.message);
+      storage.setWriteOK(false);
+      const retry = setInterval(async () => {
+        try {
+          applyLoaded(await withTimeout(storage.load(), 25000), false);
+          storage.setWriteOK(true); clearInterval(retry); broadcast();
+          console.log('Данные из GitHub загружены со второй попытки');
+        } catch (_) { /* повторим */ }
+      }, 30000);
+    }
+  } else {
+    console.warn('GITHUB_TOKEN не задан: данные хранятся только в памяти сервера.');
+  }
+  server.listen(PORT, () => console.log('Оверлей запущен на порту ' + PORT));
+}
+start();
+
+process.on('SIGTERM', async () => {
+  try {
+    clearTimeout(saveTimer); clearTimeout(libTimer);
+    if (storage.enabled) {
+      await storage.saveState(statePatch());
+      await storage.saveLibrary([...teams.values()]);
+      await storage.idle();
+    }
+  } catch (_) { /* уже завершаемся */ }
+  process.exit(0);
+});

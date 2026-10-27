@@ -170,8 +170,9 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <button class="btn" id="tfNew" type="button" hidden>Отмена</button>
       </div>
       <p class="tmsg" id="tfMsg" role="status"></p>
+      <p class="hint" id="storeMsg"></p>
       <div class="tgrid" id="tList"></div>
-      <p class="hint">Значок подставляется, когда название в табло или сетке совпадает с названием команды из этого списка: начните вводить, и пульт предложит варианты. Лучше PNG с прозрачным фоном. Список запоминается на сервере и в этом браузере.</p>
+      <p class="hint">Значок подставляется, когда в табло или сетке введено название команды из списка или её сокращение (например, NW): начните вводить, и пульт предложит варианты. Лучше PNG с прозрачным фоном.</p>
     </section>
 
     <section class="card">
@@ -219,6 +220,7 @@ function connect(){
           restoreFromLocal().then(function(){ restoring = false; });
         } else { LS.set('ctlBoot', m.boot); }
       }
+      showStore(m.store);
       sync();
       if (!restoring) saveSnap();
     }
@@ -356,7 +358,9 @@ var editId = null, newLogo = null, clearLogo = false, teamSig = '', caching = fa
 function findTeam(v){
   var n = String(v || '').trim().toLowerCase();
   if (!n || !st || !st.teams) return null;
-  for (var i = 0; i < st.teams.length; i++) if (st.teams[i].name.toLowerCase() === n) return st.teams[i];
+  var i;
+  for (i = 0; i < st.teams.length; i++) if (st.teams[i].name.toLowerCase() === n) return st.teams[i];
+  for (i = 0; i < st.teams.length; i++) if (st.teams[i].tag && st.teams[i].tag.toLowerCase() === n) return st.teams[i];
   return null;
 }
 function bindSlot(v){ var t = findTeam(v); return t ? { name: t.name, teamId: t.id } : { name: v, teamId: '' }; }
@@ -399,7 +403,10 @@ function renderTeams(){
   if (sig === teamSig) return;
   teamSig = sig;
   var dl = $('teamNames'); dl.innerHTML = '';
-  st.teams.forEach(function(t){ var o = document.createElement('option'); o.value = t.name; dl.appendChild(o); });
+  st.teams.forEach(function(t){
+    var o = document.createElement('option'); o.value = t.name; if (t.tag) o.label = t.tag; dl.appendChild(o);
+    if (t.tag){ var o2 = document.createElement('option'); o2.value = t.tag; o2.label = t.name; dl.appendChild(o2); }
+  });
   var host = $('tList'); host.innerHTML = '';
   if (!st.teams.length){ host.innerHTML = '<p class="hint">Пока нет команд. Добавьте первую выше.</p>'; }
   st.teams.forEach(function(t){
@@ -520,6 +527,24 @@ function restoreFromLocal(){
     });
   });
   return chain.then(function(){ var snap = LS.get('ctlSnap', null); if (snap) patch(snap); });
+}
+
+document.addEventListener('focusout', function(e){
+  if (e.target && e.target.getAttribute && e.target.getAttribute('list') === 'teamNames') setTimeout(sync, 600);
+});
+
+function fmtTime(ts){ var d = new Date(ts); return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes(); }
+function showStore(info){
+  var el = $('storeMsg'); if (!el || !info) return;
+  if (info.mode !== 'github'){
+    el.textContent = 'Хранение: только память сервера. После перезапуска данные вернутся из этого браузера. Чтобы хранить их надёжно, подключите GitHub-токен (инструкция в чате).';
+  } else if (!info.writes){
+    el.textContent = 'Хранение: GitHub недоступен, сохранение приостановлено, пока не удастся прочитать сохранённые данные.';
+  } else if (!info.ok){
+    el.textContent = 'Хранение: ошибка записи на GitHub (' + info.error + '). Данные пока в памяти сервера.';
+  } else {
+    el.textContent = 'Хранение: GitHub' + (info.saved ? ', последнее сохранение в ' + fmtTime(info.saved) : ', изменений пока не было') + '.';
+  }
 }
 
 $('url').textContent = location.origin + '/overlay';

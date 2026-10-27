@@ -90,7 +90,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   background:radial-gradient(circle at 30% 25%,#2b3340,#0e1117); border:1.5px solid var(--gold3);
   font-size:13px; font-weight:800; letter-spacing:.04em; color:var(--gold2); font-style:normal}
 .bl img{width:82%; height:82%; object-fit:contain; display:block}
-.bl.none{visibility:hidden}
+.bl.tbd{opacity:.4}
 .bn{flex:1; font-size:26px; font-weight:600; letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
 .bn.empty{color:rgba(255,255,255,.3)}
 .bs{width:72px; align-self:stretch; display:grid; place-items:center; font-weight:800; font-size:34px; font-variant-numeric:tabular-nums; background:rgba(255,255,255,.05)}
@@ -192,8 +192,8 @@ function render(){
   var a = ACC[st.accent] || ACC.gold, s = document.documentElement.style;
   s.setProperty('--gold', a.g); s.setProperty('--gold2', a.g2); s.setProperty('--gold3', a.g3);
   TM = {}; (st.teams || []).forEach(function(t){ TM[t.id] = t; });
-  $('tnA').textContent = st.a.name || ' '; setLogo($('lgA'), st.a.teamId ? TM[st.a.teamId] : null, (st.a.tag || '').toUpperCase());
-  $('tnB').textContent = st.b.name || ' '; setLogo($('lgB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());
+  $('tnA').textContent = st.a.name || 'TBD'; setLogo($('lgA'), st.a.teamId ? TM[st.a.teamId] : null, (st.a.tag || '').toUpperCase());
+  $('tnB').textContent = st.b.name || 'TBD'; setLogo($('lgB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());
   $('scA').textContent = st.a.score; $('scB').textContent = st.b.score;
   if (prevA !== null && st.a.score !== prevA) bump($('scA'));
   if (prevB !== null && st.b.score !== prevB) bump($('scB'));
@@ -212,7 +212,7 @@ function render(){
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
   renderBracket();
   if (st.scene === 'soon'){ $('scTitle').textContent = 'Скоро начнём'; $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
-  if (st.scene === 'break'){ $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = st.a.name + '  ' + st.a.score + ' : ' + st.b.score + '  ' + st.b.name; $('scRes').textContent = 'Карта ' + st.map + ' · ' + st.stage; }
+  if (st.scene === 'break'){ $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = (st.a.name || 'TBD') + '  ' + st.a.score + ' : ' + st.b.score + '  ' + (st.b.name || 'TBD'); $('scRes').textContent = 'Карта ' + st.map + ' · ' + st.stage; }
   drawTimer();
 }
 setInterval(drawTimer, 200);
@@ -295,12 +295,12 @@ function renderBracket(){
     var m = b.m[id], A = m.a, B = m.b;
     [['a', A, B], ['b', B, A]].forEach(function(x){
       var e = bEls[id + x[0]], me = x[1], other = x[2];
-      e.n.textContent = me.name || '—';
+      e.n.textContent = me.name || 'TBD';
       e.n.classList.toggle('empty', !me.name);
       var tm = me.teamId ? TM[me.teamId] : null;
-      e.l.classList.toggle('none', !me.name);
-      setLogo(e.l, tm, tm ? tm.tag.toUpperCase() : initials(me.name));
-      e.sc.textContent = me.score;
+      e.l.classList.toggle('tbd', !me.name);
+      setLogo(e.l, tm, me.name ? (tm ? tm.tag.toUpperCase() : initials(me.name)) : '?');
+      e.sc.textContent = (me.name || me.score) ? me.score : '';
       e.row.classList.toggle('win', me.score > other.score);
       e.row.classList.toggle('lose', me.score < other.score);
     });

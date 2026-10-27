@@ -291,6 +291,12 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .bh{background:linear-gradient(180deg,rgba(90,150,255,.22),rgba(40,90,200,.06)); border-bottom:none; box-shadow:inset 0 1px 0 rgba(200,225,255,.4)}
 .bh::after{content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold) 15%,var(--gold2) 50%,var(--gold) 85%,transparent); box-shadow:0 0 10px var(--glow)}
 .br.win .bs{background:linear-gradient(180deg,rgba(110,170,255,.55),rgba(60,120,240,.30))}
+
+/* ---------- растровые арты ---------- */
+.sart{background:radial-gradient(44% 46% at 50% 52%,rgba(2,6,18,.62),rgba(2,6,18,.25) 70%,transparent 100%) center/cover no-repeat,linear-gradient(rgba(2,6,18,.18),rgba(2,6,18,.18)),#03060f url(/img/hall.jpg) center/cover no-repeat}
+.bfull{background:#03060f url(/img/hall-dim.jpg) center/cover no-repeat}
+.emb-s{object-fit:contain}
+.emb-w .emb-l{object-fit:contain; filter:drop-shadow(0 0 34px var(--glow)) drop-shadow(0 12px 14px rgba(0,0,0,.75))}
 </style>
 </head>
 <body>
@@ -312,7 +318,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   <div class="sb" id="sb">
     <div class="cut team t" id="pA"><div class="in"><div class="logo" id="lgA"></div><div class="tn" id="tnA"></div></div></div>
     <div class="cut score s" id="sA"><div class="in"><span id="scA">0</span></div></div>
-    <div class="cut mid m" id="mC"><div class="in"><svg class="emb-s" viewBox="0 0 100 100"><use href="#crest"/></svg><b id="boT"></b><i id="mapT"></i></div></div>
+    <div class="cut mid m" id="mC"><div class="in"><img class="emb-s" src="/img/crest.png" alt=""><b id="boT"></b><i id="mapT"></i></div></div>
     <div class="cut score s" id="sB"><div class="in"><span id="scB">0</span></div></div>
     <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
   </div>
@@ -362,17 +368,6 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
           <rect x="1486" y="150" width="62" height="610" fill="url(#pilr)" opacity=".6"/>
         </g>
       </defs>
-      <rect width="1920" height="1080" fill="url(#hex)"/>
-      <circle cx="960" cy="470" r="520" fill="url(#halo)"/>
-      <path d="M740 770 V440 Q740 236 960 236 Q1180 236 1180 440 V770 Z" fill="url(#gate)"/>
-      <path d="M740 770 V440 Q740 236 960 236 Q1180 236 1180 440 V770" fill="none" stroke="#a9d3ff" stroke-opacity=".7" stroke-width="3"/>
-      <path d="M700 770 V430 Q700 196 960 196 Q1220 196 1220 430 V770" fill="none" stroke="#6aa8ff" stroke-opacity=".4" stroke-width="2"/>
-      <path d="M660 770 V424 Q660 156 960 156 Q1260 156 1260 424 V770" fill="none" stroke="#6aa8ff" stroke-opacity=".2" stroke-width="2"/>
-      <g class="sway" filter="url(#bl20)">
-        <polygon points="800,-40 1120,-40 1560,780 360,780" fill="url(#beam)"/>
-        <polygon points="450,-40 560,-40 900,780 330,780" fill="url(#beam)" opacity=".5"/>
-        <polygon points="1360,-40 1470,-40 1590,780 1020,780" fill="url(#beam)" opacity=".5"/>
-      </g>
       <g class="rings" style="transform-origin:960px 470px">
         <circle cx="960" cy="470" r="360" fill="none" stroke="#9fd0ff" stroke-opacity=".30" stroke-width="2" stroke-dasharray="2 14"/>
         <circle cx="960" cy="470" r="388" fill="none" stroke="#9fd0ff" stroke-opacity=".5" stroke-width="1"/>
@@ -381,15 +376,6 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
         <circle cx="960" cy="470" r="420" fill="none" stroke="#6aa8ff" stroke-opacity=".34" stroke-width="6" stroke-dasharray="90 40 6 40"/>
         <circle cx="960" cy="470" r="446" fill="none" stroke="#6aa8ff" stroke-opacity=".2" stroke-width="1"/>
       </g>
-      <use href="#pillars"/>
-      <use href="#pillars" transform="translate(0,1520) scale(1,-1)" mask="url(#mfade)" opacity=".7"/>
-      <rect x="0" y="760" width="1920" height="320" fill="url(#floor)"/>
-      <g stroke="#7ab4ff" stroke-opacity=".30" stroke-width="2" fill="none">
-        <path d="M0 782 H1920 M0 836 H1920 M0 910 H1920 M0 1004 H1920"/>
-        <path d="M960 760 L-300 1080 M960 760 L60 1080 M960 760 L440 1080 M960 760 L960 1080 M960 760 L1480 1080 M960 760 L1860 1080 M960 760 L2220 1080"/>
-      </g>
-      <ellipse cx="960" cy="764" rx="520" ry="26" fill="#9fd0ff" opacity=".35" filter="url(#bl6)"/>
-      <rect x="0" y="758" width="1920" height="3" fill="#cfe6ff" opacity=".8"/>
       <rect x="28" y="28" width="1864" height="1024" fill="none" stroke="#9fd0ff" stroke-opacity=".28" stroke-width="1"/>
       <g fill="none" stroke="#e8f3ff" stroke-linecap="square">
         <path d="M28 120 V28 H120 M1800 28 H1892 V120 M28 960 V1052 H120 M1800 1052 H1892 V960" stroke-width="3" stroke-opacity=".9"/>
@@ -403,7 +389,7 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
     <i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
     <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
-    <div class="emb-w"><svg class="emb-l" viewBox="0 0 100 100"><use href="#crest"/></svg><i class="flare"></i></div>
+    <div class="emb-w"><img class="emb-l" src="/img/crest.png" alt=""><i class="flare"></i></div>
     <div class="grain"></div><div class="vig"></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>

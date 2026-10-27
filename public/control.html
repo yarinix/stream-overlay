@@ -29,6 +29,8 @@ h1{font-size:1.05rem; font-weight:800; letter-spacing:.14em; text-transform:uppe
 .card h3{margin:0; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700}
 .f{display:flex; flex-direction:column; gap:4px; min-width:0}
 .f label{font-size:.75rem; color:var(--muted)}
+label.chk{display:flex; align-items:center; gap:10px; min-height:40px; cursor:pointer}
+.chk input{width:20px; min-height:0; height:20px; flex:none}
 input,select{font:inherit; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 10px; min-height:40px; width:100%; min-width:0}
 input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-visible + span{outline:2px solid var(--gold); outline-offset:1px}
 .two{display:grid; grid-template-columns:minmax(0,1fr) 104px; gap:8px}
@@ -151,8 +153,13 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <div class="f"><label for="bTitle">Заголовок на экране</label><input id="bTitle" maxlength="24"></div>
         <div class="btns"><button class="btn p" id="bShow" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
       </div>
+      <div class="bhead">
+        <label class="chk"><input type="checkbox" id="bAuto"><span>Авто-переход победителей</span></label>
+        <div class="f"><label for="bWin">Матч до побед</label><select id="bWin"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+        <div class="f"><label for="bWinGf">Гранд-финал до побед</label><select id="bWinGf"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+      </div>
       <div class="bgrid" id="bgrid"></div>
-      <p class="hint">Победитель каждой пары подсвечивается сам по большему счёту. Названия и счёт меняются сразу, пока сетка на экране.</p>
+      <p class="hint">Когда у команды набрано нужное число побед, она сама встаёт в следующий матч (проигравшие верхней сетки уходят в нижнюю). Если счёт поправить, переход откатывается. Названия и счёт меняются сразу, пока сетка на экране.</p>
     </section>
 
     <section class="card wide">
@@ -291,6 +298,7 @@ function sync(){
   renderTeams();
   if (st.bracket){
     setVal('bTitle', st.bracket.title);
+    $('bAuto').checked = !!st.bracket.auto; setVal('bWin', st.bracket.win); setVal('bWinGf', st.bracket.winGf);
     MATCHES.forEach(function(m){
       ['a','b'].forEach(function(s){
         var t = st.bracket.m[m[0]][s];
@@ -336,6 +344,9 @@ document.querySelectorAll('#sw button').forEach(function(b){
 });
 
 typed('bTitle', function(v){ patch({ bracket: { title: v } }); });
+$('bAuto').onchange = function(){ patch({ bracket: { auto: $('bAuto').checked } }); };
+$('bWin').onchange = function(){ patch({ bracket: { win: +$('bWin').value } }); };
+$('bWinGf').onchange = function(){ patch({ bracket: { winGf: +$('bWinGf').value } }); };
 $('bShow').onclick = function(){ patch({ scene: 'bracket' }); };
 $('bReset').onclick = function(){
   var b = $('bReset');
@@ -512,7 +523,7 @@ function saveSnap(){
     Object.keys(st.bracket.m).forEach(function(id){ m[id] = { a: pickT(st.bracket.m[id].a), b: pickT(st.bracket.m[id].b) }; });
     LS.set('ctlSnap', {
       a: pickT(st.a), b: pickT(st.b), bo: st.bo, map: st.map, tour: st.tour, stage: st.stage, cast: st.cast,
-      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, m: m }
+      role: st.role, label: st.label, accent: st.accent, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, win: st.bracket.win, winGf: st.bracket.winGf, m: m }
     });
   }, 800);
 }

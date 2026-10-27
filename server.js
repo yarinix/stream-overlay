@@ -35,7 +35,7 @@ const state = {
   label: 'До начала драфта',
   lt: false, scene: 'game', accent: 'gold',
   bracket: {
-    title: 'Плей-офф',
+    title: 'Плей-офф', auto: true, win: 2, winGf: 4,
     m: {
       pi1:  { a: { name: 'Storm Riders', score: 3 }, b: { name: 'Silver Tide', score: 2 } },
       pi2:  { a: { name: 'Night Owls', score: 3 },   b: { name: 'Polar Echo', score: 1 } },
@@ -54,6 +54,32 @@ const EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
 const MATCH_IDS = ['pi1', 'pi2', 'ubs1', 'ubs2', 'ubf', 'gf', 'lbs', 'lbf'];
 for (const t of [state.a, state.b]) t.teamId = '';
 for (const id of Object.keys(state.bracket.m)) for (const sd of ['a', 'b']) state.bracket.m[id][sd].teamId = '';
+/* автопереход: куда уходит победитель (w) и проигравший (l) каждого матча */
+const DEST = {
+  pi1: { w: ['ubs1', 'b'] }, pi2: { w: ['ubs2', 'b'] },
+  ubs1: { w: ['ubf', 'a'], l: ['lbs', 'a'] }, ubs2: { w: ['ubf', 'b'], l: ['lbs', 'b'] },
+  lbs: { w: ['lbf', 'a'] }, ubf: { w: ['gf', 'a'], l: ['lbf', 'b'] }, lbf: { w: ['gf', 'b'] }
+};
+const same = (x, y) => (x.teamId && x.teamId === y.teamId) || (x.name && x.name.trim().toLowerCase() === y.name.trim().toLowerCase());
+function propagate(id, depth = 0) {
+  const d = DEST[id]; if (!d || depth > 8) return;
+  const br = state.bracket, m = br.m[id], need = id === 'gf' ? br.winGf : br.win;
+  let w = null;
+  if (m.a.score !== m.b.score) {
+    const hi = m.a.score > m.b.score ? 'a' : 'b';
+    if (m[hi].score >= need && m[hi].name.trim()) w = hi;
+  }
+  const put = (to, src) => {
+    const slot = br.m[to[0]][to[1]];
+    if (src) {
+      if (!same(slot, src) || slot.name !== src.name) { slot.name = src.name; slot.teamId = src.teamId; slot.score = 0; propagate(to[0], depth + 1); }
+    } else {
+      for (const t of [m.a, m.b]) if (t.name.trim() && same(slot, t)) { slot.name = ''; slot.teamId = ''; slot.score = 0; propagate(to[0], depth + 1); break; }
+    }
+  };
+  put(d.w, w ? m[w] : null);
+  if (d.l) put(d.l, w ? m[w === 'a' ? 'b' : 'a'] : null);
+}
 const str = (v, max) => String(v).slice(0, max);
 const int = (v, lo, hi) => Math.min(hi, Math.max(lo, parseInt(v, 10) || 0));
 
@@ -81,6 +107,11 @@ function applyPatch(p) {
   if (p.bracket && typeof p.bracket === 'object') {
     const b = p.bracket;
     if ('title' in b) state.bracket.title = str(b.title, 24);
+    let reflow = false;
+    if ('auto' in b) { state.bracket.auto = !!b.auto; reflow = true; }
+    if ('win' in b) { state.bracket.win = int(b.win, 1, 5) || 1; reflow = true; }
+    if ('winGf' in b) { state.bracket.winGf = int(b.winGf, 1, 5) || 1; reflow = true; }
+    const touched = new Set();
     if (b.reset) {
       for (const id of MATCH_IDS) state.bracket.m[id] = { a: { name: '', score: 0, teamId: '' }, b: { name: '', score: 0, teamId: '' } };
     }
@@ -91,11 +122,15 @@ function applyPatch(p) {
         for (const s of ['a', 'b']) {
           const t = m[s];
           if (!t || typeof t !== 'object') continue;
-          if ('name' in t) state.bracket.m[id][s].name = str(t.name, 28);
-          if ('score' in t) state.bracket.m[id][s].score = int(t.score, 0, 9);
+          if ('name' in t) { state.bracket.m[id][s].name = str(t.name, 28); touched.add(id); }
+          if ('score' in t) { state.bracket.m[id][s].score = int(t.score, 0, 9); touched.add(id); }
           if ('teamId' in t) state.bracket.m[id][s].teamId = teams.has(t.teamId) ? t.teamId : '';
         }
       }
+    }
+    if (state.bracket.auto) {
+      const order = ['pi1', 'pi2', 'ubs1', 'ubs2', 'lbs', 'ubf', 'lbf'];
+      for (const id of order) if (reflow || touched.has(id)) propagate(id);
     }
   }
   if ('swap' in p && p.swap) { const x = state.a; state.a = state.b; state.b = x; }
@@ -108,7 +143,7 @@ function statePatch() {
   return {
     a: slotOut(state.a), b: slotOut(state.b), bo: state.bo, map: state.map, tour: state.tour, stage: state.stage,
     cast: state.cast, role: state.role, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent,
-    bracket: { title: state.bracket.title, m }, timerMins: state.timer.mins
+    bracket: { title: state.bracket.title, auto: state.bracket.auto, win: state.bracket.win, winGf: state.bracket.winGf, m }, timerMins: state.timer.mins
   };
 }
 let saveTimer = null, libTimer = null;

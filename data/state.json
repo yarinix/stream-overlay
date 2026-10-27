@@ -1,0 +1,126 @@
+{
+ "a": {
+  "name": "Selangor Red Giants",
+  "tag": "SRG",
+  "score": 2,
+  "teamId": "57cb1a6239"
+ },
+ "b": {
+  "name": "Team Vamos",
+  "tag": "VMS",
+  "score": 1,
+  "teamId": "910b8fc1de"
+ },
+ "bo": 3,
+ "map": 1,
+ "tour": "BlackSid Invitational",
+ "stage": "Групповой этап",
+ "cast": "BlackSid_Co",
+ "role": "Комментатор",
+ "label": "До начала драфта",
+ "lt": false,
+ "scene": "bracket",
+ "accent": "gold",
+ "bracket": {
+  "title": "Плей-офф",
+  "m": {
+   "pi1": {
+    "a": {
+     "name": "Team Vamos",
+     "score": 0,
+     "teamId": "910b8fc1de"
+    },
+    "b": {
+     "name": "Team Flash",
+     "score": 0,
+     "teamId": "1aceb5ac1a"
+    }
+   },
+   "pi2": {
+    "a": {
+     "name": "Invictus Gaming",
+     "score": 0,
+     "teamId": "180e21de90"
+    },
+    "b": {
+     "name": "Bigetron MY by Vitality",
+     "score": 0,
+     "teamId": "c6fb972c8b"
+    }
+   },
+   "ubs1": {
+    "a": {
+     "name": "Selangor Red Giants",
+     "score": 0,
+     "teamId": "57cb1a6239"
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
+   "ubs2": {
+    "a": {
+     "name": "Team Rey",
+     "score": 0,
+     "teamId": "00dc9c87bd"
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
+   "ubf": {
+    "a": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
+   "gf": {
+    "a": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
+   "lbs": {
+    "a": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
+   "lbf": {
+    "a": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   }
+  }
+ },
+ "timerMins": 5
+}

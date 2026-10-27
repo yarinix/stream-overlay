@@ -9,14 +9,6 @@
    "ext": "png"
   },
   {
-   "id": "910b8fc1de",
-   "name": "Team Vamos",
-   "tag": "VMS",
-   "v": "mvq87p94",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "57cb1a6239",
    "name": "Selangor Red Giants",
    "tag": "SRG",
@@ -29,6 +21,14 @@
    "name": "Invictus Gaming",
    "tag": "IG",
    "v": "mvq88sep",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "910b8fc1de",
+   "name": "Team Vamos",
+   "tag": "VMS",
+   "v": "mvq87p94",
    "mime": "image/png",
    "ext": "png"
   },

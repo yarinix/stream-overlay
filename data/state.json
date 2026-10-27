@@ -24,13 +24,19 @@
  "bracket": {
   "title": "Плей-офф",
   "auto": true,
-  "win": 3,
-  "winGf": 4,
+  "fmt": {
+   "pi": 5,
+   "ubs": 5,
+   "ubf": 5,
+   "lbs": 7,
+   "lbf": 7,
+   "gf": 7
+  },
   "m": {
    "pi1": {
     "a": {
      "name": "Team Vamos",
-     "score": 2,
+     "score": 3,
      "teamId": "910b8fc1de"
     },
     "b": {
@@ -47,50 +53,14 @@
     },
     "b": {
      "name": "Bigetron MY by Vitality",
-     "score": 2,
+     "score": 3,
      "teamId": "c6fb972c8b"
     }
    },
    "ubs1": {
     "a": {
      "name": "Selangor Red Giants",
-     "score": 2,
-     "teamId": "57cb1a6239"
-    },
-    "b": {
-     "name": "",
-     "score": 0,
-     "teamId": ""
-    }
-   },
-   "ubs2": {
-    "a": {
-     "name": "Team Rey",
-     "score": 2,
-     "teamId": "00dc9c87bd"
-    },
-    "b": {
-     "name": "",
-     "score": 0,
-     "teamId": ""
-    }
-   },
-   "ubf": {
-    "a": {
-     "name": "",
-     "score": 0,
-     "teamId": ""
-    },
-    "b": {
-     "name": "",
-     "score": 0,
-     "teamId": ""
-    }
-   },
-   "gf": {
-    "a": {
-     "name": "Selangor Red Giants",
-     "score": 4,
+     "score": 3,
      "teamId": "57cb1a6239"
     },
     "b": {
@@ -99,10 +69,46 @@
      "teamId": "910b8fc1de"
     }
    },
+   "ubs2": {
+    "a": {
+     "name": "Team Rey",
+     "score": 3,
+     "teamId": "00dc9c87bd"
+    },
+    "b": {
+     "name": "Bigetron MY by Vitality",
+     "score": 0,
+     "teamId": "c6fb972c8b"
+    }
+   },
+   "ubf": {
+    "a": {
+     "name": "Selangor Red Giants",
+     "score": 3,
+     "teamId": "57cb1a6239"
+    },
+    "b": {
+     "name": "Team Rey",
+     "score": 0,
+     "teamId": "00dc9c87bd"
+    }
+   },
+   "gf": {
+    "a": {
+     "name": "Selangor Red Giants",
+     "score": 0,
+     "teamId": "57cb1a6239"
+    },
+    "b": {
+     "name": "",
+     "score": 0,
+     "teamId": ""
+    }
+   },
    "lbs": {
     "a": {
      "name": "Team Vamos",
-     "score": 2,
+     "score": 0,
      "teamId": "910b8fc1de"
     },
     "b": {
@@ -118,9 +124,9 @@
      "teamId": ""
     },
     "b": {
-     "name": "",
+     "name": "Team Rey",
      "score": 0,
-     "teamId": ""
+     "teamId": "00dc9c87bd"
     }
    }
   }

@@ -18,9 +18,10 @@
  "cast": "BlackSid_Co",
  "role": "Комментатор",
  "social": "twitch.tv/blacksid_co",
+ "endText": "Увидимся на следующей трансляции",
  "label": "До начала драфта",
  "lt": false,
- "scene": "break",
+ "scene": "soon",
  "accent": "rose",
  "preset": "shards",
  "bracket": {

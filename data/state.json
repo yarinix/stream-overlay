@@ -47,14 +47,14 @@
     },
     "b": {
      "name": "Bigetron MY by Vitality",
-     "score": 0,
+     "score": 2,
      "teamId": "c6fb972c8b"
     }
    },
    "ubs1": {
     "a": {
      "name": "Selangor Red Giants",
-     "score": 0,
+     "score": 2,
      "teamId": "57cb1a6239"
     },
     "b": {
@@ -66,32 +66,32 @@
    "ubs2": {
     "a": {
      "name": "Team Rey",
-     "score": 0,
+     "score": 2,
      "teamId": "00dc9c87bd"
     },
     "b": {
-     "name": "",
+     "name": "Bigetron MY by Vitality",
      "score": 0,
-     "teamId": ""
+     "teamId": "c6fb972c8b"
     }
    },
    "ubf": {
     "a": {
-     "name": "",
-     "score": 0,
-     "teamId": ""
+     "name": "Selangor Red Giants",
+     "score": 2,
+     "teamId": "57cb1a6239"
     },
     "b": {
-     "name": "",
+     "name": "Team Rey",
      "score": 0,
-     "teamId": ""
+     "teamId": "00dc9c87bd"
     }
    },
    "gf": {
     "a": {
-     "name": "",
+     "name": "Selangor Red Giants",
      "score": 0,
-     "teamId": ""
+     "teamId": "57cb1a6239"
     },
     "b": {
      "name": "",
@@ -101,14 +101,14 @@
    },
    "lbs": {
     "a": {
-     "name": "",
+     "name": "Team Vamos",
      "score": 0,
-     "teamId": ""
+     "teamId": "910b8fc1de"
     },
     "b": {
-     "name": "",
+     "name": "Bigetron MY by Vitality",
      "score": 0,
-     "teamId": ""
+     "teamId": "c6fb972c8b"
     }
    },
    "lbf": {
@@ -118,9 +118,9 @@
      "teamId": ""
     },
     "b": {
-     "name": "",
+     "name": "Team Rey",
      "score": 0,
-     "teamId": ""
+     "teamId": "00dc9c87bd"
     }
    }
   }

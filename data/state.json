@@ -23,7 +23,7 @@
  "lt": false,
  "scene": "end",
  "accent": "rose",
- "preset": "royal",
+ "preset": "hall",
  "bracket": {
   "title": "Плей-офф",
   "auto": true,

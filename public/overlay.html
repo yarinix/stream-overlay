@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Tenor+Sans&family=Oswald:wght@500;600;700&family=Cinzel:wght@600;700;800&family=Montserrat:wght@500;600;700;800&display=swap">
+<style>
+@font-face{font-family:"Forum";src:url(/fonts/forum.woff) format("woff");font-display:block}
+@font-face{font-family:"Tenor Sans";src:url(/fonts/tenor.woff) format("woff");font-display:block}
+@font-face{font-family:"Oswald";src:url(/fonts/oswald.woff) format("woff");font-weight:200 700;font-display:block}
+@font-face{font-family:"Montserrat";src:url(/fonts/montserrat.woff) format("woff");font-weight:100 900;font-display:block}
+@font-face{font-family:"Cormorant Garamond";src:url(/fonts/cormorant.woff) format("woff");font-weight:300 700;font-display:block}
+@font-face{font-family:"Cormorant Garamond";src:url(/fonts/cormorant-i.woff) format("woff");font-weight:300 700;font-style:italic;font-display:block}
+</style>
 <style>
 :root{
   --gold:#c9a45c; --gold2:#f2dca4; --gold3:#6d5a2e;
@@ -457,6 +464,60 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
 .m8 span{margin-top:auto; font-family:var(--f-sub); font-size:16px; letter-spacing:.3em; text-transform:uppercase; color:var(--tr1); text-shadow:0 0 12px rgba(255,200,110,.5)}
 .bscene.on .m8{opacity:1; transform:none; transition:opacity .8s ease 1.3s, transform .9s cubic-bezier(.2,.9,.2,1) 1.3s}
 @keyframes m8f{from{transform:translateY(0); filter:drop-shadow(0 0 16px rgba(255,200,110,.4)) drop-shadow(0 6px 8px rgba(0,0,0,.6))}to{transform:translateY(-8px); filter:drop-shadow(0 0 30px rgba(255,210,130,.8)) drop-shadow(0 6px 8px rgba(0,0,0,.6))}}
+
+/* ---------- ТИПОГРАФИКА v2: свои шрифты, вес и размер под каждую роль ---------- */
+:root{
+  --f-head:"Cormorant Garamond","Forum","Times New Roman",serif;
+  --f-sub:"Montserrat",system-ui,sans-serif;
+  --f-num:"Oswald","Montserrat",sans-serif;
+}
+#cv{-webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; font-feature-settings:"lnum" 1,"kern" 1}
+/* заголовки сцен: контрастный антиква, плотный вес */
+.scene h2{font-family:var(--f-head); font-weight:700; font-size:132px; letter-spacing:.05em; line-height:.95}
+.scene.isbreak h2{font-size:116px}
+.scene.isend > h2{font-size:108px}
+.scene.issoon > .big{font-size:182px}
+.br:not(.win) .bn{color:#d3e0f5}
+.scene .sub{font-family:var(--f-sub); font-weight:500; font-size:27px; letter-spacing:.34em; padding-left:.34em; color:#eaf1ff}
+.scene .big{font-weight:500; font-size:196px; letter-spacing:.02em}
+.scene.isbreak > .big{font-size:156px}
+.scene .res{font-family:var(--f-sub); font-weight:600; font-size:21px; letter-spacing:.24em; color:#f4e5b8}
+.scene.isend > .res{font-size:24px}
+.soc{font-family:var(--f-sub); font-weight:600; font-size:23px; letter-spacing:.1em}
+.soc::before{font-family:var(--f-sub); font-weight:600; font-size:14px; letter-spacing:.26em}
+/* табло */
+.tn{font-family:var(--f-sub); font-weight:700; font-size:22px; letter-spacing:.08em; text-transform:uppercase}
+.score .in span{font-family:var(--f-num); font-weight:600; font-size:66px; letter-spacing:0}
+.mid b{font-family:var(--f-sub); font-weight:700; font-size:15px; letter-spacing:.2em}
+.mid i{font-family:var(--f-sub); font-weight:600; font-size:15px; letter-spacing:.1em; color:#dbe8fb}
+.logo{font-family:var(--f-sub); font-weight:700; font-size:19px; letter-spacing:.02em}
+.timer small{font-family:var(--f-sub); font-weight:600; font-size:14px; letter-spacing:.2em}
+.timer strong{font-family:var(--f-num); font-weight:500; font-size:56px; letter-spacing:.03em}
+/* плашка комментатора */
+.lt strong{font-family:var(--f-head); font-weight:700; font-size:50px; letter-spacing:.02em; line-height:1}
+.lt span{font-family:var(--f-sub); font-weight:600; font-size:15px; letter-spacing:.28em}
+/* нижняя строка */
+.tick .tx{font-family:var(--f-sub); font-weight:600; font-size:19px; letter-spacing:.16em; color:#e9e3d2}
+.tick .game-name{font-family:var(--f-head); font-style:italic; font-weight:700; font-size:32px; letter-spacing:.02em; color:var(--tr1)}
+.plate .in{font-family:var(--f-sub); font-weight:800; font-size:18px; letter-spacing:.24em}
+/* камера */
+.camname{font-family:var(--f-sub); font-weight:600; font-size:19px; letter-spacing:.3em}
+.live{font-family:var(--f-sub); font-weight:800; font-size:14px; letter-spacing:.16em}
+/* сетка */
+.bt h2{font-family:var(--f-head); font-weight:700; font-size:92px; letter-spacing:.06em; line-height:1}
+.bt p{font-family:var(--f-sub); font-weight:500; font-size:22px; letter-spacing:.34em; color:#eaf1ff}
+.bh span{font-family:var(--f-sub); font-weight:700; font-size:14px; letter-spacing:.14em}
+.bh em{font-family:var(--f-sub); font-weight:800; font-size:14px; letter-spacing:.06em}
+.bn{font-family:var(--f-sub); font-weight:600; font-size:21px; letter-spacing:.05em; text-transform:uppercase}
+.br.win .bn{font-weight:800; color:#fff}
+.br:not(.win) .bn{font-weight:500; color:#c3d3ee}
+.bs{font-family:var(--f-num); font-weight:600; font-size:38px}
+.br:not(.win) .bs{font-weight:400; color:#aebfdc}
+.m8 span{font-family:var(--f-sub); font-weight:600; font-size:15px; letter-spacing:.22em}
+/* перерыв: плашка счёта */
+.bkn{font-family:var(--f-sub); font-weight:700; font-size:28px; letter-spacing:.07em}
+.bks{font-family:var(--f-num); font-weight:600; font-size:76px}
+.bkd{font-family:var(--f-num); font-weight:400; font-size:52px}
 </style>
 </head>
 <body>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Tenor+Sans&family=Oswald:wght@500;600;700&family=Cinzel:wght@600;700;800&family=Montserrat:wght@500;600;700;800&display=swap">
 <style>
 :root{
   --gold:#c9a45c; --gold2:#f2dca4; --gold3:#6d5a2e;
@@ -284,9 +284,9 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
    radial-gradient(70% 60% at 45% 55%, rgba(50,110,220,.20), transparent 70%),
    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 0 L56 16 V48 L28 64 L0 48 V16 Z M28 64 V97 M0 48 L-28 64 M56 48 L84 64' fill='none' stroke='%236aa8ff' stroke-opacity='.08'/%3E%3C/svg%3E"),
    linear-gradient(180deg,#071230 0%,#050c20 55%,#03060f 100%);
-  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1466px 24px,1894px 24px,1894px 272px,1466px 272px,1466px 24px)}
+  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1479px 39px,1881px 39px,1881px 266px,1479px 266px,1479px 39px)}
 .bgrain{position:absolute; inset:0; opacity:.10; mix-blend-mode:overlay; background-image:var(--noise); pointer-events:none;
-  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1466px 24px,1894px 24px,1894px 272px,1466px 272px,1466px 24px)}
+  clip-path:polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,1479px 39px,1881px 39px,1881px 266px,1479px 266px,1479px 39px)}
 .bframe{position:absolute; left:0; top:0; pointer-events:none}
 .bh{background:linear-gradient(180deg,rgba(90,150,255,.22),rgba(40,90,200,.06)); border-bottom:none; box-shadow:inset 0 1px 0 rgba(200,225,255,.4)}
 .bh::after{content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold) 15%,var(--gold2) 50%,var(--gold) 85%,transparent); box-shadow:0 0 10px var(--glow)}
@@ -305,10 +305,144 @@ body[data-preset=shards] .sart{background-image:radial-gradient(44% 46% at 50% 5
 body[data-preset=shards] .bfull{background-image:url(/img/shards-dim.jpg)}
 body[data-preset=citadel] .rings,body[data-preset=citadel] .rings2{opacity:.35}
 body[data-preset=shards] .rings2{opacity:.5}
+
+/* =====================================================================
+   КОРОЛЕВСКИЙ ПРЕСЕТ: свои фоны + рамка вебки, типографика, «живые» слои
+   ===================================================================== */
+:root{
+  --tr1:#f4e5b8; --tr2:#c4a265; --tr3:#6e5530;
+  --f-head:"Forum","Cinzel","Times New Roman",serif;
+  --f-sub:"Tenor Sans","Montserrat",system-ui,sans-serif;
+  --f-num:"Oswald","Montserrat",system-ui,sans-serif;
+  --metal:linear-gradient(180deg,#ffffff 0%,#eef2fa 28%,#aab7cf 50%,#f9f1d8 55%,#d9be86 76%,#8f7344 100%);
+}
+/* бронзово-золотая окантовка панелей вместо серебра */
+.cut{background:linear-gradient(135deg,var(--tr1) 0%,var(--tr2) 20%,#1e4280 46%,var(--tr3) 62%,var(--tr1) 82%,var(--tr2) 100%)}
+.tick::before{background:linear-gradient(90deg,transparent,var(--tr1) 16%,var(--tr2) 50%,var(--tr1) 84%,transparent); box-shadow:0 0 14px rgba(196,162,101,.55)}
+.bh::after{background:linear-gradient(90deg,transparent,var(--tr2) 12%,var(--tr1) 50%,var(--tr2) 88%,transparent); box-shadow:0 0 10px rgba(196,162,101,.45)}
+.tick .tag{background:linear-gradient(135deg,var(--tr1),var(--tr2) 55%,var(--tr3)); color:#1a1306}
+.tick .sep{background:var(--tr2); box-shadow:0 0 10px rgba(196,162,101,.6)}
+.logo{box-shadow:0 0 0 2px var(--tr2),0 0 0 4px #07102a,0 0 0 5px rgba(244,229,184,.75),0 0 18px var(--glow)}
+.bl{box-shadow:0 0 0 1.5px var(--tr2),0 0 0 3px #07102a,0 0 0 4px rgba(244,229,184,.5)}
+.bkl{box-shadow:0 0 0 2px var(--tr2),0 0 0 4px #07102a,0 0 0 5px rgba(244,229,184,.75),0 0 18px var(--glow)}
+.bh em{border-color:var(--tr2); color:var(--tr1)}
+/* цифры и подписи */
+.score .in span{font-family:var(--f-num); font-weight:600; font-size:64px}
+.timer strong{font-family:var(--f-num); font-weight:600}
+.tn,.bn{font-family:var(--f-sub); font-weight:400; letter-spacing:.1em}
+.bs{font-family:var(--f-num); font-weight:600}
+.timer small,.mid b,.lt span,.tick .tx,.bh span,.bh em,.plate .in{font-family:var(--f-sub)}
+.lt strong{font-family:var(--f-head); font-weight:400; letter-spacing:.06em}
+.tick .game-name{font-family:var(--f-head)}
+.bkn{font-family:var(--f-sub); font-weight:400}
+.bks{font-family:var(--f-num); font-weight:600}
+.bt h2{font-family:var(--f-head); font-weight:400; background:var(--metal); -webkit-background-clip:text; background-clip:text}
+.bt p{font-family:var(--f-sub)}
+
+/* ---------- веб-камера: рамка из PNG ---------- */
+.cam,.plate{display:none}
+.camwrap{position:absolute; left:1467px; top:0; width:424px; height:313px; z-index:5; pointer-events:none}
+.camf{position:absolute; inset:0; width:100%; height:100%; display:block; filter:drop-shadow(0 6px 14px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(60,120,230,.35))}
+.camname{position:absolute; left:20px; right:20px; top:268px; height:42px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-sub); font-size:20px; letter-spacing:.34em; text-transform:uppercase; color:var(--tr1); text-shadow:0 0 12px rgba(120,170,255,.6),0 1px 2px #000; padding-left:.34em}
+.camwrap .live{position:absolute; right:auto; top:50px; left:26px; transform:none; z-index:2}
+.spk{position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; opacity:0; animation:spark 5.5s ease-in-out infinite;
+  background:radial-gradient(circle,#fff 0 22%,rgba(255,238,190,.9) 30%,transparent 62%);
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
+.spk{filter:drop-shadow(0 0 6px #ffe9b0)}
+.spk.s1{left:17px; top:39px} .spk.s2{left:407px; top:39px; animation-delay:1.4s} .spk.s3{left:17px; top:270px; animation-delay:2.8s} .spk.s4{left:407px; top:270px; animation-delay:4.1s}
+@keyframes spark{0%,72%,100%{opacity:0; transform:scale(.2) rotate(0)}82%{opacity:1; transform:scale(1.6) rotate(45deg)}92%{opacity:.4; transform:scale(.9) rotate(90deg)}}
+
+/* ---------- слои сцен: свои фоны, медленное «дыхание», туман ---------- */
+.sart{z-index:6; background:#03060f}
+.scene{z-index:7}
+.sweep{z-index:8}
+.simg{position:absolute; inset:-3%; background:center/cover no-repeat; opacity:0; transition:opacity .9s ease; animation:kb 38s ease-in-out infinite alternate; animation-play-state:paused; will-change:transform,opacity}
+@keyframes kb{from{transform:scale(1.01) translate3d(0,0,0)}to{transform:scale(1.08) translate3d(-1.2%,-.9%,0)}}
+body[data-sc=soon] .simg.s-soon,body[data-sc=break] .simg.s-break,body[data-sc=end] .simg.s-end{opacity:1; animation-play-state:running}
+body[data-preset=royal] .simg.s-soon{background-image:url(/img/royal-soon.jpg)}
+body[data-preset=royal] .simg.s-break{background-image:url(/img/royal-break.jpg)}
+body[data-preset=royal] .simg.s-end{background-image:url(/img/royal-end.jpg)}
+body[data-preset=hall] .simg{background-image:url(/img/hall.jpg)}
+body[data-preset=citadel] .simg{background-image:url(/img/citadel.jpg)}
+body[data-preset=shards] .simg{background-image:url(/img/shards.jpg)}
+.sart{background-image:none !important}
+body[data-preset=royal] .bfull{background-image:url(/img/royal-bracket.jpg)}
+body[data-preset=royal] .sart > svg,body[data-preset=royal] .bframe{display:none}
+body[data-preset=royal] .vig{opacity:.55}
+body[data-preset=royal] .rings,body[data-preset=royal] .rings2{display:none}
+.emb-w{top:34px; width:150px; height:150px; margin-left:-75px}
+.emb-w .emb-l{width:150px; height:150px}
+.flare{top:70px}
+.fogl{position:absolute; left:0; width:3840px; height:540px; background:url(/img/fog.png) repeat-x; background-size:1920px 540px; pointer-events:none; will-change:transform}
+.fogl.f1{bottom:70px; opacity:.5; animation:fogm 80s linear infinite}
+.fogl.f2{bottom:-90px; opacity:.38; animation:fogm 130s linear infinite reverse}
+@keyframes fogm{from{transform:translate3d(0,0,0)}to{transform:translate3d(-1920px,0,0)}}
+.glowp{position:absolute; left:50%; top:20px; width:760px; height:520px; margin-left:-380px; pointer-events:none;
+  background:radial-gradient(closest-side,rgba(170,205,255,.42),rgba(120,170,255,.12) 55%,transparent); animation:glowp 6s ease-in-out infinite alternate; will-change:opacity,transform}
+body[data-sc=end] .glowp{background:radial-gradient(closest-side,rgba(255,214,140,.5),rgba(255,190,110,.14) 55%,transparent)}
+@keyframes glowp{from{opacity:.55; transform:scale(.94)}to{opacity:1; transform:scale(1.06)}}
+.edgeg{position:absolute; bottom:60px; width:520px; height:520px; pointer-events:none; background:radial-gradient(closest-side,rgba(60,130,255,.55),transparent); animation:edge 4.6s ease-in-out infinite alternate; will-change:opacity}
+.edgeg.eg1{left:-190px} .edgeg.eg2{right:-190px; animation-delay:1.7s}
+@keyframes edge{from{opacity:.25}to{opacity:.85}}
+.flash{position:absolute; right:260px; top:60px; width:520px; height:320px; pointer-events:none; background:radial-gradient(closest-side,rgba(205,225,255,.55),transparent); opacity:0; animation:flash 13s linear infinite}
+@keyframes flash{0%,86%,100%{opacity:0}87%{opacity:.8}88%{opacity:.15}89.5%{opacity:.6}92%{opacity:0}}
+body[data-sc=end] .flash{display:none}
+.ember{position:absolute; width:5px; height:5px; border-radius:50%; background:#ffd890; box-shadow:0 0 10px 3px rgba(255,190,100,.8); opacity:0; animation:dust var(--t) linear infinite; display:none; will-change:transform,opacity}
+body[data-sc=end] .ember{display:block}
+body[data-sc=end] .dust{display:none}
+.bok{display:none}
+
+/* ---------- макеты сцен (поверх фонов) ---------- */
+.scene{display:block}
+.scene > h2,.scene > .sub,.scene > .line,.scene > .big,.scene > .res,.scene > .bkp{position:absolute; left:0; right:0; margin:0}
+.scene > .line{left:50%; right:auto; width:560px; margin-left:-280px}
+.scene > .big,.scene > .res{display:block}
+.scene h2{font-family:var(--f-head); font-weight:400; font-size:118px; letter-spacing:.06em; line-height:1; padding:0; text-align:center; background:none; -webkit-background-clip:border-box; background-clip:border-box; color:#fff;
+  filter:drop-shadow(0 0 26px rgba(80,140,255,.55)) drop-shadow(0 6px 10px rgba(0,0,0,.75))}
+.scene h2 .w{display:inline-block; white-space:nowrap}
+.scene h2 .ch{display:inline-block; color:transparent; -webkit-background-clip:text; background-clip:text; background-repeat:no-repeat;
+  background-image:linear-gradient(100deg,transparent 38%,rgba(255,255,255,.98) 50%,transparent 62%),var(--metal);
+  background-size:260% 100%,100% 100%; background-position:160% 0,0 0}
+.scene.on h2 .ch{animation:chIn 1s cubic-bezier(.2,.9,.2,1) both, shine 7.5s linear infinite;
+  animation-delay:calc(.2s + var(--i)*.05s), calc(1.8s + var(--i)*.07s)}
+@keyframes chIn{from{opacity:0; transform:translateY(40px) scale(.86); filter:blur(10px)}to{opacity:1; transform:none; filter:none}}
+@keyframes shine{0%,38%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
+.scene .sub{font-family:var(--f-sub); font-style:normal; font-weight:400; font-size:30px; letter-spacing:.42em; text-transform:uppercase; color:#e4edfd; text-shadow:0 0 18px rgba(100,160,255,.7),0 2px 4px rgba(0,0,0,.8); padding-left:.42em}
+.scene .line{height:2px; background:linear-gradient(90deg,transparent,var(--tr2),var(--tr1) 50%,var(--tr2),transparent); box-shadow:0 0 16px rgba(196,162,101,.6)}
+.scene .big{font-family:var(--f-num); font-weight:600; font-size:190px; letter-spacing:.03em; line-height:1; margin:0;
+  background:linear-gradient(180deg,#ffffff,#d5e5ff 55%,#7aaaf5); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 26px rgba(80,140,255,.65)) drop-shadow(0 8px 10px rgba(0,0,0,.7))}
+.scene .res{font-family:var(--f-sub); font-size:23px; letter-spacing:.3em; text-transform:uppercase; color:var(--tr1); background:linear-gradient(180deg,rgba(20,44,98,.72),rgba(5,12,32,.82)); border:1px solid rgba(196,162,101,.65);
+  clip-path:var(--cut); left:0; right:0; margin-left:auto; margin-right:auto; width:max-content; padding:12px 40px; text-shadow:0 0 12px rgba(120,170,255,.55)}
+.scene > .bkp{left:0; right:0; margin-left:auto; margin-right:auto; width:max-content}
+.scene h2,.scene.isbreak h2{margin-top:0 !important}
+.scene > .soc{position:absolute; bottom:auto}
+.scene::after{display:none}
+/* «Скоро начнём» */
+.scene.issoon > h2{top:384px} .scene.issoon > .sub{top:530px} .scene.issoon > .line{top:590px}
+.scene.issoon > .big{top:612px} .scene.issoon > .res{top:822px} .scene.issoon > .bkp{display:none}
+.scene.issoon > .soc{top:936px}
+/* «Перерыв» */
+.scene.isbreak > h2{top:168px} .scene.isbreak > .sub{top:312px} .scene.isbreak > .line{top:366px}
+.scene.isbreak > .big{top:382px; font-size:150px} .scene.isbreak > .res{top:566px}
+.scene.isbreak > .bkp{top:706px} .scene.isbreak > .soc{top:896px}
+.scene.isbreak h2{font-size:104px}
+/* «Финал» */
+.scene.isend > h2{top:372px; font-size:108px} .scene.isend > .sub{top:512px} .scene.isend > .line{top:572px}
+.scene.isend > .big,.scene.isend > .bkp{display:none} .scene.isend > .res{top:604px; font-size:26px} .scene.isend > .soc{top:900px}
+.scene.isend{--metal:linear-gradient(180deg,#fffaf0 0%,#fbe9bf 30%,#d8b56f 52%,#fff3d0 57%,#c9a05a 78%,#7d5c2c 100%)}
+.scene.isend h2{filter:drop-shadow(0 0 28px rgba(255,190,100,.6)) drop-shadow(0 6px 10px rgba(0,0,0,.75))}
+.scene.isend .sub{text-shadow:0 0 18px rgba(255,190,100,.7),0 2px 4px rgba(0,0,0,.8)}
+.scene.isend .res{border-color:rgba(255,214,140,.75)}
+.scene.isbreak > .soc,.scene.issoon > .soc,.scene.isend > .soc{bottom:auto}
+.soc{font-family:var(--f-sub); font-weight:400; letter-spacing:.18em; border-color:rgba(196,162,101,.6)}
+.soc::before{font-family:var(--f-sub); color:var(--tr1); border-right-color:rgba(196,162,101,.5)}
+.soc b{background:var(--tr2); box-shadow:0 0 12px rgba(196,162,101,.7)}
+@media (prefers-reduced-motion: reduce){.simg,.fogl,.glowp,.edgeg,.flash,.ember,.spk,.scene .ch{animation:none !important}}
 </style>
 </head>
 <body>
-<div style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><img src="/img/hall.jpg" alt=""><img src="/img/citadel.jpg" alt=""><img src="/img/shards.jpg" alt=""><img src="/img/hall-dim.jpg" alt=""><img src="/img/citadel-dim.jpg" alt=""><img src="/img/shards-dim.jpg" alt=""></div>
+<div style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><img src="/img/royal-soon.jpg" alt=""><img src="/img/royal-break.jpg" alt=""><img src="/img/royal-end.jpg" alt=""><img src="/img/royal-bracket.jpg" alt=""><img src="/img/camframe.png" alt=""><img src="/img/fog.png" alt=""><img src="/img/hall.jpg" alt=""><img src="/img/citadel.jpg" alt=""><img src="/img/shards.jpg" alt=""><img src="/img/hall-dim.jpg" alt=""><img src="/img/citadel-dim.jpg" alt=""><img src="/img/shards-dim.jpg" alt=""></div>
 <div id="cv">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#b9c6dc"/><stop offset="1" stop-color="#5f7396"/></linearGradient>
@@ -332,9 +466,12 @@ body[data-preset=shards] .rings2{opacity:.5}
     <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
   </div>
   <div class="cut timer" id="timer"><div class="in"><small id="tLabel"></small><strong id="tVal">05:00</strong></div></div>
-  <div class="cam"><i></i><i></i><i></i><i></i></div>
-  <div class="live"><b></b>LIVE</div>
-  <div class="cut plate"><div class="in" id="camName"></div></div>
+  <div class="camwrap" id="camwrap">
+    <img class="camf" src="/img/camframe.png" alt="">
+    <div class="camname" id="camName"></div>
+    <div class="live"><b></b>LIVE</div>
+    <i class="spk s1"></i><i class="spk s2"></i><i class="spk s3"></i><i class="spk s4"></i>
+  </div>
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
   <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
   <div class="bscene" id="bscene">
@@ -350,6 +487,9 @@ body[data-preset=shards] .rings2{opacity:.5}
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
   <div class="sart" id="sart" aria-hidden="true">
+    <div class="simg s-soon"></div><div class="simg s-break"></div><div class="simg s-end"></div>
+    <div class="fogl f1"></div><div class="fogl f2"></div>
+    <div class="glowp"></div><div class="edgeg eg1"></div><div class="edgeg eg2"></div><div class="flash"></div>
     <svg viewBox="0 0 1920 1080" width="1920" height="1080">
       <defs>
         <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe0ff" stop-opacity=".34"/><stop offset=".7" stop-color="#7fb4ff" stop-opacity=".07"/><stop offset="1" stop-color="#7fb4ff" stop-opacity="0"/></linearGradient>
@@ -395,7 +535,7 @@ body[data-preset=shards] .rings2{opacity:.5}
     </svg>
     <i class="bok" style="left:8%;top:62%;width:120px;height:120px;--t:16s;--x:40px"></i><i class="bok" style="left:78%;top:20%;width:90px;height:90px;--t:19s;--x:-36px"></i>
     <i class="bok" style="left:62%;top:70%;width:160px;height:160px;--t:22s;--x:30px"></i><i class="bok" style="left:20%;top:18%;width:70px;height:70px;--t:14s;--x:-28px"></i>
-    <i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
+    <i class="ember" style="left:20%;top:86%;--t:7s;--x:20px"></i><i class="ember" style="left:36%;top:92%;--t:9s;--x:-16px"></i><i class="ember" style="left:54%;top:88%;--t:8s;--x:24px"></i><i class="ember" style="left:70%;top:94%;--t:10s;--x:-22px"></i><i class="ember" style="left:84%;top:90%;--t:7.5s;--x:14px"></i><i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
     <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
     <div class="emb-w"><img class="emb-l" src="/img/crest.png" alt=""><i class="flare"></i></div>
@@ -421,6 +561,21 @@ function fit(){
 }
 window.addEventListener('resize', fit); fit();
 
+/* --- библиотека текста: посимвольное появление + блик по буквам --- */
+function setTitle(el, text){
+  if (el.dataset.t === text) return;
+  el.dataset.t = text; el.textContent = '';
+  var i = 0;
+  text.split(' ').forEach(function(word, wi, arr){
+    var w = document.createElement('span'); w.className = 'w';
+    Array.prototype.forEach.call(word, function(chr){
+      var s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', i++); s.textContent = chr; w.appendChild(s);
+    });
+    el.appendChild(w);
+    if (wi < arr.length - 1){ el.appendChild(document.createTextNode(' ')); i++; }
+  });
+  el.setAttribute('aria-label', text);
+}
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
 function bump(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
 function remaining(){
@@ -455,17 +610,18 @@ function render(){
     var sw = $('sweep'); sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
   }
   prevScene = st.scene;
-  var sceneOn = st.scene === 'soon' || st.scene === 'break';
+  var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
-  $('scene').classList.toggle('isbreak', st.scene === 'break');
-  document.body.dataset.preset = st.preset || 'hall';
+  $('scene').classList.toggle('isbreak', st.scene === 'break'); $('scene').classList.toggle('isend', st.scene === 'end'); $('scene').classList.toggle('issoon', st.scene === 'soon');
+  document.body.dataset.preset = st.preset || 'royal'; document.body.dataset.sc = st.scene;
   $('socT').textContent = st.social || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
   renderBracket();
-  if (st.scene === 'soon'){ $('scTitle').textContent = 'Скоро начнём'; $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
+  if (st.scene === 'end'){ setTitle($('scTitle'), 'Спасибо за просмотр'); $('scSub').textContent = st.tour; $('scRes').textContent = st.endText || ''; }
+  if (st.scene === 'soon'){ setTitle($('scTitle'), 'Скоро начнём'); $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
   if (st.scene === 'break'){
-    $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = st.tour + ' · BO' + st.bo + ' · Карта ' + st.map;
+    setTitle($('scTitle'), 'Перерыв'); $('scSub').textContent = st.tour + ' · BO' + st.bo + ' · Карта ' + st.map;
     $('scRes').textContent = 'Следующая карта: ' + Math.min(9, st.map + 1);
     $('bkNA').textContent = st.a.name || 'TBD'; $('bkNB').textContent = st.b.name || 'TBD';
     $('bkSA').textContent = st.a.score; $('bkSB').textContent = st.b.score;
@@ -519,7 +675,7 @@ var BR = {
   ubf:{x:1000,y:438}, gf:{x:1480,y:601}, lbs:{x:520,y:764}, lbf:{x:1000,y:764}
 };
 var HEADS = [
-  ['Плей-ин',40,290,'pi'], ['Верхняя сетка · полуфинал',520,290,'ubs'], ['Верхняя сетка · финал',1000,290,'ubf'], ['Гранд-финал',1480,290,'gf'],
+  ['Плей-ин',40,290,'pi'], ['Верхняя сетка · полуфинал',520,290,'ubs'], ['Верхняя сетка · финал',1000,290,'ubf'], ['Гранд-финал',1480,330,'gf'],
   ['Нижняя сетка · полуфинал',520,700,'lbs'], ['Нижняя сетка · финал',1000,700,'lbf']
 ];
 var LINKS = [['pi1','ubs1'],['pi2','ubs2'],['ubs1','ubf'],['ubs2','ubf'],['ubf','gf'],['lbf','gf'],['lbs','lbf']];

@@ -21,7 +21,7 @@
  "label": "До начала драфта",
  "lt": false,
  "scene": "bracket",
- "accent": "rose",
+ "accent": "gold",
  "preset": "shards",
  "bracket": {
   "title": "Плей-офф",

@@ -2,13 +2,13 @@
  "a": {
   "name": "Selangor Red Giants",
   "tag": "SRG",
-  "score": 2,
+  "score": 0,
   "teamId": "57cb1a6239"
  },
  "b": {
   "name": "Team Vamos",
   "tag": "VMS",
-  "score": 1,
+  "score": 0,
   "teamId": "910b8fc1de"
  },
  "bo": 3,
@@ -23,6 +23,9 @@
  "accent": "gold",
  "bracket": {
   "title": "Плей-офф",
+  "auto": true,
+  "win": 2,
+  "winGf": 4,
   "m": {
    "pi1": {
     "a": {

@@ -19,6 +19,11 @@ function createStorage(opts) {
   let chain = Promise.resolve();
   let writeOK = true;
 
+  async function httpError(r) {
+    let msg = '';
+    try { msg = (await r.json()).message || ''; } catch (_) { /* тела нет */ }
+    return new Error('GitHub ' + r.status + (msg ? ': ' + msg : ''));
+  }
   const enqueue = (fn) => { const p = chain.then(fn); chain = p.catch(() => {}); return p; };
   const encPath = (p) => p.split('/').map(encodeURIComponent).join('/');
 
@@ -38,21 +43,21 @@ function createStorage(opts) {
   async function ensureBranch() {
     let r = await gh('GET', `/repos/${repo}/branches/${branch}`);
     if (r.ok) return;
-    if (r.status !== 404) throw new Error('GitHub ' + r.status);
+    if (r.status !== 404) throw await httpError(r);
     r = await gh('GET', `/repos/${repo}`);
-    if (!r.ok) throw new Error('GitHub ' + r.status);
+    if (!r.ok) throw await httpError(r);
     const def = (await r.json()).default_branch;
     r = await gh('GET', `/repos/${repo}/git/ref/heads/${def}`);
-    if (!r.ok) throw new Error('GitHub ' + r.status);
+    if (!r.ok) throw await httpError(r);
     const sha = (await r.json()).object.sha;
     r = await gh('POST', `/repos/${repo}/git/refs`, { ref: `refs/heads/${branch}`, sha });
-    if (!r.ok && r.status !== 422) throw new Error('GitHub ' + r.status);
+    if (!r.ok && r.status !== 422) throw await httpError(r);
   }
 
   async function getFile(path) {
     const r = await gh('GET', `/repos/${repo}/contents/${encPath(path)}?ref=${encodeURIComponent(branch)}`);
     if (r.status === 404) return null;
-    if (!r.ok) throw new Error('GitHub ' + r.status);
+    if (!r.ok) throw await httpError(r);
     const j = await r.json();
     shas.set(path, j.sha);
     const buf = Buffer.from(j.content || '', 'base64');
@@ -76,7 +81,7 @@ function createStorage(opts) {
         const r = await gh('PUT', `/repos/${repo}/contents/${encPath(path)}`, body);
         if (r.ok) { const j = await r.json(); shas.set(path, j.content.sha); last.set(path, h); good(); return; }
         if (r.status === 409 || r.status === 422) { shas.delete(path); continue; }
-        throw new Error('GitHub ' + r.status);
+        throw await httpError(r);
       }
       throw new Error('GitHub: конфликт версий');
     }).catch(fail);
@@ -90,7 +95,7 @@ function createStorage(opts) {
       if (!sha) return;
       const r = await gh('DELETE', `/repos/${repo}/contents/${encPath(path)}`, { message, sha, branch });
       if (r.ok || r.status === 404) { shas.delete(path); last.delete(path); good(); return; }
-      throw new Error('GitHub ' + r.status);
+      throw await httpError(r);
     }).catch(fail);
   }
 
@@ -120,6 +125,8 @@ function createStorage(opts) {
     enabled,
     info: () => ({ mode: enabled ? 'github' : 'memory', ok: status.ok, saved: status.saved, error: status.error, writes: writeOK }),
     setWriteOK(v) { writeOK = !!v; },
+    reportError(e) { fail(e); },
+    reportOk() { good(); },
     load,
     saveState: (obj) => put('data/state.json', Buffer.from(JSON.stringify(obj, null, 1)), 'Состояние эфира'),
     saveLibrary: (teams) => put('data/library.json', Buffer.from(JSON.stringify({

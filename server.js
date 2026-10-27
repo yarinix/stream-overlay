@@ -294,12 +294,13 @@ async function start() {
       // не затираем сохранённое значениями по умолчанию, пока не получилось прочитать
       console.warn('Не удалось загрузить данные из GitHub: ' + e.message);
       storage.setWriteOK(false);
+      storage.reportError(e);
       const retry = setInterval(async () => {
         try {
           applyLoaded(await withTimeout(storage.load(), 25000), false);
           storage.setWriteOK(true); clearInterval(retry); broadcast();
           console.log('Данные из GitHub загружены со второй попытки');
-        } catch (_) { /* повторим */ }
+        } catch (err) { storage.reportError(err); }
       }, 30000);
     }
   } else {

@@ -19,7 +19,7 @@
  "role": "Комментатор",
  "label": "До начала драфта",
  "lt": false,
- "scene": "bracket",
+ "scene": "game",
  "accent": "steel",
  "bracket": {
   "title": "Плей-офф",

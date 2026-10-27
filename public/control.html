@@ -47,6 +47,15 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .seg input{position:absolute; opacity:0; pointer-events:none; width:1px; min-height:0}
 .seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
 .seg input:checked + span{background:var(--gold); color:#15100a; border-color:var(--gold)}
+.card > .ch{all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; min-height:28px; cursor:pointer; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700}
+.card > .ch:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+.ch::after{content:''; width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin:-4px 4px 0 0; transition:transform .2s}
+.card.shut > .ch::after{transform:rotate(-45deg); margin:0 4px 0 0}
+.cb{display:flex; flex-direction:column; gap:10px; min-width:0}
+.card.shut{gap:0}
+.card.shut > .cb{display:none}
+.foldbar{display:flex; gap:8px; justify-content:flex-end; margin:0 0 10px}
+.foldbar .btn{min-height:34px; padding:6px 12px; font-size:.75rem}
 .card.wide{grid-column:1 / -1}
 .tform{display:grid; grid-template-columns:auto minmax(0,1fr) 104px; gap:10px; align-items:end}
 .tform .thumb{grid-row:span 1}
@@ -100,6 +109,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 
   <div class="preview" id="pv"><iframe id="frame" src="/overlay" title="Предпросмотр оверлея"></iframe></div>
 
+  <div class="foldbar"><button class="btn" id="foldAll" type="button">Свернуть все</button><button class="btn" id="unfoldAll" type="button">Развернуть все</button></div>
   <div class="deck">
     <section class="card">
       <h3>Сцена</h3>
@@ -299,6 +309,32 @@ var FMTS = [['pi','Плей-ин'],['ubs','Верх · полуфинал'],['ub
     var mm = {}; mm[id] = {}; mm[id][s] = { score: cur + parseInt(b.dataset.d, 10) };
     patch({ bracket: { m: mm } });
   });
+})();
+(function folding(){
+  var KEY = 'ctlfold', DEF_OPEN = { 'Сцена': 1, 'Команды и счёт': 1 }, saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.deck > .card'));
+  function store(){ try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  function setShut(card, name, shut, persist){
+    card.classList.toggle('shut', shut);
+    card.querySelector('.ch').setAttribute('aria-expanded', shut ? 'false' : 'true');
+    if (persist){ saved[name] = shut ? 0 : 1; store(); }
+  }
+  cards.forEach(function(card){
+    var h = card.querySelector('h3'); if (!h) return;
+    var name = h.textContent.trim();
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ch'; btn.textContent = name;
+    var body = document.createElement('div'); body.className = 'cb';
+    while (h.nextSibling) body.appendChild(h.nextSibling);
+    card.replaceChild(btn, h); card.appendChild(body);
+    var open = name in saved ? !!saved[name] : !!DEF_OPEN[name];
+    setShut(card, name, !open, false);
+    btn.addEventListener('click', function(){ setShut(card, name, !card.classList.contains('shut'), true); });
+  });
+  function all(shut){ cards.forEach(function(card){ var b = card.querySelector('.ch'); if (b) setShut(card, b.textContent, shut, true); }); }
+  $('foldAll').onclick = function(){ all(true); };
+  $('unfoldAll').onclick = function(){ all(false); };
 })();
 var timers = {};
 function setVal(id, v){ var el = $(id); if (document.activeElement !== el) el.value = v; }

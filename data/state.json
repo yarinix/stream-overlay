@@ -22,6 +22,7 @@
  "lt": false,
  "scene": "game",
  "accent": "rose",
+ "preset": "hall",
  "bracket": {
   "title": "Плей-офф",
   "auto": true,

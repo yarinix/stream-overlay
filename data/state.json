@@ -20,7 +20,7 @@
  "label": "До начала драфта",
  "lt": false,
  "scene": "game",
- "accent": "steel",
+ "accent": "rose",
  "bracket": {
   "title": "Плей-офф",
   "auto": true,

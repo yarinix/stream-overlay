@@ -185,19 +185,71 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .bs{background:rgba(77,163,255,.1)}
 .br.win .bs{color:#fff; background:rgba(77,163,255,.38); text-shadow:0 0 12px var(--glow)}
 .sweep{background:linear-gradient(90deg, transparent 0%, rgba(77,163,255,.10) 18%, rgba(77,163,255,.5) 42%, rgba(255,255,255,.9) 50%, rgba(77,163,255,.5) 58%, rgba(77,163,255,.10) 82%, transparent 100%)}
+
+/* ---------- ближе к референсу: зал, герб, табло с гербом, перерыв ---------- */
+.emb-s{width:36px; height:36px; flex:none; filter:drop-shadow(0 0 8px var(--glow))}
+.emb-l{position:absolute; left:50%; top:62px; width:150px; height:150px; margin-left:-75px; filter:drop-shadow(0 0 26px var(--glow)) drop-shadow(0 8px 10px rgba(0,0,0,.6))}
+.sart{position:absolute; inset:0; opacity:0; pointer-events:none; transition:opacity .6s; overflow:hidden;
+  background:radial-gradient(60% 55% at 50% 34%, rgba(70,140,240,.40), transparent 72%), linear-gradient(180deg,#050a1c 0%,#08162f 55%,#03060e 100%)}
+.sart.on{opacity:1}
+.sart svg:first-child{position:absolute; left:0; top:0}
+.dust{position:absolute; width:6px; height:6px; border-radius:50%; background:#bfe0ff; opacity:0; box-shadow:0 0 10px 2px var(--glow); animation:dust var(--t) linear infinite; will-change:transform,opacity}
+@keyframes dust{0%{opacity:0; transform:translate(0,0)}15%{opacity:.8}85%{opacity:.5}100%{opacity:0; transform:translate(var(--x),-240px)}}
+.scene{background:none}
+.scene::before{background:none}
+.scene h2{margin-top:110px}
+.scene.isbreak h2{margin-top:70px}
+.scene.isbreak .big{font-size:150px}
+.scene .big{font-size:200px}
+.bkp{display:none; align-items:center; gap:22px; margin-top:6px; padding:12px 40px; background:linear-gradient(180deg,#13265a,#070f26); border:2px solid var(--gold); clip-path:var(--cut); filter:drop-shadow(0 0 16px var(--glow))}
+.scene.isbreak .bkp{display:flex}
+.scene.on > :nth-child(6){transition-delay:.8s}
+.bkn{width:330px; font-size:30px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; text-align:left; line-height:1.1; overflow-wrap:anywhere}
+.bkn.r{text-align:right}
+.bkl{flex:none; width:68px; height:68px; border-radius:50%; display:grid; place-items:center; overflow:hidden; font-weight:800; font-size:22px; background:radial-gradient(circle at 30% 25%,#27458c,#0a1226); border:2px solid var(--gold); color:var(--gold2)}
+.bkl img{width:80%; height:80%; object-fit:contain}
+.bks{font-size:64px; font-weight:800; min-width:56px; text-shadow:0 0 16px var(--glow); font-variant-numeric:tabular-nums}
+.bkd{font-style:normal; font-size:50px; color:var(--gold2)}
+.scene .res{padding:10px 34px; margin-top:6px; border:1px solid var(--gold3); background:rgba(8,20,48,.6); font-size:22px; letter-spacing:.28em}
+/* табло: скошенные крылья и герб по центру */
+#pA{clip-path:none}
+.team.t:not(.r){--cut:polygon(0 0,100% 0,calc(100% - 26px) 100%,0 100%)}
+.team.t.r{--cut:polygon(0 0,100% 0,100% 100%,26px 100%)}
+.team.t .in{padding:0 36px 0 22px}
+.team.t.r .in{padding:0 22px 0 36px}
+.score{--cut:polygon(0 0,100% 0,100% 100%,0 100%)}
+.mid{height:136px !important; --cut:polygon(0 0,100% 0,100% 62%,calc(100% - 26px) 100%,26px 100%,0 62%)}
+.mid .in{padding-top:6px; gap:0; justify-content:flex-start; padding-top:14px}
+.mid b{font-size:15px; letter-spacing:.22em}
+.mid i{font-size:15px; letter-spacing:.12em; color:#cfe0f7}
+/* LIVE */
+.live{position:absolute; right:40px; top:36px; transform:translate(-308px,14px); display:flex; align-items:center; gap:8px; padding:5px 12px; font-size:15px; font-weight:800; letter-spacing:.18em; background:rgba(5,10,24,.78); border:1px solid var(--gold3); color:#fff}
+.live b{width:10px; height:10px; border-radius:50%; background:#ff4157; box-shadow:0 0 10px #ff4157; animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.35}}
+.bbg{background:#050a18}
 </style>
 </head>
 <body>
 <div id="cv">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#b9c6dc"/><stop offset="1" stop-color="#5f7396"/></linearGradient>
+  <symbol id="crest" viewBox="0 0 100 100">
+    <path d="M50 4 L61 28 L50 96 L39 28 Z" fill="url(#gs)"/>
+    <path d="M37 34 C26 30 14 33 3 14 C6 42 20 58 38 66 Z" fill="url(#gs)" opacity=".92"/>
+    <path d="M63 34 C74 30 86 33 97 14 C94 42 80 58 62 66 Z" fill="url(#gs)" opacity=".92"/>
+    <path d="M40 70 C30 74 20 72 12 66 C20 80 32 86 44 84 Z M60 70 C70 74 80 72 88 66 C80 80 68 86 56 84 Z" fill="url(#gs)" opacity=".75"/>
+  </symbol>
+</defs></svg>
   <div class="sb" id="sb">
     <div class="cut team t" id="pA"><div class="in"><div class="logo" id="lgA"></div><div class="tn" id="tnA"></div></div></div>
     <div class="cut score s" id="sA"><div class="in"><span id="scA">0</span></div></div>
-    <div class="cut mid m" id="mC"><div class="in"><b id="boT"></b><i id="mapT"></i></div></div>
+    <div class="cut mid m" id="mC"><div class="in"><svg class="emb-s" viewBox="0 0 100 100"><use href="#crest"/></svg><b id="boT"></b><i id="mapT"></i></div></div>
     <div class="cut score s" id="sB"><div class="in"><span id="scB">0</span></div></div>
     <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
   </div>
   <div class="cut timer" id="timer"><div class="in"><small id="tLabel"></small><strong id="tVal">05:00</strong></div></div>
   <div class="cam"><i></i><i></i><i></i><i></i></div>
+  <div class="live"><b></b>LIVE</div>
   <div class="cut plate"><div class="in" id="camName"></div></div>
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
   <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
@@ -209,7 +261,39 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
     <div class="blinks" id="blinks" aria-hidden="true"></div>
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
-  <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div></div>
+  <div class="sart" id="sart" aria-hidden="true">
+    <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" width="1920" height="1080">
+      <defs>
+        <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd0ff" stop-opacity=".30"/><stop offset="1" stop-color="#9fd0ff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="pil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050a1a"/><stop offset=".85" stop-color="#0d2046"/><stop offset="1" stop-color="#3d78d0"/></linearGradient>
+        <linearGradient id="pilr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#050a1a"/><stop offset=".85" stop-color="#0d2046"/><stop offset="1" stop-color="#3d78d0"/></linearGradient>
+        <linearGradient id="gate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe6ff" stop-opacity=".45"/><stop offset=".55" stop-color="#4f95ff" stop-opacity=".35"/><stop offset="1" stop-color="#0a1a3c" stop-opacity="0"/></linearGradient>
+        <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c63c0" stop-opacity=".55"/><stop offset="1" stop-color="#050a18" stop-opacity="0"/></linearGradient>
+      </defs>
+      <path d="M760 760 V430 Q760 250 960 250 Q1160 250 1160 430 V760 Z" fill="url(#gate)"/>
+      <path d="M760 760 V430 Q760 250 960 250 Q1160 250 1160 430 V760" fill="none" stroke="#8fc2ff" stroke-opacity=".55" stroke-width="3"/>
+      <path d="M690 760 V420 Q690 200 960 200 Q1230 200 1230 420 V760" fill="none" stroke="#5c9bf0" stroke-opacity=".35" stroke-width="2"/>
+      <polygon points="780,0 1140,0 1500,760 420,760" fill="url(#beam)"/>
+      <polygon points="900,0 1020,0 1180,760 740,760" fill="url(#beam)" opacity=".7"/>
+      <rect x="0" y="0" width="150" height="800" fill="url(#pil)"/>
+      <rect x="190" y="60" width="95" height="720" fill="url(#pil)" opacity=".85"/>
+      <rect x="320" y="150" width="60" height="640" fill="url(#pil)" opacity=".6"/>
+      <rect x="1770" y="0" width="150" height="800" fill="url(#pilr)"/>
+      <rect x="1635" y="60" width="95" height="720" fill="url(#pilr)" opacity=".85"/>
+      <rect x="1540" y="150" width="60" height="640" fill="url(#pilr)" opacity=".6"/>
+      <rect x="0" y="760" width="1920" height="320" fill="url(#floor)"/>
+      <g stroke="#6aa8ff" stroke-opacity=".28" stroke-width="2" fill="none">
+        <path d="M0 780 H1920 M0 830 H1920 M0 900 H1920 M0 990 H1920"/>
+        <path d="M960 760 L-200 1080 M960 760 L100 1080 M960 760 L460 1080 M960 760 L960 1080 M960 760 L1460 1080 M960 760 L1820 1080 M960 760 L2120 1080"/>
+      </g>
+      <rect x="0" y="758" width="1920" height="4" fill="#8fc2ff" opacity=".6"/>
+    </svg>
+    <i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
+    <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
+    <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i>
+    <svg class="emb-l" viewBox="0 0 100 100"><use href="#crest"/></svg>
+  </div>
+  <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div></div>
   <div class="sweep" id="sweep"></div>
 </div>
 <script>
@@ -263,12 +347,22 @@ function render(){
     var sw = $('sweep'); sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
   }
   prevScene = st.scene;
-  $('scene').classList.toggle('on', st.scene === 'soon' || st.scene === 'break');
+  var sceneOn = st.scene === 'soon' || st.scene === 'break';
+  $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
+  $('scene').classList.toggle('isbreak', st.scene === 'break');
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
   renderBracket();
   if (st.scene === 'soon'){ $('scTitle').textContent = 'Скоро начнём'; $('scSub').textContent = st.tour; $('scRes').textContent = st.stage; }
-  if (st.scene === 'break'){ $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = (st.a.name || 'TBD') + '  ' + st.a.score + ' : ' + st.b.score + '  ' + (st.b.name || 'TBD'); $('scRes').textContent = 'Карта ' + st.map + ' · ' + st.stage; }
+  if (st.scene === 'break'){
+    $('scTitle').textContent = 'Перерыв'; $('scSub').textContent = st.tour + ' · BO' + st.bo + ' · Карта ' + st.map;
+    $('scRes').textContent = 'Следующая карта: ' + Math.min(9, st.map + 1);
+    $('bkNA').textContent = st.a.name || 'TBD'; $('bkNB').textContent = st.b.name || 'TBD';
+    $('bkSA').textContent = st.a.score; $('bkSB').textContent = st.b.score;
+    setLogo($('bkLA'), st.a.teamId ? TM[st.a.teamId] : null, (st.a.tag || '').toUpperCase());
+    setLogo($('bkLB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());
+    fitText($('bkNA'), 30, 14, 76); fitText($('bkNB'), 30, 14, 76);
+  }
   drawTimer();
 }
 setInterval(drawTimer, 200);

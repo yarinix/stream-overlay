@@ -84,7 +84,7 @@
    "ubf": {
     "a": {
      "name": "Selangor Red Giants",
-     "score": 3,
+     "score": 5,
      "teamId": "57cb1a6239"
     },
     "b": {
@@ -95,9 +95,9 @@
    },
    "gf": {
     "a": {
-     "name": "",
+     "name": "Selangor Red Giants",
      "score": 0,
-     "teamId": ""
+     "teamId": "57cb1a6239"
     },
     "b": {
      "name": "",
@@ -124,9 +124,9 @@
      "teamId": ""
     },
     "b": {
-     "name": "",
+     "name": "Team Rey",
      "score": 0,
-     "teamId": ""
+     "teamId": "00dc9c87bd"
     }
    }
   }

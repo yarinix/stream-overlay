@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
 <style>
 :root{
   --gold:#c9a45c; --gold2:#f2dca4; --gold3:#6d5a2e;
@@ -131,6 +131,60 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
   .scene > *, .bscene .bh, .bscene .bm, .bscene .bt{transform:none !important}
   .sweep{display:none}
 }
+
+/* ---------- стиль «чемпионат»: тёмно-синий, голубое свечение, серебряная кромка ---------- */
+:root{
+  --glow:rgba(77,163,255,.5);
+  --cut:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);
+  --f-head:"Cinzel","Cormorant Garamond","Times New Roman",serif;
+}
+.cut{background:linear-gradient(135deg,#f4f8ff,var(--gold) 34%,var(--gold3) 66%,#aebcd2)}
+.cut > .in{background:linear-gradient(180deg,#13265a 0%,#0b1738 52%,#060d20 100%); box-shadow:inset 0 1px 0 rgba(170,205,255,.28), inset 0 -18px 28px rgba(40,100,220,.12)}
+.sb,.timer,.lt{filter:drop-shadow(0 0 16px var(--glow)) drop-shadow(0 12px 22px rgba(0,0,0,.6))}
+.logo,.bl{background:radial-gradient(circle at 30% 25%,#27458c,#0a1226); color:var(--gold2)}
+.logo{border-color:var(--gold); box-shadow:0 0 12px var(--glow)}
+.bl{border-color:var(--gold3)}
+.score .in{color:#fff; text-shadow:0 0 18px var(--glow),0 0 4px rgba(255,255,255,.6); background:linear-gradient(180deg,#1a3a86,#0b1a40)}
+.mid .in{background:linear-gradient(180deg,#0f2150,#070f26)}
+.mid b{color:var(--gold2)}
+.tn{text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.cam i{border-color:var(--gold); filter:drop-shadow(0 0 6px var(--glow))}
+.plate .in{color:var(--gold2); text-shadow:0 0 10px var(--glow)}
+.timer small,.lt span{color:var(--gold2)}
+.timer strong{text-shadow:0 0 14px var(--glow)}
+.tick{background:linear-gradient(180deg,#0b1936,#050a18); border-top:2px solid var(--gold); box-shadow:0 -6px 26px var(--glow)}
+.tick .tag{background:linear-gradient(135deg,var(--gold2),var(--gold)); color:#04122a}
+.tick .sep{background:var(--gold3)}
+.tick .tx{color:#cfe0f7}
+.tick .game-name{font-family:var(--f-head); font-style:normal; color:var(--gold2); letter-spacing:.08em; font-weight:700; font-size:24px}
+.scene{background:
+  radial-gradient(55% 60% at 50% 36%, rgba(70,140,240,.38), transparent 72%),
+  radial-gradient(40% 30% at 50% 100%, rgba(90,160,255,.30), transparent 80%),
+  linear-gradient(180deg,#070d22 0%,#0a1a3c 58%,#04070f 100%)}
+.scene::before{content:''; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(105deg, transparent 0 190px, rgba(120,175,255,.06) 190px 192px),
+             linear-gradient(0deg, rgba(80,150,255,.20), transparent 32%)}
+.scene::after{content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); box-shadow:0 0 24px 4px var(--glow)}
+.scene > *{position:relative; z-index:1}
+.scene h2{font-family:var(--f-head); font-weight:800; letter-spacing:.07em; padding-left:.07em;
+  background:linear-gradient(180deg,#ffffff 0%,#dbe4f2 42%,#8795ad 54%,#eef3fb 100%); -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 22px var(--glow)) drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.scene .sub{font-family:var(--f-body); font-style:normal; font-size:34px; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:var(--gold2); padding-left:.3em}
+.scene .big{background:linear-gradient(180deg,#ffffff,#bcd8ff 55%,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 26px var(--glow)); font-family:var(--f-body)}
+.scene .line{background:linear-gradient(90deg,transparent,var(--gold),transparent); box-shadow:0 0 16px var(--glow)}
+.scene .res{color:#cfe0f7}
+.bbg{background:#060b18}
+.lk{background:var(--gold); box-shadow:0 0 10px var(--glow)}
+.bt h2{font-family:var(--f-head); font-weight:800; letter-spacing:.08em;
+  background:linear-gradient(180deg,#ffffff,#dbe4f2 45%,#8795ad 55%,#eef3fb); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 16px var(--glow))}
+.bt p{font-family:var(--f-body); font-style:normal; font-size:24px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold2); font-weight:600}
+.bh{background:linear-gradient(180deg,rgba(77,163,255,.16),rgba(77,163,255,.05)); border-bottom:2px solid var(--gold); color:var(--gold2); box-shadow:0 6px 18px -8px var(--glow)}
+.bh em{border-color:var(--gold); color:var(--gold2); background:rgba(5,12,32,.6)}
+.br + .br{border-top:1px solid rgba(130,180,255,.2)}
+.bs{background:rgba(77,163,255,.1)}
+.br.win .bs{color:#fff; background:rgba(77,163,255,.38); text-shadow:0 0 12px var(--glow)}
+.sweep{background:linear-gradient(90deg, transparent 0%, rgba(77,163,255,.10) 18%, rgba(77,163,255,.5) 42%, rgba(255,255,255,.9) 50%, rgba(77,163,255,.5) 58%, rgba(77,163,255,.10) 82%, transparent 100%)}
 </style>
 </head>
 <body>
@@ -164,9 +218,10 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 var $ = function(id){ return document.getElementById(id); };
 var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null, prevScene = null, lastTime = '';
 var ACC = {
-  gold:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e' },
-  steel:{ g:'#9db4c9', g2:'#e3eef8', g3:'#43586b' },
-  rose:{ g:'#c06a7a', g2:'#f2c6ce', g3:'#6a2f3b' }
+  gold:{ g:'#4da3ff', g2:'#d6ebff', g3:'#1d4f91', gl:'rgba(77,163,255,.5)' },
+  steel:{ g:'#a9bdd6', g2:'#f1f6fc', g3:'#4a5d77', gl:'rgba(170,195,230,.4)' },
+  amber:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e', gl:'rgba(201,164,92,.45)' },
+  rose:{ g:'#e0566c', g2:'#ffd0d7', g3:'#7a2335', gl:'rgba(224,86,108,.45)' }
 };
 function fit(){
   var k = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
@@ -191,7 +246,7 @@ function drawTimer(){
 }
 function render(){
   var a = ACC[st.accent] || ACC.gold, s = document.documentElement.style;
-  s.setProperty('--gold', a.g); s.setProperty('--gold2', a.g2); s.setProperty('--gold3', a.g3);
+  s.setProperty('--gold', a.g); s.setProperty('--gold2', a.g2); s.setProperty('--gold3', a.g3); s.setProperty('--glow', a.gl);
   TM = {}; (st.teams || []).forEach(function(t){ TM[t.id] = t; });
   $('tnA').textContent = st.a.name || 'TBD'; fitText($('tnA'), 22, 11, 62); setLogo($('lgA'), st.a.teamId ? TM[st.a.teamId] : null, (st.a.tag || '').toUpperCase());
   $('tnB').textContent = st.b.name || 'TBD'; fitText($('tnB'), 22, 11, 62); setLogo($('lgB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());

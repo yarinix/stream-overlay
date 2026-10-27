@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap">
 <style>
 :root{
-  --ink:#07090c; --panel:#10141a; --panel2:#161b23; --line:#262d38; --text:#e9e5da; --muted:#8c94a1;
-  --gold:#c9a45c; --ok:#5fb98a; --bad:#d0636f;
+  --ink:#050a16; --panel:#0b1428; --panel2:#101c36; --line:#203359; --text:#e6eefb; --muted:#8a9bb8;
+  --gold:#4da3ff; --ok:#5fb98a; --bad:#d0636f;
   --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif; color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -37,7 +37,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .btns{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .btn{font:inherit; font-weight:600; font-size:.85rem; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 16px; min-height:42px; cursor:pointer}
 .btn:hover{border-color:var(--gold)}
-.btn.p{background:var(--gold); color:#15100a; border-color:var(--gold)}
+.btn.p{background:var(--gold); color:#04122a; border-color:var(--gold)}
 .btn[aria-pressed="true"]{border-color:var(--gold); box-shadow:inset 0 0 0 1px var(--gold)}
 .sc{display:flex; align-items:center; gap:10px}
 .sc output{min-width:2ch; text-align:center; font-weight:800; font-size:1.4rem; font-variant-numeric:tabular-nums}
@@ -46,7 +46,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .seg label{cursor:pointer; display:block; flex:1 1 auto}
 .seg input{position:absolute; opacity:0; pointer-events:none; width:1px; min-height:0}
 .seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
-.seg input:checked + span{background:var(--gold); color:#15100a; border-color:var(--gold)}
+.seg input:checked + span{background:var(--gold); color:#04122a; border-color:var(--gold)}
 .card > .ch{all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; min-height:28px; cursor:pointer; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700}
 .card > .ch:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
 .ch::after{content:''; width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin:-4px 4px 0 0; transition:transform .2s}
@@ -121,9 +121,10 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       </div>
       <h3>Стиль</h3>
       <div class="sw" id="sw">
-        <button type="button" data-a="gold" aria-label="Золото" aria-pressed="false" style="background:#c9a45c"></button>
+        <button type="button" data-a="gold" aria-label="Синий" aria-pressed="false" style="background:#4da3ff"></button>
         <button type="button" data-a="steel" aria-label="Сталь" aria-pressed="false" style="background:#9db4c9"></button>
-        <button type="button" data-a="rose" aria-label="Рубин" aria-pressed="false" style="background:#c06a7a"></button>
+        <button type="button" data-a="amber" aria-label="Золото" aria-pressed="false" style="background:#c9a45c"></button>
+        <button type="button" data-a="rose" aria-label="Рубин" aria-pressed="false" style="background:#e0566c"></button>
       </div>
     </section>
 

@@ -1,3 +1,52 @@
 {
- "teams": []
+ "teams": [
+  {
+   "id": "910b8fc1de",
+   "name": "Team Vamos",
+   "tag": "VMS",
+   "v": "mvq87p94",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "57cb1a6239",
+   "name": "Selangor Red Giant",
+   "tag": "SRG",
+   "v": "mvq7th02",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "180e21de90",
+   "name": "Invictus Gaming",
+   "tag": "IG",
+   "v": "mvq7th8t",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "1aceb5ac1a",
+   "name": "Team FLASH",
+   "tag": "FL",
+   "v": "mvq7th3l",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "c6fb972c8b",
+   "name": "Bigetron MY by Vit",
+   "tag": "BTR",
+   "v": "mvq7thh8",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "00dc9c87bd",
+   "name": "Team Rey",
+   "tag": "TR",
+   "v": "mvq7thk7",
+   "mime": "image/png",
+   "ext": "png"
+  }
+ ]
 }

@@ -3,13 +3,13 @@
   "name": "Selangor Red Giant",
   "tag": "SRG",
   "score": 2,
-  "teamId": "57cb1a6239"
+  "teamId": ""
  },
  "b": {
   "name": "VAMOS",
   "tag": "VM",
   "score": 1,
-  "teamId": "910b8fc1de"
+  "teamId": ""
  },
  "bo": 3,
  "map": 1,
@@ -28,31 +28,31 @@
     "a": {
      "name": "VAMOS",
      "score": 0,
-     "teamId": "910b8fc1de"
+     "teamId": ""
     },
     "b": {
      "name": "Team FLASH",
      "score": 0,
-     "teamId": "1aceb5ac1a"
+     "teamId": ""
     }
    },
    "pi2": {
     "a": {
      "name": "Invictus Gaming",
      "score": 0,
-     "teamId": "180e21de90"
+     "teamId": ""
     },
     "b": {
      "name": "Bigetron MY by V",
      "score": 0,
-     "teamId": "c6fb972c8b"
+     "teamId": ""
     }
    },
    "ubs1": {
     "a": {
      "name": "Selangor Red Gia",
      "score": 0,
-     "teamId": "57cb1a6239"
+     "teamId": ""
     },
     "b": {
      "name": "",
@@ -64,7 +64,7 @@
     "a": {
      "name": "Team Rey",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     },
     "b": {
      "name": "",

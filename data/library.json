@@ -1,14 +1,6 @@
 {
  "teams": [
   {
-   "id": "00dc9c87bd",
-   "name": "Team Rey",
-   "tag": "TR",
-   "v": "mvq89ttw",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "910b8fc1de",
    "name": "Team Vamos",
    "tag": "VMS",
@@ -29,6 +21,14 @@
    "name": "Invictus Gaming",
    "tag": "IG",
    "v": "mvq88sep",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "00dc9c87bd",
+   "name": "Team Rey",
+   "tag": "TR",
+   "v": "mvq89ttw",
    "mime": "image/png",
    "ext": "png"
   },

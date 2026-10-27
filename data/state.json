@@ -24,7 +24,7 @@
  "bracket": {
   "title": "Плей-офф",
   "auto": true,
-  "win": 2,
+  "win": 3,
   "winGf": 4,
   "m": {
    "pi1": {
@@ -58,9 +58,9 @@
      "teamId": "57cb1a6239"
     },
     "b": {
-     "name": "Team Vamos",
+     "name": "",
      "score": 0,
-     "teamId": "910b8fc1de"
+     "teamId": ""
     }
    },
    "ubs2": {
@@ -70,21 +70,21 @@
      "teamId": "00dc9c87bd"
     },
     "b": {
-     "name": "Bigetron MY by Vitality",
+     "name": "",
      "score": 0,
-     "teamId": "c6fb972c8b"
+     "teamId": ""
     }
    },
    "ubf": {
     "a": {
-     "name": "Selangor Red Giants",
-     "score": 2,
-     "teamId": "57cb1a6239"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Team Rey",
+     "name": "",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     }
    },
    "gf": {
@@ -113,14 +113,14 @@
    },
    "lbf": {
     "a": {
-     "name": "Team Vamos",
-     "score": 4,
-     "teamId": "910b8fc1de"
+     "name": "",
+     "score": 0,
+     "teamId": ""
     },
     "b": {
-     "name": "Team Rey",
+     "name": "",
      "score": 0,
-     "teamId": "00dc9c87bd"
+     "teamId": ""
     }
    }
   }

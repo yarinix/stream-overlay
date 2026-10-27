@@ -31,7 +31,7 @@ h1{font-size:1.05rem; font-weight:800; letter-spacing:.14em; text-transform:uppe
 .f label{font-size:.75rem; color:var(--muted)}
 input,select{font:inherit; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 10px; min-height:40px; width:100%; min-width:0}
 input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-visible + span{outline:2px solid var(--gold); outline-offset:1px}
-.two{display:grid; grid-template-columns:1fr 84px; gap:8px}
+.two{display:grid; grid-template-columns:minmax(0,1fr) 104px; gap:8px}
 .btns{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .btn{font:inherit; font-weight:600; font-size:.85rem; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 16px; min-height:42px; cursor:pointer}
 .btn:hover{border-color:var(--gold)}
@@ -46,7 +46,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
 .seg input:checked + span{background:var(--gold); color:#15100a; border-color:var(--gold)}
 .card.wide{grid-column:1 / -1}
-.tform{display:grid; grid-template-columns:auto minmax(0,1fr) 84px; gap:10px; align-items:end}
+.tform{display:grid; grid-template-columns:auto minmax(0,1fr) 104px; gap:10px; align-items:end}
 .tform .thumb{grid-row:span 1}
 .thumb{width:64px; height:64px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); display:grid; place-items:center; overflow:hidden; font-weight:800; font-size:.8rem; color:var(--gold); flex:none}
 .thumb img{width:84%; height:84%; object-fit:contain; display:block}
@@ -116,9 +116,9 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 
     <section class="card">
       <h3>Команды и счёт</h3>
-      <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="18" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="3"></div></div>
+      <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="5"></div></div>
       <div class="sc"><button class="btn" id="aMinus" type="button" aria-label="Минус очко команде A">−</button><output id="oA">0</output><button class="btn p" id="aPlus" type="button" aria-label="Плюс очко команде A">+</button></div>
-      <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="18" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="3"></div></div>
+      <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="5"></div></div>
       <div class="sc"><button class="btn" id="bMinus" type="button" aria-label="Минус очко команде B">−</button><output id="oB">0</output><button class="btn p" id="bPlus" type="button" aria-label="Плюс очко команде B">+</button></div>
       <div class="btns"><button class="btn" id="swap" type="button">Поменять местами</button><button class="btn" id="zero" type="button">Сбросить счёт</button></div>
     </section>
@@ -159,8 +159,8 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       <h3>Команды и значки</h3>
       <div class="tform">
         <div class="thumb" id="tfPrev" aria-hidden="true"></div>
-        <div class="f"><label for="tfName">Название команды</label><input id="tfName" maxlength="18" placeholder="Например, Nova Wolves"></div>
-        <div class="f"><label for="tfTag">Тег</label><input id="tfTag" maxlength="3" placeholder="NW"></div>
+        <div class="f"><label for="tfName">Название команды</label><input id="tfName" maxlength="28" placeholder="Например, Nova Wolves"></div>
+        <div class="f"><label for="tfTag">Тег</label><input id="tfTag" maxlength="5" placeholder="NW"></div>
       </div>
       <div class="tbtns">
         <button class="btn" id="tfPick" type="button">Выбрать значок</button>
@@ -256,7 +256,7 @@ var MATCHES = [
     el.className = 'mini';
     var h = '<h4>' + m[1] + '</h4>';
     ['a','b'].forEach(function(s){
-      h += '<div class="trow"><input id="bn_' + id + s + '" maxlength="18" list="teamNames" autocomplete="off" aria-label="' + m[1] + ', команда ' + (s === 'a' ? '1' : '2') + '" placeholder="Команда">' +
+      h += '<div class="trow"><input id="bn_' + id + s + '" maxlength="28" list="teamNames" autocomplete="off" aria-label="' + m[1] + ', команда ' + (s === 'a' ? '1' : '2') + '" placeholder="Команда">' +
         '<button class="btn" type="button" data-m="' + id + '" data-s="' + s + '" data-d="-1" aria-label="Минус очко">−</button>' +
         '<output id="bo_' + id + s + '">0</output>' +
         '<button class="btn p" type="button" data-m="' + id + '" data-s="' + s + '" data-d="1" aria-label="Плюс очко">+</button></div>';
@@ -473,7 +473,7 @@ function processLogo(file){
 $('tfSave').onclick = function(){
   var name = $('tfName').value.trim();
   if (!name){ msg('Введите название команды.'); return; }
-  var body = { name: name, tag: $('tfTag').value.trim().slice(0, 3).toUpperCase() };
+  var body = { name: name, tag: $('tfTag').value.trim().slice(0, 5).toUpperCase() };
   if (editId) body.id = editId;
   if (newLogo) body.logo = newLogo; else if (clearLogo) body.clearLogo = true;
   $('tfSave').disabled = true;

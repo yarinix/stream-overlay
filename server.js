@@ -62,8 +62,8 @@ function applyPatch(p) {
   for (const k of ['a', 'b']) {
     const t = p[k];
     if (t && typeof t === 'object') {
-      if ('name' in t) state[k].name = str(t.name, 18);
-      if ('tag' in t) state[k].tag = str(t.tag, 3);
+      if ('name' in t) state[k].name = str(t.name, 28);
+      if ('tag' in t) state[k].tag = str(t.tag, 5);
       if ('score' in t) state[k].score = int(t.score, 0, 9);
       if ('teamId' in t) state[k].teamId = teams.has(t.teamId) ? t.teamId : '';
     }
@@ -91,7 +91,7 @@ function applyPatch(p) {
         for (const s of ['a', 'b']) {
           const t = m[s];
           if (!t || typeof t !== 'object') continue;
-          if ('name' in t) state.bracket.m[id][s].name = str(t.name, 16);
+          if ('name' in t) state.bracket.m[id][s].name = str(t.name, 28);
           if ('score' in t) state.bracket.m[id][s].score = int(t.score, 0, 9);
           if ('teamId' in t) state.bracket.m[id][s].teamId = teams.has(t.teamId) ? t.teamId : '';
         }
@@ -177,10 +177,10 @@ app.put('/api/team', authHttp, (req, res) => {
     if (!buf.length || buf.length > 100 * 1024) return res.status(400).json({ error: 'logo too large' });
     logo = { buf, mime: m[1] };
   }
-  const name = 'name' in b ? str(b.name, 18) : t.name;
+  const name = 'name' in b ? str(b.name, 28) : t.name;
   if (!name.trim()) return res.status(400).json({ error: 'name required' });
   t.name = name;
-  if ('tag' in b) t.tag = str(b.tag, 3);
+  if ('tag' in b) t.tag = str(b.tag, 5);
   if (b.clearLogo) { t.buf = null; t.mime = ''; t.ext = ''; t.v = Date.now().toString(36); storage.deleteLogo(id, oldExt); }
   if (logo) {
     t.buf = logo.buf; t.mime = logo.mime; t.ext = EXT[logo.mime]; t.v = Date.now().toString(36);

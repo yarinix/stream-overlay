@@ -20,7 +20,7 @@
  "social": "twitch.tv/blacksid_co",
  "label": "До начала драфта",
  "lt": false,
- "scene": "bracket",
+ "scene": "break",
  "accent": "rose",
  "bracket": {
   "title": "Плей-офф",

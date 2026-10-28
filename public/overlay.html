@@ -586,6 +586,14 @@ body[data-sc=break] .emb-cap{display:none}
 .soc::before{content:'СЛЕДИТЕ ЗА\A ТРАНСЛЯЦИЯМИ'; white-space:pre; text-align:left; line-height:1.6; font-size:13px; letter-spacing:.26em; padding-right:24px}
 .soc b{width:26px; height:30px; border-radius:0; box-shadow:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath fill='%239146ff' d='M2 0 0 5v20h6v3h4l3-3h5l7-7V0H2z'/%3E%3Cpath fill='%23fff' d='M20 16l-4 4h-5l-3 3v-3H4V2h16v14z'/%3E%3Cpath fill='%239146ff' d='M14 6h2v6h-2zM9 6h2v6H9z'/%3E%3C/svg%3E") center/contain no-repeat !important}
 .soc span{font-size:27px; font-weight:600; letter-spacing:.05em; text-transform:none}
+
+/* ---------- значок Twitch у ника на вебке ---------- */
+.camname::before{content:''; flex:none; width:19px; height:22px; margin-right:14px; margin-left:-.34em; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath fill='%239146ff' d='M2 0 0 5v20h6v3h4l3-3h5l7-7V0H2z'/%3E%3Cpath fill='%23fff' d='M20 16l-4 4h-5l-3 3v-3H4V2h16v14z'/%3E%3Cpath fill='%239146ff' d='M14 6h2v6h-2zM9 6h2v6H9z'/%3E%3C/svg%3E") center/contain no-repeat}
+/* ---------- сцена «Только вебка»: рамка в углу, видны левый и нижний края ---------- */
+.camwrap{transition:transform .6s cubic-bezier(.2,.9,.2,1)}
+body[data-sc=cam] .camwrap{transform:translate(40px,-40px)}
+body[data-sc=cam] .sweep{display:none}
+body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-sc=cam] .tick,body[data-sc=cam] .bscene{opacity:0 !important; visibility:hidden}
 </style>
 </head>
 <body>

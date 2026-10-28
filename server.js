@@ -107,7 +107,7 @@ function applyPatch(p) {
   if ('label' in p) state.label = str(p.label, 24);
   if ('lt' in p) state.lt = !!p.lt;
   if ('scene' in p && ['game', 'soon', 'break', 'bracket', 'end'].includes(p.scene)) state.scene = p.scene;
-  if ('preset' in p && ['royal', 'hall', 'citadel', 'shards'].includes(p.preset)) state.preset = p.preset;
+  if ('preset' in p && ['royal'].includes(p.preset)) state.preset = p.preset;
   if ('accent' in p && ['gold', 'steel', 'rose', 'amber'].includes(p.accent)) state.accent = p.accent;
   if (p.bracket && typeof p.bracket === 'object') {
     const b = p.bracket;

@@ -120,8 +120,6 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <label><input type="radio" name="scene" value="bracket"><span>Сетка</span></label>
         <label><input type="radio" name="scene" value="end"><span>Финал</span></label>
       </div>
-      <h3>Фон заставок</h3>
-      <div class="seg" role="radiogroup" aria-label="Фон"><label><input type="radio" name="preset" value="royal"><span>Королевский</span></label><label><input type="radio" name="preset" value="hall"><span>Чертог</span></label><label><input type="radio" name="preset" value="citadel"><span>Цитадель</span></label><label><input type="radio" name="preset" value="shards"><span>Осколки</span></label></div>
       <h3>Стиль</h3>
       <div class="sw" id="sw">
         <button type="button" data-a="gold" aria-label="Синий" aria-pressed="false" style="background:#4da3ff"></button>
@@ -350,7 +348,6 @@ function sync(){
   setVal('bo', st.bo); setVal('map', st.map); setVal('tour', st.tour); setVal('stg', st.stage);
   setVal('cast', st.cast); setVal('role', st.role); setVal('social', st.social || ''); setVal('endText', st.endText || ''); setVal('label', st.label); setVal('mins', st.timer.mins);
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
-  document.querySelectorAll('input[name=preset]').forEach(function(r){ r.checked = r.value === (st.preset || 'royal'); });
   renderTeams();
   if (st.bracket){
     setVal('bTitle', st.bracket.title);
@@ -394,9 +391,6 @@ $('tGo').onclick = function(){ send({ type: 'timer', action: st.timer.run ? 'pau
 $('tReset').onclick = function(){ send({ type: 'timer', action: 'reset' }); };
 document.querySelectorAll('input[name=scene]').forEach(function(r){
   r.addEventListener('change', function(){ if (r.checked) patch({ scene: r.value }); });
-});
-document.querySelectorAll('input[name=preset]').forEach(function(r){
-  r.addEventListener('change', function(){ if (r.checked) patch({ preset: r.value }); });
 });
 document.querySelectorAll('#sw button').forEach(function(b){
   b.addEventListener('click', function(){ patch({ accent: b.dataset.a }); });

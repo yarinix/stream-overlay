@@ -300,18 +300,12 @@ html,body{margin:0; background:transparent; overflow:hidden; width:100%; height:
 .br.win .bs{background:linear-gradient(180deg,rgba(110,170,255,.55),rgba(60,120,240,.30))}
 
 /* ---------- растровые арты ---------- */
-.sart{background:radial-gradient(44% 46% at 50% 52%,rgba(2,6,18,.62),rgba(2,6,18,.25) 70%,transparent 100%) center/cover no-repeat,linear-gradient(rgba(2,6,18,.18),rgba(2,6,18,.18)),#03060f url(/img/hall.jpg) center/cover no-repeat}
-.bfull{background:#03060f url(/img/hall-dim.jpg) center/cover no-repeat}
+.sart{background:radial-gradient(44% 46% at 50% 52%,rgba(2,6,18,.62),rgba(2,6,18,.25) 70%,transparent 100%) center/cover no-repeat,linear-gradient(rgba(2,6,18,.18),rgba(2,6,18,.18)),#03060f}
+.bfull{background:#03060f url(/img/royal-bracket.jpg) center/cover no-repeat}
 .emb-s{object-fit:contain}
 .emb-w .emb-l{object-fit:contain; filter:drop-shadow(0 0 34px var(--glow)) drop-shadow(0 12px 14px rgba(0,0,0,.75))}
 
 /* пресеты фона */
-body[data-preset=citadel] .sart{background-image:radial-gradient(44% 46% at 50% 52%,rgba(2,6,18,.55),rgba(2,6,18,.2) 70%,transparent 100%),url(/img/citadel.jpg)}
-body[data-preset=citadel] .bfull{background-image:url(/img/citadel-dim.jpg)}
-body[data-preset=shards] .sart{background-image:radial-gradient(44% 46% at 50% 52%,rgba(2,6,18,.5),rgba(2,6,18,.15) 70%,transparent 100%),url(/img/shards.jpg)}
-body[data-preset=shards] .bfull{background-image:url(/img/shards-dim.jpg)}
-body[data-preset=citadel] .rings,body[data-preset=citadel] .rings2{opacity:.35}
-body[data-preset=shards] .rings2{opacity:.5}
 
 /* =====================================================================
    КОРОЛЕВСКИЙ ПРЕСЕТ: свои фоны + рамка вебки, типографика, «живые» слои
@@ -370,9 +364,6 @@ body[data-sc=soon] .simg.s-soon,body[data-sc=break] .simg.s-break,body[data-sc=e
 body[data-preset=royal] .simg.s-soon{background-image:url(/img/royal-soon.jpg)}
 body[data-preset=royal] .simg.s-break{background-image:url(/img/royal-break.jpg)}
 body[data-preset=royal] .simg.s-end{background-image:url(/img/royal-end.jpg)}
-body[data-preset=hall] .simg{background-image:url(/img/hall.jpg)}
-body[data-preset=citadel] .simg{background-image:url(/img/citadel.jpg)}
-body[data-preset=shards] .simg{background-image:url(/img/shards.jpg)}
 .sart{background-image:none !important}
 body[data-preset=royal] .bfull{background-image:url(/img/royal-bracket.jpg)}
 body[data-preset=royal] .sart > svg,body[data-preset=royal] .bframe{display:none}
@@ -521,7 +512,7 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
 </style>
 </head>
 <body>
-<div style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><img src="/img/royal-soon.jpg" alt=""><img src="/img/royal-break.jpg" alt=""><img src="/img/royal-end.jpg" alt=""><img src="/img/royal-bracket.jpg" alt=""><img src="/img/camframe.png" alt=""><img src="/img/fog.png" alt=""><img src="/img/hall.jpg" alt=""><img src="/img/citadel.jpg" alt=""><img src="/img/shards.jpg" alt=""><img src="/img/hall-dim.jpg" alt=""><img src="/img/citadel-dim.jpg" alt=""><img src="/img/shards-dim.jpg" alt=""></div>
+<div style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true"><img src="/img/royal-soon.jpg" alt=""><img src="/img/royal-break.jpg" alt=""><img src="/img/royal-end.jpg" alt=""><img src="/img/royal-bracket.jpg" alt=""><img src="/img/camframe.png" alt=""><img src="/img/fog.png" alt=""></div>
 <div id="cv">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#b9c6dc"/><stop offset="1" stop-color="#5f7396"/></linearGradient>
@@ -693,7 +684,7 @@ function render(){
   var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
   $('scene').classList.toggle('isbreak', st.scene === 'break'); $('scene').classList.toggle('isend', st.scene === 'end'); $('scene').classList.toggle('issoon', st.scene === 'soon');
-  document.body.dataset.preset = st.preset || 'royal'; document.body.dataset.sc = st.scene;
+  document.body.dataset.preset = 'royal'; document.body.dataset.sc = st.scene;
   $('socT').textContent = st.social || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');

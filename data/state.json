@@ -24,7 +24,13 @@
  "scene": "cam",
  "accent": "gold",
  "preset": "royal",
- "layout": {},
+ "layout": {
+  "cam": {
+   "camwrap": {
+    "hide": true
+   }
+  }
+ },
  "customScenes": [],
  "bracket": {
   "title": "Плей-офф",

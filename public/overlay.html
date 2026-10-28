@@ -591,7 +591,7 @@ body[data-sc=break] .emb-cap{display:none}
 .camname::before{content:''; flex:none; width:20px; height:23px; margin-right:14px; margin-left:-.34em; background:url(/img/twitch.png) center/contain no-repeat}
 /* ---------- сцена «Только вебка»: рамка в углу, видны левый и нижний края ---------- */
 .camwrap{transition:transform .6s cubic-bezier(.2,.9,.2,1)}
-body[data-sc=cam] .camwrap{transform:translate(40px,-40px)}
+.camwrap{transform:translate(40px,-40px)}
 body[data-sc=cam] .sweep{display:none}
 body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-sc=cam] .tick,body[data-sc=cam] .bscene{opacity:0 !important; visibility:hidden}
 /* перерыв: плашка со ссылкой ниже полосы на фоне */
@@ -983,14 +983,14 @@ function applyLayout(){
   var L = layoutOf(), cam = st.scene === 'cam';
   EL.forEach(function(e){
     var el = e.el; if (!el) return;
-    var v = L[e.id] || {}, sig = JSON.stringify(v) + (HAS_IND ? '' : (cam && e.id === 'camwrap' ? 'c' : ''));
+    var v = L[e.id] || {}, sig = JSON.stringify(v) + (HAS_IND ? '' : '');
     if (el.__ls === sig) return; el.__ls = sig;
     var dx = +v.dx || 0, dy = +v.dy || 0, sc = +v.sc > 0 ? +v.sc : 1;
     if (HAS_IND){
       el.style.translate = (dx || dy) ? dx + 'px ' + dy + 'px' : ''; el.style.scale = sc !== 1 ? String(sc) : '';
     } else {
       var t = (dx || dy || sc !== 1) ? 'translate(' + dx + 'px,' + dy + 'px) scale(' + sc + ')' : '';
-      if (cam && e.id === 'camwrap') t += ' translate(40px,-40px)';
+      if (e.id === 'camwrap') t += ' translate(40px,-40px)';
       el.style.transform = t;
     }
     if (el.__f0 === undefined){ el.style.filter = ''; el.__f0 = getComputedStyle(el).filter; }

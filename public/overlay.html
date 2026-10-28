@@ -539,6 +539,52 @@ html.lite .scene h2 .ch{color:#f0dca8; background:none}
 html.lite .scene .big{-webkit-background-clip:border-box; background-clip:border-box; background:none; color:#e8f0ff}
 html.lite .simg{inset:0; transform:none}
 body.paused *{animation-play-state:paused !important}
+
+/* ---------- КОМПОНОВКА v3 (по референсам) ---------- */
+/* табло: счёт внутри плашек команд, без отдельных коробок */
+.t{width:408px}
+#pA{left:455px} #pB{left:1057px}
+#sA{left:775px} #sB{left:1057px}
+.team.t:not(.r) .in{padding:0 124px 0 22px}
+.team.t.r .in{padding:0 22px 0 124px}
+#sA{--cut:polygon(0 0,100% 0,calc(100% - 26px) 100%,0 100%)}
+#sB{--cut:polygon(0 0,100% 0,100% 100%,26px 100%)}
+#sA,#sB{background:none; z-index:2}
+#sA .in,#sB .in{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02)); box-shadow:none}
+#sA .in{box-shadow:inset 1px 0 0 rgba(170,205,255,.32)} #sB .in{box-shadow:inset -1px 0 0 rgba(170,205,255,.32)}
+#sA .in{padding-right:18px} #sB .in{padding-left:18px}
+.score .in span{font-size:68px; color:#fff}
+.tn{font-size:23px; line-height:1.08}
+/* подпись под логотипом заставок */
+.emb-cap{position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:-8px; white-space:nowrap; font-family:var(--f-sub); font-weight:500; font-size:19px; letter-spacing:.44em; padding-left:.44em; text-transform:uppercase; color:#eaf1ff; text-shadow:0 2px 8px rgba(0,0,0,.85)}
+body[data-sc=break] .emb-cap{display:none}
+/* «Скоро начнём»: этап над заголовком */
+.scene.issoon > .sub{display:none}
+.scene.issoon > .res{top:322px}
+.scene.issoon > h2{top:388px} .scene.issoon > .line{top:534px} .scene.issoon > .big{top:558px}
+/* «Финал»: широкая полоса за заголовком */
+.scene.isend::before{content:''; position:absolute; left:0; right:0; top:352px; height:190px;
+  background:linear-gradient(180deg,rgba(24,56,128,.62),rgba(8,20,58,.82) 50%,rgba(24,56,128,.62));
+  border-top:1px solid rgba(244,229,184,.7); border-bottom:1px solid rgba(244,229,184,.7);
+  box-shadow:0 0 50px rgba(60,120,255,.35), inset 0 0 70px rgba(70,130,255,.2);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.scene.isend > .sub,.scene.isend > .line{display:none}
+.scene.isend > h2{top:398px}
+.scene.isend > .res{top:586px}
+.scene.isend > .soc{top:880px}
+/* «Перерыв»: стеклянная полоса счёта */
+.scene > .bkp{position:absolute; width:1240px; padding:22px 50px; gap:26px; justify-content:center; border:0; clip-path:none; filter:none;
+  background:linear-gradient(90deg,rgba(6,14,36,0),rgba(6,14,36,.8) 10%,rgba(6,14,36,.84) 50%,rgba(6,14,36,.8) 90%,rgba(6,14,36,0))}
+.bkp::before,.bkp::after{content:''; position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,rgba(110,170,255,.95) 16%,rgba(244,229,184,.95) 50%,rgba(110,170,255,.95) 84%,transparent); box-shadow:0 0 14px rgba(100,160,255,.7)}
+.bkp::before{top:0} .bkp::after{bottom:0}
+.bkd{display:none}
+.bkn{width:340px; font-size:30px}
+.bks{font-size:86px; min-width:130px; text-align:center; text-shadow:none}
+/* плашка со ссылкой: значок Twitch */
+.soc{padding:10px 32px 10px 26px; gap:20px; background:linear-gradient(180deg,rgba(18,40,96,.88),rgba(5,12,32,.92))}
+.soc::before{content:'СЛЕДИТЕ ЗА\A ТРАНСЛЯЦИЯМИ'; white-space:pre; text-align:left; line-height:1.6; font-size:13px; letter-spacing:.26em; padding-right:24px}
+.soc b{width:26px; height:30px; border-radius:0; box-shadow:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath fill='%239146ff' d='M2 0 0 5v20h6v3h4l3-3h5l7-7V0H2z'/%3E%3Cpath fill='%23fff' d='M20 16l-4 4h-5l-3 3v-3H4V2h16v14z'/%3E%3Cpath fill='%239146ff' d='M14 6h2v6h-2zM9 6h2v6H9z'/%3E%3C/svg%3E") center/contain no-repeat !important}
+.soc span{font-size:27px; font-weight:600; letter-spacing:.05em; text-transform:none}
 </style>
 </head>
 <body>
@@ -639,7 +685,7 @@ body.paused *{animation-play-state:paused !important}
     <i class="ember" style="left:20%;top:86%;--t:7s;--x:20px"></i><i class="ember" style="left:36%;top:92%;--t:9s;--x:-16px"></i><i class="ember" style="left:54%;top:88%;--t:8s;--x:24px"></i><i class="ember" style="left:70%;top:94%;--t:10s;--x:-22px"></i><i class="ember" style="left:84%;top:90%;--t:7.5s;--x:14px"></i><i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
     <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
-    <div class="emb-w"><img class="emb-l" src="/img/mpl.webp" alt=""><i class="flare"></i></div>
+    <div class="emb-w"><img class="emb-l" src="/img/mpl.webp" alt=""><i class="flare"></i><div class="emb-cap" id="embCap"></div></div>
     <div class="grain"></div><div class="vig"></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>
@@ -657,10 +703,12 @@ var ACC = {
   rose:{ g:'#e0566c', g2:'#ffd0d7', g3:'#7a2335', gl:'rgba(224,86,108,.45)' }
 };
 function fit(){
-  var k = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-  cv.style.transform = 'scale(' + k + ')';
+  var vv = window.visualViewport;
+  var w = Math.min(window.innerWidth, vv ? vv.width : 1e9), h = Math.min(window.innerHeight, vv ? vv.height : 1e9);
+  var k = Math.min(w / 1920, h / 1080);
+  cv.style.transform = 'translate(' + Math.max(0, (w - 1920 * k) / 2) + 'px,' + Math.max(0, (h - 1080 * k) / 2) + 'px) scale(' + k + ')';
 }
-window.addEventListener('resize', fit); fit();
+window.addEventListener('resize', fit); if (window.visualViewport) window.visualViewport.addEventListener('resize', fit); fit();
 
 /* --- библиотека текста: посимвольное появление + блик по буквам --- */
 function setTitle(el, text){
@@ -715,7 +763,7 @@ function render(){
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
   $('scene').classList.toggle('isbreak', st.scene === 'break'); $('scene').classList.toggle('isend', st.scene === 'end'); $('scene').classList.toggle('issoon', st.scene === 'soon');
   document.body.dataset.preset = 'royal'; document.body.dataset.sc = st.scene;
-  $('socT').textContent = st.social || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
+  $('socT').textContent = String(st.social || '').replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,''); $('embCap').textContent = st.tour || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
   renderBracket();

@@ -1,9 +1,9 @@
 {
  "a": {
-  "name": "",
-  "tag": "SRG",
+  "name": "Team Rey",
+  "tag": "TR",
   "score": 0,
-  "teamId": ""
+  "teamId": "00dc9c87bd"
  },
  "b": {
   "name": "Team Vamos",

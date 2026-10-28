@@ -1,26 +1,10 @@
 {
  "teams": [
   {
-   "id": "180e21de90",
-   "name": "Invictus Gaming",
-   "tag": "IG",
-   "v": "mvq88sep",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "00dc9c87bd",
    "name": "Team Rey",
    "tag": "TR",
    "v": "mvq89ttw",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
-   "id": "910b8fc1de",
-   "name": "Team Vamos",
-   "tag": "VMS",
-   "v": "mvq87p94",
    "mime": "image/png",
    "ext": "png"
   },
@@ -33,10 +17,18 @@
    "ext": "png"
   },
   {
-   "id": "c6fb972c8b",
-   "name": "Bigetron MY by Vitality",
-   "tag": "BTRM",
-   "v": "mvq89kh6",
+   "id": "180e21de90",
+   "name": "Invictus Gaming",
+   "tag": "IG",
+   "v": "mvq88sep",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "910b8fc1de",
+   "name": "Team Vamos",
+   "tag": "VMS",
+   "v": "mvq87p94",
    "mime": "image/png",
    "ext": "png"
   },
@@ -45,6 +37,14 @@
    "name": "Selangor Red Giants",
    "tag": "SRG",
    "v": "mvq88dsl",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "c6fb972c8b",
+   "name": "Bigetron MY by Vitality",
+   "tag": "BTRM",
+   "v": "mvq89kh6",
    "mime": "image/png",
    "ext": "png"
   }

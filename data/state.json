@@ -24,7 +24,13 @@
  "scene": "end",
  "accent": "gold",
  "preset": "royal",
- "layout": {},
+ "layout": {
+  "end": {
+   "scRes": {
+    "dy": -40
+   }
+  }
+ },
  "customScenes": [],
  "bracket": {
   "title": "Плей-офф",

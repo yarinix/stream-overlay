@@ -187,7 +187,7 @@ app.get('/healthz', (_req, res) => res.type('text').send('ok'));
 app.get('/', (_req, res) => res.redirect('/control'));
 app.use(express.static(path.join(__dirname, 'public'), {
   extensions: ['html'],
-  setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache')
+  setHeaders: (res, fp) => res.setHeader('Cache-Control', /[\\/](img|fonts)[\\/]/.test(fp) ? 'public, max-age=86400' : 'no-cache')
 }));
 
 function authHttp(req, res, next) {

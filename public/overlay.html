@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>Оверлей</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<script>(function(){try{var q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(q||c||f)document.documentElement.classList.add("lite")}catch(e){}})()</script>
 <style>
 @font-face{font-family:"Forum";src:url(/fonts/forum.woff) format("woff");font-display:block}
 @font-face{font-family:"Tenor Sans";src:url(/fonts/tenor.woff) format("woff");font-display:block}
@@ -509,6 +510,35 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
 .bkn{font-family:var(--f-sub); font-weight:700; font-size:28px; letter-spacing:.07em}
 .bks{font-family:var(--f-num); font-weight:600; font-size:76px}
 .bkd{font-family:var(--f-num); font-weight:400; font-size:52px}
+
+/* ---------- ПРОИЗВОДИТЕЛЬНОСТЬ ---------- */
+/* зерно через mix-blend-mode на весь экран — самое тяжёлое, визуально почти незаметно */
+.grain,.bgrain,.tick::after{display:none}
+.flare{mix-blend-mode:normal}
+/* эффекты заставок крутятся только когда заставка видна */
+body:not([data-sc=soon]):not([data-sc=break]):not([data-sc=end]) .sart{visibility:hidden}
+body:not([data-sc=soon]):not([data-sc=break]):not([data-sc=end]) .sart *{animation-play-state:paused !important}
+body:not([data-sc=bracket]) .bscene *{animation-play-state:paused !important}
+.simg{will-change:auto}
+body[data-sc=soon] .simg.s-soon,body[data-sc=break] .simg.s-break,body[data-sc=end] .simg.s-end{will-change:transform,opacity}
+/* свечения без box-shadow и drop-shadow внутри анимаций */
+.dust,.ember{box-shadow:none; width:10px; height:10px; margin:-2px 0 0 -2px}
+.dust{background:radial-gradient(circle,#dff0ff 0 28%,rgba(150,205,255,.55) 42%,transparent 70%)}
+.ember{background:radial-gradient(circle,#fff1c9 0 28%,rgba(255,190,100,.6) 42%,transparent 70%)}
+.spk{filter:none}
+.live b{box-shadow:none}
+/* блик по буквам заголовка — один проход при появлении, а не бесконечно */
+.scene.on h2 .ch{animation:chIn 1s cubic-bezier(.2,.9,.2,1) both, shine 3.2s linear 1 both;
+  animation-delay:calc(.2s + var(--i)*.05s), calc(1.6s + var(--i)*.07s)}
+/* блик по плашкам табло — несколько проходов, потом стоит */
+.sb .cut > .in::after{animation-iteration-count:2}
+/* лёгкий режим: телефоны, предпросмотр в пульте, ?lite */
+html.lite *,html.lite *::before,html.lite *::after{animation:none !important; filter:none !important; text-shadow:none !important; will-change:auto !important}
+html.lite .fogl,html.lite .glowp,html.lite .edgeg,html.lite .flash,html.lite .dust,html.lite .ember,html.lite .bok,html.lite .flare,html.lite .spk,html.lite .sweep{display:none !important}
+html.lite .scene h2 .ch{color:#f0dca8; background:none}
+html.lite .scene .big{-webkit-background-clip:border-box; background-clip:border-box; background:none; color:#e8f0ff}
+html.lite .simg{inset:0; transform:none}
+body.paused *{animation-play-state:paused !important}
 </style>
 </head>
 <body>
@@ -531,7 +561,7 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
   <div class="sb" id="sb">
     <div class="cut team t" id="pA"><div class="in"><div class="logo" id="lgA"></div><div class="tn" id="tnA"></div></div></div>
     <div class="cut score s" id="sA"><div class="in"><span id="scA">0</span></div></div>
-    <div class="cut mid m" id="mC"><div class="in"><img class="emb-s" src="/img/mpl.png" alt=""><b id="boT"></b><i id="mapT"></i></div></div>
+    <div class="cut mid m" id="mC"><div class="in"><img class="emb-s" src="/img/mpl.webp" alt=""><b id="boT"></b><i id="mapT"></i></div></div>
     <div class="cut score s" id="sB"><div class="in"><span id="scB">0</span></div></div>
     <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
   </div>
@@ -553,7 +583,7 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
       <path d="M28 28 H1466 M28 1052 H1892" stroke-width="1" stroke-opacity=".22"/></g>
       <path d="M28 20 l8 8 -8 8 -8 -8z M28 1044 l8 8 -8 8 -8 -8z M1892 1044 l8 8 -8 8 -8 -8z" fill="#e8f3ff"/></svg>
     <div class="bgrain"></div>
-    <div class="m8"><img src="/img/m8.png" alt="M8"><span>Победитель едет на M8</span></div>
+    <div class="m8"><img src="/img/m8.webp" alt="M8"><span>Победитель едет на M8</span></div>
     <div class="blinks" id="blinks" aria-hidden="true"></div>
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
@@ -609,7 +639,7 @@ body[data-sc=break] .emb-w .emb-l{width:228px; height:156px}
     <i class="ember" style="left:20%;top:86%;--t:7s;--x:20px"></i><i class="ember" style="left:36%;top:92%;--t:9s;--x:-16px"></i><i class="ember" style="left:54%;top:88%;--t:8s;--x:24px"></i><i class="ember" style="left:70%;top:94%;--t:10s;--x:-22px"></i><i class="ember" style="left:84%;top:90%;--t:7.5s;--x:14px"></i><i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
     <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
-    <div class="emb-w"><img class="emb-l" src="/img/mpl.png" alt=""><i class="flare"></i></div>
+    <div class="emb-w"><img class="emb-l" src="/img/mpl.webp" alt=""><i class="flare"></i></div>
     <div class="grain"></div><div class="vig"></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>
@@ -703,6 +733,7 @@ function render(){
   drawTimer();
 }
 setInterval(drawTimer, 200);
+document.addEventListener('visibilitychange', function(){ document.body.classList.toggle('paused', document.hidden); });
 
 /* ---------- значки команд ---------- */
 var TM = {};

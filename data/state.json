@@ -24,14 +24,7 @@
  "scene": "bracket",
  "accent": "gold",
  "preset": "royal",
- "layout": {
-  "bracket": {
-   "camwrap": {
-    "dx": 40,
-    "dy": -40
-   }
-  }
- },
+ "layout": {},
  "customScenes": [],
  "bracket": {
   "title": "Плей-офф",

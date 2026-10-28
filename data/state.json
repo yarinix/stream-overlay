@@ -39,24 +39,24 @@
    "pi1": {
     "a": {
      "name": "Team Vamos",
-     "score": 0,
+     "score": 3,
      "teamId": "910b8fc1de"
     },
     "b": {
      "name": "Team Flash",
-     "score": 0,
+     "score": 1,
      "teamId": "1aceb5ac1a"
     }
    },
    "pi2": {
     "a": {
      "name": "Invictus Gaming",
-     "score": 0,
+     "score": 1,
      "teamId": "180e21de90"
     },
     "b": {
      "name": "Bigetron MY by Vitality",
-     "score": 0,
+     "score": 3,
      "teamId": "c6fb972c8b"
     }
    },
@@ -67,9 +67,9 @@
      "teamId": "00dc9c87bd"
     },
     "b": {
-     "name": "",
+     "name": "Team Vamos",
      "score": 0,
-     "teamId": ""
+     "teamId": "910b8fc1de"
     }
    },
    "ubs2": {
@@ -79,9 +79,9 @@
      "teamId": "57cb1a6239"
     },
     "b": {
-     "name": "",
+     "name": "Bigetron MY by Vitality",
      "score": 0,
-     "teamId": ""
+     "teamId": "c6fb972c8b"
     }
    },
    "ubf": {

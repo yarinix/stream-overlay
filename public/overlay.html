@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<script>(function(){try{var q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(q||c||f)document.documentElement.classList.add("lite")}catch(e){}})()</script>
+<script>(function(){try{var e=/[?&]edit\b/.test(location.search),q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(e)document.documentElement.classList.add("edit");else if(q||c||f)document.documentElement.classList.add("lite")}catch(e){}})()</script>
 <style>
 @font-face{font-family:"Forum";src:url(/fonts/forum.woff) format("woff");font-display:block}
 @font-face{font-family:"Tenor Sans";src:url(/fonts/tenor.woff) format("woff");font-display:block}
@@ -601,6 +601,60 @@ body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-s
 .mid .in{padding-top:8px}
 .emb-s{width:104px; height:80px; object-fit:contain}
 .emb-cap{margin-top:16px}
+
+/* ===================== РЕДАКТОР: правки элементов, свои сцены ===================== */
+.lt{visibility:hidden; transition:transform .7s cubic-bezier(.2,.9,.2,1), visibility 0s linear .7s}
+.lt.on{visibility:visible; transition-delay:0s,0s}
+[data-tc],[data-tc] *{color:var(--tc) !important}
+/* свои сцены */
+#cscene{position:absolute; inset:0; z-index:4; display:none; pointer-events:none; overflow:hidden}
+body[data-sc=custom] #cscene{display:block}
+body[data-sc=custom] .sb,body[data-sc=custom] .timer,body[data-sc=custom] .lt,body[data-sc=custom] .tick,body[data-sc=custom] .bscene,body[data-sc=custom] .scene,body[data-sc=custom] .sart,body[data-sc=custom] .sweep{display:none !important}
+body[data-cam="0"] .camwrap{display:none}
+.cbg{position:absolute; inset:0; background:center/cover no-repeat}
+.ci{position:absolute; box-sizing:border-box}
+.ci-t{display:flex; align-items:center; line-height:1.08; overflow-wrap:anywhere; white-space:pre-wrap}
+.ci-t > span{display:block; width:100%}
+.ci-p-glass{background:linear-gradient(90deg,rgba(6,14,36,0),rgba(6,14,36,.8) 10%,rgba(6,14,36,.84) 50%,rgba(6,14,36,.8) 90%,rgba(6,14,36,0))}
+.ci-p-glass::before,.ci-p-glass::after{content:''; position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,rgba(110,170,255,.95) 16%,rgba(244,229,184,.95) 50%,rgba(110,170,255,.95) 84%,transparent); box-shadow:0 0 14px rgba(100,160,255,.7)}
+.ci-p-glass::before{top:0} .ci-p-glass::after{bottom:0}
+.ci-img > img{width:100%; height:100%; display:block}
+.ci.cut{--cut:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+/* режим редактирования */
+html.edit,html.edit body{background:#121826}
+html.edit .sweep{display:none !important}
+#edl{position:absolute; inset:0; z-index:1000; display:none; --inv:1; touch-action:none; user-select:none; -webkit-user-select:none}
+html.edit #edl{display:block}
+#edl.grid{background-image:linear-gradient(rgba(255,255,255,.09) calc(1px*var(--inv)),transparent 0),linear-gradient(90deg,rgba(255,255,255,.09) calc(1px*var(--inv)),transparent 0); background-size:var(--g) var(--g)}
+#edl .safe{position:absolute; left:96px; top:54px; right:96px; bottom:54px; border:calc(2px*var(--inv)) dashed rgba(255,255,255,.28); pointer-events:none}
+#edl .cx{position:absolute; background:rgba(255,255,255,.18); pointer-events:none}
+.eh{position:absolute; box-sizing:border-box; border:calc(1px*var(--inv)) dashed rgba(120,190,255,.6); cursor:move}
+.eh.grp{border-color:rgba(255,200,110,.5)}
+.eh:hover{border-color:#7fd0ff; background:rgba(120,190,255,.08)}
+.eh.on{border:calc(2px*var(--inv)) solid #4da3ff; background:rgba(77,163,255,.10)}
+.eh.off{opacity:.55}
+.eh .el{position:absolute; left:calc(-1px*var(--inv)); bottom:100%; margin-bottom:calc(2px*var(--inv)); font:600 calc(12px*var(--inv))/1.3 system-ui,sans-serif; padding:calc(1px*var(--inv)) calc(6px*var(--inv)); background:#4da3ff; color:#04122a; white-space:nowrap; display:none; border-radius:calc(3px*var(--inv)); pointer-events:none}
+.eh.on .el,.eh:hover .el{display:block}
+.rh{position:absolute; width:calc(14px*var(--inv)); height:calc(14px*var(--inv)); margin:calc(-7px*var(--inv)) 0 0 calc(-7px*var(--inv)); background:#fff; border:calc(2px*var(--inv)) solid #4da3ff; box-sizing:border-box; border-radius:calc(3px*var(--inv))}
+.rh[data-h=nw]{left:0; top:0; cursor:nwse-resize} .rh[data-h=ne]{left:100%; top:0; cursor:nesw-resize}
+.rh[data-h=se]{left:100%; top:100%; cursor:nwse-resize} .rh[data-h=sw]{left:0; top:100%; cursor:nesw-resize}
+.rh[data-h=n]{left:50%; top:0; cursor:ns-resize} .rh[data-h=s]{left:50%; top:100%; cursor:ns-resize}
+.rh[data-h=w]{left:0; top:50%; cursor:ew-resize} .rh[data-h=e]{left:100%; top:50%; cursor:ew-resize}
+.gd{position:absolute; background:#ff3df0; pointer-events:none}
+.gd.v{top:0; bottom:0; width:calc(1px*var(--inv))} .gd.h{left:0; right:0; height:calc(1px*var(--inv))}
+.mq{position:absolute; border:calc(1px*var(--inv)) solid #4da3ff; background:rgba(77,163,255,.16); pointer-events:none}
+
+.lhide{opacity:0 !important; visibility:hidden !important}
+[data-tc],[data-tc] *{-webkit-text-fill-color:var(--tc) !important}
+html.edit *{animation-duration:.001s !important; animation-delay:0s !important; animation-iteration-count:1 !important; animation-fill-mode:both !important; transition-duration:0s !important; transition-delay:0s !important}
+html.edit .lhide{opacity:.28 !important; visibility:visible !important}
+.ci-line{background:linear-gradient(90deg,transparent,var(--c) 18%,var(--c) 82%,transparent)}
+.ci-line.solid{background:var(--c)}
+.ci-p-solid{background:var(--f,#0a1530)}
+.ci-p-outline{border:2px solid var(--b,#c4a265)}
+.ci-logo{display:grid; place-items:center}
+.ci-logo .logo{width:100%; height:100%; border-radius:50%}
+.ci-logo .logo img{width:84%; height:84%}
 </style>
 </head>
 <body>
@@ -623,7 +677,7 @@ body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-s
   <div class="sb" id="sb">
     <div class="cut team t" id="pA"><div class="in"><div class="logo" id="lgA"></div><div class="tn" id="tnA"></div></div></div>
     <div class="cut score s" id="sA"><div class="in"><span id="scA">0</span></div></div>
-    <div class="cut mid m" id="mC"><div class="in"><img class="emb-s" src="/img/mpl.webp" alt=""><b id="boT"></b><i id="mapT"></i></div></div>
+    <div class="cut mid m" id="mC"><div class="in"><img class="emb-s" src="/img/mpl.png" alt=""><b id="boT"></b><i id="mapT"></i></div></div>
     <div class="cut score s" id="sB"><div class="in"><span id="scB">0</span></div></div>
     <div class="cut team t r" id="pB"><div class="in"><div class="logo" id="lgB"></div><div class="tn" id="tnB"></div></div></div>
   </div>
@@ -635,7 +689,7 @@ body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-s
     <i class="spk s1"></i><i class="spk s2"></i><i class="spk s3"></i><i class="spk s4"></i>
   </div>
   <div class="cut lt" id="lt"><div class="in"><strong id="ltName"></strong><span id="ltRole"></span></div></div>
-  <div class="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
+  <div class="tick" id="tick"><div class="tag" id="tkTour"></div><div class="tx" id="tkStage"></div><div class="sep"></div><div class="tx">Прямой эфир</div><div class="tx game-name">Mobile Legends: Bang Bang</div></div>
   <div class="bscene" id="bscene">
     <div class="bfull"></div>
     <svg class="bframe" viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true"><g fill="none" stroke="#e8f3ff" stroke-linecap="square">
@@ -645,8 +699,8 @@ body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-s
       <path d="M28 28 H1466 M28 1052 H1892" stroke-width="1" stroke-opacity=".22"/></g>
       <path d="M28 20 l8 8 -8 8 -8 -8z M28 1044 l8 8 -8 8 -8 -8z M1892 1044 l8 8 -8 8 -8 -8z" fill="#e8f3ff"/></svg>
     <div class="bgrain"></div>
-    <div class="m8"><img src="/img/m8.webp" alt="M8"><span>Победитель едет на M8</span></div>
-    <div class="blinks" id="blinks" aria-hidden="true"></div>
+    <div id="bgrid" style="position:absolute;inset:0"><div class="blinks" id="blinks" aria-hidden="true"></div></div>
+    <div class="m8"><img src="/img/m8.png" alt="M8"><span>Победитель едет на M8</span></div>
     <div class="bt"><h2 id="bTitle"></h2><p id="bTour"></p></div>
   </div>
   <div class="sart" id="sart" aria-hidden="true">
@@ -701,27 +755,31 @@ body[data-sc=cam] .sb,body[data-sc=cam] .timer,body[data-sc=cam] .lt,body[data-s
     <i class="ember" style="left:20%;top:86%;--t:7s;--x:20px"></i><i class="ember" style="left:36%;top:92%;--t:9s;--x:-16px"></i><i class="ember" style="left:54%;top:88%;--t:8s;--x:24px"></i><i class="ember" style="left:70%;top:94%;--t:10s;--x:-22px"></i><i class="ember" style="left:84%;top:90%;--t:7.5s;--x:14px"></i><i class="dust" style="left:12%;top:70%;--t:9s;--x:30px"></i><i class="dust" style="left:26%;top:45%;--t:11s;--x:-24px"></i><i class="dust" style="left:38%;top:80%;--t:8s;--x:18px"></i>
     <i class="dust" style="left:55%;top:60%;--t:12s;--x:-30px"></i><i class="dust" style="left:68%;top:78%;--t:10s;--x:26px"></i><i class="dust" style="left:82%;top:50%;--t:9.5s;--x:-18px"></i>
     <i class="dust" style="left:90%;top:72%;--t:13s;--x:22px"></i><i class="dust" style="left:47%;top:35%;--t:14s;--x:-26px"></i><i class="dust" style="left:33%;top:60%;--t:10.5s;--x:20px"></i><i class="dust" style="left:73%;top:40%;--t:12.5s;--x:-22px"></i>
-    <div class="emb-w"><img class="emb-l" src="/img/mpl.webp" alt=""><i class="flare"></i><div class="emb-cap" id="embCap"></div></div>
+    <div class="emb-w"><img class="emb-l" src="/img/mpl.png" alt=""><i class="flare"></i><div class="emb-cap" id="embCap"></div></div>
     <div class="grain"></div><div class="vig"></div>
   </div>
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>
+  <div id="cscene"></div>
   <div class="sweep" id="sweep"></div>
+  <div id="edl"></div>
 </div>
 <script>
 (function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
-var cv = $('cv'), st = null, offset = 0, prevA = null, prevB = null, prevScene = null, lastTime = '';
+var cv = $('cv'), K = 1, st = null, offset = 0, prevA = null, prevB = null, prevScene = null, lastTime = '';
 var ACC = {
   gold:{ g:'#4da3ff', g2:'#d6ebff', g3:'#1d4f91', gl:'rgba(77,163,255,.5)' },
   steel:{ g:'#a9bdd6', g2:'#f1f6fc', g3:'#4a5d77', gl:'rgba(170,195,230,.4)' },
   amber:{ g:'#c9a45c', g2:'#f2dca4', g3:'#6d5a2e', gl:'rgba(201,164,92,.45)' },
   rose:{ g:'#e0566c', g2:'#ffd0d7', g3:'#7a2335', gl:'rgba(224,86,108,.45)' }
 };
+var EDITING_EARLY = document.documentElement.classList.contains('edit');
 function fit(){
   var vv = window.visualViewport;
   var w = Math.min(window.innerWidth, vv ? vv.width : 1e9), h = Math.min(window.innerHeight, vv ? vv.height : 1e9);
-  var k = Math.min(w / 1920, h / 1080);
+  var k = Math.min(w / 1920, h / 1080); K = k;
+  if (EDITING_EARLY) $('edl').style.setProperty('--inv', 1 / k);
   cv.style.transform = 'translate(' + Math.max(0, (w - 1920 * k) / 2) + 'px,' + Math.max(0, (h - 1080 * k) / 2) + 'px) scale(' + k + ')';
 }
 window.addEventListener('resize', fit); if (window.visualViewport) window.visualViewport.addEventListener('resize', fit); fit();
@@ -754,6 +812,7 @@ function drawTimer(){
     lastTime = txt;
     $('tVal').textContent = txt; $('scTime').textContent = txt;
     $('timer').classList.toggle('zero', r === 0);
+    if (csKey) fillCustom();
   }
 }
 function render(){
@@ -769,7 +828,7 @@ function render(){
   $('boT').textContent = 'BO' + st.bo; $('mapT').textContent = 'Карта ' + st.map;
   $('tkTour').textContent = st.tour; $('tkStage').textContent = st.stage;
   $('camName').textContent = st.cast; $('ltName').textContent = st.cast; $('ltRole').textContent = st.role;
-  $('lt').classList.toggle('on', !!st.lt);
+  $('lt').classList.toggle('on', !!st.lt || EDITING);
   $('tLabel').textContent = st.label;
   if (prevScene !== null && st.scene !== prevScene){
     var sw = $('sweep'); sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
@@ -778,7 +837,7 @@ function render(){
   var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
   $('scene').classList.toggle('isbreak', st.scene === 'break'); $('scene').classList.toggle('isend', st.scene === 'end'); $('scene').classList.toggle('issoon', st.scene === 'soon');
-  document.body.dataset.preset = 'royal'; document.body.dataset.sc = st.scene;
+  document.body.dataset.preset = 'royal'; document.body.dataset.sc = String(st.scene).indexOf('c:') === 0 ? 'custom' : st.scene;
   $('socT').textContent = String(st.social || '').replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,''); $('embCap').textContent = st.tour || ''; $('soc').style.visibility = st.social ? 'visible' : 'hidden';
   $('bscene').classList.toggle('on', st.scene === 'bracket');
   $('sb').classList.toggle('hide', st.scene === 'soon' || st.scene === 'bracket');
@@ -794,6 +853,7 @@ function render(){
     setLogo($('bkLB'), st.b.teamId ? TM[st.b.teamId] : null, (st.b.tag || '').toUpperCase());
     fitText($('bkNA'), 30, 14, 76); fitText($('bkNB'), 30, 14, 76);
   }
+  applyLayout(); renderCustom();
   drawTimer();
 }
 setInterval(drawTimer, 200);
@@ -847,7 +907,7 @@ var HEADS = [
 var LINKS = [['pi1','ubs1'],['pi2','ubs2'],['ubs1','ubf'],['ubs2','ubf'],['ubf','gf'],['lbf','gf'],['lbs','lbf']];
 var bEls = {};
 function buildBracket(){
-  var host = $('bscene'), html = '', i;
+  var host = $('bgrid'), html = '', i;
   function colOf(x){ return Math.round((x - 40) / 480); }
   HEADS.forEach(function(h){
     html += '<div class="bh" style="left:' + h[1] + 'px;top:' + h[2] + 'px;--d:' + (0.2 + colOf(h[1]) * 0.12).toFixed(2) + 's"><span>' + h[0] + '</span><em id="bf_' + h[3] + '"></em></div>';
@@ -907,12 +967,153 @@ function renderBracket(){
 buildBracket();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if (st) fitAll(); });
 
+/* ---------- редактор: раскладка встроенных элементов и свои сцены ---------- */
+var EDITING = document.documentElement.classList.contains('edit'), OVR = null;
+var EL = [
+  ['pA','Плашка команды A','Табло','#pA'], ['sA','Счёт A','Табло','#sA'], ['mC','Центр: BO и карта','Табло','#mC'], ['sB','Счёт B','Табло','#sB'], ['pB','Плашка команды B','Табло','#pB'],
+  ['timer','Таймер','Игра','#timer'], ['camwrap','Рамка вебки','Игра','#camwrap'], ['lt','Плашка ведущего','Игра','#lt'], ['tick','Нижняя полоса','Игра','#tick'],
+  ['emb','Эмблема','Заставки','.emb-w'], ['scTitle','Заголовок','Заставки','#scTitle', 1], ['scSub','Подзаголовок','Заставки','#scSub', 1], ['scLine','Линия','Заставки','#scene > .line'],
+  ['scTime','Большой таймер','Заставки','#scTime', 1], ['scRes','Плашка текста','Заставки','#scRes'], ['bkp','Счёт перерыва','Заставки','#bkp'], ['soc','Соцсеть','Заставки','#soc'],
+  ['bt','Заголовок сетки','Сетка','.bt'], ['bgrid','Сетка матчей','Сетка','#bgrid'], ['m8','Значок M8','Сетка','.m8']
+].map(function(a){ return { id: a[0], name: a[1], group: a[2], el: document.querySelector(a[3]), tight: !!a[4] }; });
+var ELX = {}; EL.forEach(function(e){ ELX[e.id] = e; });
+var HAS_IND = !!(window.CSS && CSS.supports && CSS.supports('translate', '1px'));
+function layoutOf(){ var L = st && st.layout; return (L && L[st.scene]) || {}; }
+function applyLayout(){
+  var L = layoutOf(), cam = st.scene === 'cam';
+  EL.forEach(function(e){
+    var el = e.el; if (!el) return;
+    var v = L[e.id] || {}, sig = JSON.stringify(v) + (HAS_IND ? '' : (cam && e.id === 'camwrap' ? 'c' : ''));
+    if (el.__ls === sig) return; el.__ls = sig;
+    var dx = +v.dx || 0, dy = +v.dy || 0, sc = +v.sc > 0 ? +v.sc : 1;
+    if (HAS_IND){
+      el.style.translate = (dx || dy) ? dx + 'px ' + dy + 'px' : ''; el.style.scale = sc !== 1 ? String(sc) : '';
+    } else {
+      var t = (dx || dy || sc !== 1) ? 'translate(' + dx + 'px,' + dy + 'px) scale(' + sc + ')' : '';
+      if (cam && e.id === 'camwrap') t += ' translate(40px,-40px)';
+      el.style.transform = t;
+    }
+    if (el.__f0 === undefined){ el.style.filter = ''; el.__f0 = getComputedStyle(el).filter; }
+    var base = el.__f0 && el.__f0 !== 'none' ? el.__f0 : '';
+    el.style.filter = v.hue ? (base + ' hue-rotate(' + v.hue + 'deg)').trim() : '';
+    if (v.color){ el.style.setProperty('--tc', v.color); el.setAttribute('data-tc', ''); } else { el.style.removeProperty('--tc'); el.removeAttribute('data-tc'); }
+    el.classList.toggle('lhide', !!v.hide);
+  });
+}
+/* свои сцены */
+var csKey = '', csHasTok = false;
+var FONTS = { head: 'var(--f-head)', sub: 'var(--f-sub)', num: 'var(--f-num)' };
+var IMGS = { mpl: '/img/mpl.png', m8: '/img/m8.png', twitch: '/img/twitch.png', camframe: '/img/camframe.png' };
+function tok(s){
+  return String(s).replace(/\{(\w+)\}/g, function(m, k){
+    switch (k){
+      case 'teamA': return st.a.name || 'TBD'; case 'teamB': return st.b.name || 'TBD';
+      case 'tagA': return (st.a.tag || '').toUpperCase(); case 'tagB': return (st.b.tag || '').toUpperCase();
+      case 'scoreA': return st.a.score; case 'scoreB': return st.b.score;
+      case 'score': return st.a.score + ' : ' + st.b.score;
+      case 'tour': return st.tour; case 'stage': return st.stage; case 'cast': return st.cast; case 'role': return st.role;
+      case 'bo': return 'BO' + st.bo; case 'map': return st.map; case 'timer': return mmss(remaining());
+      case 'social': return String(st.social || '').replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,'');
+    }
+    return m;
+  });
+}
+function curScene(){
+  if (!st || String(st.scene).indexOf('c:') !== 0) return null;
+  var cs = st.customScenes || [], id = st.scene.slice(2);
+  for (var i = 0; i < cs.length; i++) if (cs[i].id === id) return cs[i];
+  return null;
+}
+function buildItem(it){
+  var d = document.createElement('div'), t = it.type;
+  d.className = 'ci'; d.dataset.id = it.id;
+  d.style.left = it.x + 'px'; d.style.top = it.y + 'px'; d.style.width = it.w + 'px'; d.style.height = it.h + 'px';
+  if (it.rot) d.style.transform = 'rotate(' + it.rot + 'deg)';
+  if (it.op < 1) d.style.opacity = it.op;
+  if (it.hue) d.style.filter = 'hue-rotate(' + it.hue + 'deg)';
+  if (it.hide) d.style.display = 'none';
+  if (t === 'text' || t === 'timer'){
+    d.className += ' ci-t'; var sp = document.createElement('span'); d.appendChild(sp);
+    d.dataset.tpl = it.text || (t === 'timer' ? '{timer}' : '');
+    var f = sp.style;
+    f.fontFamily = FONTS[it.font] || FONTS.sub; f.fontSize = it.size + 'px'; f.fontWeight = it.weight; f.textAlign = it.align;
+    f.letterSpacing = it.ls + 'em'; f.textTransform = it.upper ? 'uppercase' : 'none'; f.fontStyle = it.italic ? 'italic' : 'normal';
+    if (t === 'timer') f.fontVariantNumeric = 'tabular-nums';
+    if (it.metal){ f.background = 'var(--metal)'; f.webkitBackgroundClip = 'text'; f.backgroundClip = 'text'; f.color = 'transparent'; f.webkitTextFillColor = 'transparent'; }
+    else f.color = it.color;
+    if (it.glow && !document.documentElement.classList.contains('lite')){ if (it.metal) f.filter = 'drop-shadow(0 0 14px rgba(100,160,255,.55)) drop-shadow(0 3px 3px rgba(0,0,0,.7))'; else f.textShadow = '0 0 18px rgba(100,160,255,.7),0 2px 4px rgba(0,0,0,.8)'; }
+  } else if (t === 'panel'){
+    var r = it.radius ? it.radius + 'px' : '';
+    if (it.style === 'plate'){
+      d.className += ' cut'; d.innerHTML = '<div class="in"></div>';
+      if (it.border) d.style.background = it.border;
+      if (it.fill) d.firstChild.style.background = it.fill;
+    } else {
+      d.className += ' ci-p-' + it.style; if (r) d.style.borderRadius = r;
+      if (it.fill) d.style.setProperty('--f', it.fill); if (it.border) d.style.setProperty('--b', it.border);
+      if (it.style === 'glass' && it.fill) d.style.background = it.fill;
+    }
+  } else if (t === 'line'){
+    d.className += ' ci-line' + (it.solid ? ' solid' : ''); d.style.setProperty('--c', it.color);
+  } else if (t === 'img'){
+    d.className += ' ci-img';
+    if (it.src === 'logoA' || it.src === 'logoB'){
+      d.className += ' ci-logo'; var lg = document.createElement('div'); lg.className = 'logo'; d.appendChild(lg); d.dataset.logo = it.src === 'logoA' ? 'a' : 'b';
+    } else {
+      var im = new Image(); im.alt = ''; im.src = IMGS[it.src] || IMGS.mpl; im.style.objectFit = it.fit; d.appendChild(im);
+    }
+  }
+  return d;
+}
+function fillCustom(){
+  var host = $('cscene'), n = host.querySelectorAll('[data-tpl]'), i;
+  for (i = 0; i < n.length; i++){ var sp = n[i].firstChild, v = tok(n[i].dataset.tpl); if (sp.textContent !== v) sp.textContent = v; }
+  n = host.querySelectorAll('[data-logo]');
+  for (i = 0; i < n.length; i++){ var s = st[n[i].dataset.logo]; setLogo(n[i].firstChild, s.teamId ? TM[s.teamId] : null, (s.tag || '').toUpperCase()); }
+}
+function renderCustom(){
+  var sc = curScene(), host = $('cscene');
+  document.body.dataset.cam = sc && sc.cam === false ? '0' : '1';
+  if (!sc){ if (csKey){ host.textContent = ''; csKey = ''; } return; }
+  var key = JSON.stringify(sc);
+  if (key !== csKey){
+    csKey = key; host.textContent = '';
+    var bg = document.createElement('div'); bg.className = 'cbg';
+    if (/^#/.test(sc.bg)) bg.style.background = sc.bg; else if (sc.bg !== 'none') bg.style.backgroundImage = 'url(/img/royal-' + sc.bg + '.jpg)';
+    host.appendChild(bg);
+    sc.items.forEach(function(it){ host.appendChild(buildItem(it)); });
+  }
+  fillCustom();
+}
+function isVis(e){
+  var el = e.el; if (!el) return false;
+  var uh = el.classList.contains('lhide');
+  for (var n = el; n && n !== cv; n = n.parentElement){
+    var cs = getComputedStyle(n);
+    if (cs.display === 'none') return false;
+    if (n === el && uh) continue;
+    if (+cs.opacity < 0.05) return false;
+    if (n === el && cs.visibility === 'hidden') return false;
+  }
+  return true;
+}
+if (EDITING){
+  window.__ov = {
+    cv: cv, els: EL, elx: ELX, isVis: isVis, tok: tok, fit: fit, layoutOf: layoutOf,
+    get st(){ return st; }, get k(){ return K; },
+    override: function(o){ OVR = o; if (st){ Object.assign(st, o); render(); } },
+    render: function(){ if (st) render(); },
+    ready: function(){ return !!st; }
+  };
+  var es = document.createElement('script'); es.src = '/edit.js'; document.body.appendChild(es);
+}
+
 var wait = 500;
 function connect(){
   var ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
   ws.onmessage = function(e){
     var m; try { m = JSON.parse(e.data); } catch (_) { return; }
-    if (m.type === 'state'){ st = m.state; offset = m.now - Date.now(); wait = 500; render(); }
+    if (m.type === 'state'){ st = m.state; if (OVR) Object.assign(st, OVR); offset = m.now - Date.now(); wait = 500; render(); }
   };
   ws.onclose = function(){ setTimeout(connect, wait); wait = Math.min(wait * 2, 8000); };
   ws.onerror = function(){ try { ws.close(); } catch (_) {} };

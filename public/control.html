@@ -90,6 +90,7 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
 .err{color:var(--bad); font-size:.82rem; min-height:1.2em; margin:0}
 [hidden]{display:none !important}
 </style>
+<link rel="stylesheet" href="/editor.css">
 </head>
 <body>
 <datalist id="teamNames"></datalist>
@@ -120,7 +121,9 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <label><input type="radio" name="scene" value="bracket"><span>Сетка</span></label>
         <label><input type="radio" name="scene" value="end"><span>Финал</span></label>
         <label><input type="radio" name="scene" value="cam"><span>Только вебка</span></label>
+        <span id="cseg" style="display:contents"></span>
       </div>
+      <button class="btn p" id="edOpen" type="button">Редактор: сетка, элементы, свои сцены</button>
       <h3>Стиль</h3>
       <div class="sw" id="sw">
         <button type="button" data-a="gold" aria-label="Синий" aria-pressed="false" style="background:#4da3ff"></button>
@@ -348,6 +351,12 @@ function sync(){
   $('oA').textContent = st.a.score; $('oB').textContent = st.b.score;
   setVal('bo', st.bo); setVal('map', st.map); setVal('tour', st.tour); setVal('stg', st.stage);
   setVal('cast', st.cast); setVal('role', st.role); setVal('social', st.social || ''); setVal('endText', st.endText || ''); setVal('label', st.label); setVal('mins', st.timer.mins);
+  var cs = st.customScenes || [], csig = cs.map(function(c){ return c.id + ':' + c.name; }).join('|');
+  if (csig !== sync.csig){
+    sync.csig = csig;
+    $('cseg').innerHTML = cs.map(function(c){ return '<label><input type="radio" name="scene" value="c:' + c.id + '"><span></span></label>'; }).join('');
+    [].forEach.call($('cseg').querySelectorAll('span'), function(sp, i){ sp.textContent = cs[i].name; });
+  }
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
   renderTeams();
   if (st.bracket){
@@ -390,7 +399,8 @@ $('map').onchange = function(e){ patch({ map: +e.target.value }); };
 $('ltBtn').onclick = function(){ patch({ lt: !st.lt }); };
 $('tGo').onclick = function(){ send({ type: 'timer', action: st.timer.run ? 'pause' : 'start' }); };
 $('tReset').onclick = function(){ send({ type: 'timer', action: 'reset' }); };
-document.querySelectorAll('input[name=scene]').forEach(function(r){
+document.querySelector('.seg[aria-label="Сцена"]').addEventListener('change', function(e){ var r = e.target; if (r && r.name === 'scene' && r.checked) patch({ scene: r.value }); });
+[].forEach.call([], function(r){
   r.addEventListener('change', function(){ if (r.checked) patch({ scene: r.value }); });
 });
 document.querySelectorAll('#sw button').forEach(function(b){
@@ -575,7 +585,7 @@ function saveSnap(){
     Object.keys(st.bracket.m).forEach(function(id){ m[id] = { a: pickT(st.bracket.m[id].a), b: pickT(st.bracket.m[id].b) }; });
     LS.set('ctlSnap', {
       a: pickT(st.a), b: pickT(st.b), bo: st.bo, map: st.map, tour: st.tour, stage: st.stage, cast: st.cast,
-      role: st.role, social: st.social, endText: st.endText, label: st.label, accent: st.accent, preset: st.preset, lt: st.lt, scene: st.scene, bracket: { title: st.bracket.title, auto: st.bracket.auto, fmt: st.bracket.fmt, m: m }
+      role: st.role, social: st.social, endText: st.endText, label: st.label, accent: st.accent, preset: st.preset, lt: st.lt, scene: st.scene, layout: st.layout || {}, customScenes: st.customScenes || [], bracket: { title: st.bracket.title, auto: st.bracket.auto, fmt: st.bracket.fmt, m: m }
     });
   }, 800);
 }
@@ -616,8 +626,11 @@ $('copyBtn').onclick = function(){
   if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){ $('copyBtn').textContent = 'Скопировано'; setTimeout(function(){ $('copyBtn').textContent = 'Копировать'; }, 1500); }, function(){});
 };
 
+window.CTL = { get st(){ return st; }, patch: patch };
+$('edOpen').onclick = function(){ if (window.EditorOpen) window.EditorOpen(); };
 if (key) connect(); else showLogin('');
 })();
 </script>
+<script src="/editor.js"></script>
 </body>
 </html>

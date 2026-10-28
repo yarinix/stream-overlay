@@ -34,6 +34,7 @@ const state = {
   cast: 'BlackSid_Co', role: 'Комментатор', social: 'twitch.tv/blacksid_co',
   label: 'До начала драфта',
   lt: false, scene: 'game', accent: 'gold', preset: 'royal', endText: 'Увидимся на следующей трансляции',
+  layout: {}, customScenes: [],
   bracket: {
     title: 'Плей-офф', auto: true, fmt: { pi: 3, ubs: 3, ubf: 5, lbs: 3, lbf: 5, gf: 7 },
     m: {
@@ -85,6 +86,82 @@ function propagate(id, depth = 0) {
 const str = (v, max) => String(v).slice(0, max);
 const int = (v, lo, hi) => Math.min(hi, Math.max(lo, parseInt(v, 10) || 0));
 
+/* ---------- редактор: правки элементов и свои сцены ---------- */
+const ID_RE = /^[a-zA-Z0-9_-]{1,24}$/;
+const BUILTIN_SCENES = ['game', 'soon', 'break', 'bracket', 'end', 'cam'];
+const numIn = (v, lo, hi, d) => { v = Number(v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+const hexIn = (v) => (typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v) ? v.toLowerCase() : '');
+const oneOf = (v, list, d) => (list.includes(v) ? v : d);
+function cleanLayout(L) {
+  const out = {};
+  if (!L || typeof L !== 'object') return out;
+  let scenes = 0;
+  for (const sk of Object.keys(L)) {
+    if (scenes >= 24) break;
+    const okScene = BUILTIN_SCENES.includes(sk) || (sk.startsWith('c:') && ID_RE.test(sk.slice(2)));
+    if (!okScene || !L[sk] || typeof L[sk] !== 'object') continue;
+    const sc = {}; let n = 0;
+    for (const ek of Object.keys(L[sk])) {
+      if (n >= 40) break;
+      if (!ID_RE.test(ek)) continue;
+      const o = L[sk][ek]; if (!o || typeof o !== 'object') continue;
+      const r = {};
+      const dx = numIn(o.dx, -2400, 2400, 0), dy = numIn(o.dy, -1400, 1400, 0), z = numIn(o.sc, 0.2, 4, 1), hue = numIn(o.hue, 0, 360, 0);
+      if (dx) r.dx = Math.round(dx * 10) / 10;
+      if (dy) r.dy = Math.round(dy * 10) / 10;
+      if (z !== 1) r.sc = Math.round(z * 1000) / 1000;
+      if (hue) r.hue = Math.round(hue);
+      const c = hexIn(o.color); if (c) r.color = c;
+      if (o.hide) r.hide = true;
+      if (Object.keys(r).length) { sc[ek] = r; n++; }
+    }
+    if (Object.keys(sc).length) { out[sk] = sc; scenes++; }
+  }
+  return out;
+}
+const IMG_SRC = ['mpl', 'm8', 'twitch', 'logoA', 'logoB', 'camframe'];
+function cleanItem(it) {
+  if (!it || typeof it !== 'object' || !ID_RE.test(String(it.id || ''))) return null;
+  const type = oneOf(it.type, ['text', 'panel', 'line', 'img', 'timer'], '');
+  if (!type) return null;
+  const r = {
+    id: it.id, type,
+    x: Math.round(numIn(it.x, -600, 2500, 0)), y: Math.round(numIn(it.y, -600, 1500, 0)),
+    w: Math.round(numIn(it.w, 1, 2400, 200)), h: Math.round(numIn(it.h, 1, 1400, 60)),
+    rot: Math.round(numIn(it.rot, -180, 180, 0)), op: Math.round(numIn(it.op, 0, 1, 1) * 100) / 100,
+    hue: Math.round(numIn(it.hue, 0, 360, 0)), hide: !!it.hide, name: str(it.name || '', 28)
+  };
+  if (type === 'text' || type === 'timer') {
+    r.text = str(it.text || '', 160);
+    r.font = oneOf(it.font, ['head', 'sub', 'num'], type === 'timer' ? 'num' : 'sub');
+    r.size = Math.round(numIn(it.size, 8, 400, 40)); r.weight = Math.round(numIn(it.weight, 300, 900, 600) / 100) * 100;
+    r.color = hexIn(it.color) || '#ffffff'; r.align = oneOf(it.align, ['left', 'center', 'right'], 'center');
+    r.ls = Math.round(numIn(it.ls, 0, 1, 0) * 100) / 100; r.upper = !!it.upper; r.glow = !!it.glow; r.metal = !!it.metal; r.italic = !!it.italic;
+  }
+  if (type === 'panel') {
+    r.style = oneOf(it.style, ['plate', 'glass', 'solid', 'outline'], 'plate');
+    r.fill = hexIn(it.fill); r.border = hexIn(it.border); r.radius = Math.round(numIn(it.radius, 0, 80, 0));
+  }
+  if (type === 'line') { r.color = hexIn(it.color) || '#c4a265'; r.solid = !!it.solid; }
+  if (type === 'img') { r.src = oneOf(it.src, IMG_SRC, 'mpl'); r.fit = oneOf(it.fit, ['contain', 'cover'], 'contain'); }
+  return r;
+}
+function cleanScenes(arr) {
+  if (!Array.isArray(arr)) return null;
+  const out = [], seen = new Set();
+  for (const sc of arr.slice(0, 12)) {
+    if (!sc || typeof sc !== 'object' || !ID_RE.test(String(sc.id || '')) || seen.has(sc.id)) continue;
+    seen.add(sc.id);
+    const bg = ['none', 'soon', 'break', 'end', 'bracket'].includes(sc.bg) ? sc.bg : (hexIn(sc.bg) || 'none');
+    const items = []; const ids = new Set();
+    for (const it of Array.isArray(sc.items) ? sc.items.slice(0, 80) : []) {
+      const c = cleanItem(it); if (c && !ids.has(c.id)) { ids.add(c.id); items.push(c); }
+    }
+    out.push({ id: sc.id, name: str(sc.name || 'Сцена', 28), bg, cam: sc.cam !== false, items });
+  }
+  return out;
+}
+
 function applyPatch(p) {
   if (!p || typeof p !== 'object') return;
   for (const k of ['a', 'b']) {
@@ -106,7 +183,10 @@ function applyPatch(p) {
   if ('endText' in p) state.endText = str(p.endText, 48);
   if ('label' in p) state.label = str(p.label, 24);
   if ('lt' in p) state.lt = !!p.lt;
-  if ('scene' in p && ['game', 'soon', 'break', 'bracket', 'end', 'cam'].includes(p.scene)) state.scene = p.scene;
+  if ('customScenes' in p) { const cs = cleanScenes(p.customScenes); if (cs) state.customScenes = cs; }
+  if ('layout' in p) state.layout = cleanLayout(p.layout);
+  if ('scene' in p && (BUILTIN_SCENES.includes(p.scene) || (typeof p.scene === 'string' && p.scene.startsWith('c:') && state.customScenes.some((c) => 'c:' + c.id === p.scene)))) state.scene = p.scene;
+  if (!BUILTIN_SCENES.includes(state.scene) && !state.customScenes.some((c) => 'c:' + c.id === state.scene)) state.scene = 'game';
   if ('preset' in p && ['royal'].includes(p.preset)) state.preset = p.preset;
   if ('accent' in p && ['gold', 'steel', 'rose', 'amber'].includes(p.accent)) state.accent = p.accent;
   if (p.bracket && typeof p.bracket === 'object') {
@@ -149,6 +229,7 @@ function statePatch() {
   return {
     a: slotOut(state.a), b: slotOut(state.b), bo: state.bo, map: state.map, tour: state.tour, stage: state.stage,
     cast: state.cast, role: state.role, social: state.social, endText: state.endText, label: state.label, lt: state.lt, scene: state.scene, accent: state.accent, preset: state.preset,
+    layout: state.layout, customScenes: state.customScenes,
     bracket: { title: state.bracket.title, auto: state.bracket.auto, fmt: state.bracket.fmt, m }, timerMins: state.timer.mins
   };
 }

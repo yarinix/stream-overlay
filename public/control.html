@@ -5,115 +5,224 @@
 <title>Пульт оверлея</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap">
 <style>
+@font-face{font-family:"Oswald";src:url(/fonts/oswald.woff) format("woff");font-weight:200 700;font-display:swap}
+@font-face{font-family:"Montserrat";src:url(/fonts/montserrat.woff) format("woff");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Cormorant Garamond";src:url(/fonts/cormorant.woff) format("woff");font-weight:300 700;font-display:swap}
 :root{
-  --ink:#050a16; --panel:#0b1428; --panel2:#101c36; --line:#203359; --text:#e6eefb; --muted:#8a9bb8;
-  --gold:#4da3ff; --ok:#5fb98a; --bad:#d0636f;
-  --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif; color-scheme:dark;
+  --bg:#050914; --glass-a:rgba(24,42,82,.58); --glass-b:rgba(9,16,36,.66); --edge:rgba(150,195,255,.15); --edge2:rgba(150,195,255,.28);
+  --field:rgba(4,9,22,.55); --text:#e8eefb; --muted:#9db0cf; --dim:#6f82a3;
+  --ac:#5aa9ff; --ac2:#3f86e6; --ink:#04122a; --bronze:#d2b078; --bronze2:#8f7344; --live:#ff5468; --ok:#5fcf9a; --bad:#ff7a8a;
+  --f-body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif; --f-num:"Oswald","Montserrat",sans-serif; --f-brand:"Cormorant Garamond",Georgia,serif;
+  --r:16px; --r2:10px; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0; background:var(--ink); color:var(--text); font-family:var(--f-body); font-size:14px; line-height:1.45;
-  padding:16px max(16px, env(safe-area-inset-right)) 32px max(16px, env(safe-area-inset-left))}
-.wrap{max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:14px}
-.top{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
-h1{font-size:1.05rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:0}
-.status{display:flex; align-items:center; gap:8px; font-size:.8rem; color:var(--muted)}
-.dot{width:9px; height:9px; border-radius:50%; background:var(--bad)}
-.dot.on{background:var(--ok)}
-.preview{position:relative; width:100%; aspect-ratio:16/9; border:1px solid var(--line); border-radius:6px; overflow:hidden;
-  background:conic-gradient(#1a1f27 25%,#14181f 0 50%,#1a1f27 0 75%,#14181f 0) 0 0/28px 28px}
+html{background:var(--bg)}
+body{margin:0; min-height:100vh; color:var(--text); font:14px/1.45 var(--f-body); -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(70vw 55vw at 8% -12%, rgba(45,110,215,.46), transparent 68%),
+    radial-gradient(55vw 45vw at 100% 8%, rgba(70,60,150,.30), transparent 70%),
+    radial-gradient(60vw 40vw at 70% 112%, rgba(196,162,101,.20), transparent 70%),
+    var(--bg) fixed;
+  padding:0 0 calc(28px + env(safe-area-inset-bottom))}
+[hidden]{display:none !important}
+h1,h2,h3,h4{margin:0}
+.glass{background:linear-gradient(180deg,var(--glass-a),var(--glass-b)); border:1px solid var(--edge); border-radius:var(--r);
+  box-shadow:0 22px 44px -24px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.06); -webkit-backdrop-filter:blur(18px) saturate(1.15); backdrop-filter:blur(18px) saturate(1.15)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:#0d1730}}
+.ttl{font-size:.8rem; font-weight:700; letter-spacing:.02em; color:var(--text); display:flex; align-items:center; gap:8px}
+.ttl small{font-weight:500; color:var(--dim)}
+.sub{margin:0; color:var(--muted); font-size:.78rem}
+
+/* верхняя панель */
+.bar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:14px; padding:10px max(18px,env(safe-area-inset-right)) 10px max(18px,env(safe-area-inset-left));
+  background:linear-gradient(180deg,rgba(5,9,20,.88),rgba(5,9,20,.6)); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-bottom:1px solid var(--edge)}
+.brand{display:flex; align-items:center; gap:10px; min-width:0}
+.mark{width:30px; height:30px; flex:none; border-radius:9px; background:linear-gradient(145deg,#f4e5b8,var(--bronze) 40%,#1e4280 70%,var(--bronze2)); box-shadow:0 0 0 1px rgba(255,255,255,.2) inset, 0 6px 16px -6px rgba(90,169,255,.6)}
+.brand b{display:block; font:600 1.35rem/1 var(--f-brand); letter-spacing:.04em}
+.brand small{display:block; color:var(--dim); font-size:.68rem; margin-top:2px}
+.onair{display:flex; align-items:center; gap:9px; padding:6px 14px 6px 11px; border-radius:99px; background:rgba(255,84,104,.10); border:1px solid rgba(255,84,104,.38); font-weight:600; font-size:.82rem; min-width:0; white-space:nowrap}
+.onair .lamp{width:9px; height:9px; border-radius:50%; background:var(--live); box-shadow:0 0 0 0 rgba(255,84,104,.6); animation:pulse 2s infinite; flex:none}
+.onair em{font-style:normal; color:var(--bronze); overflow:hidden; text-overflow:ellipsis}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(255,84,104,0)} 100%{box-shadow:0 0 0 0 rgba(255,84,104,0)}}
+.barR{margin-left:auto; display:flex; align-items:center; gap:10px}
+.conn{display:flex; align-items:center; gap:8px; font-size:.76rem; color:var(--muted)}
+.dot{width:8px; height:8px; border-radius:50%; background:var(--bad); flex:none}
+.dot.on{background:var(--ok); box-shadow:0 0 10px rgba(95,207,154,.7)}
+
+/* сетка страницы */
+.grid{max-width:1480px; margin:0 auto; padding:18px max(18px,env(safe-area-inset-right)) 0 max(18px,env(safe-area-inset-left)); display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:18px; align-items:start}
+.stage{display:flex; flex-direction:column; gap:16px; min-width:0}
+.live{display:flex; flex-direction:column; gap:16px; position:sticky; top:74px; min-width:0}
+.screen{padding:10px}
+.preview{position:relative; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; border:1px solid var(--edge);
+  background:conic-gradient(#171d2c 25%,#111623 0 50%,#171d2c 0 75%,#111623 0) 0 0/24px 24px}
 .preview iframe{position:absolute; left:0; top:0; width:1920px; height:1080px; border:0; transform-origin:0 0; background:transparent; pointer-events:none}
-.deck{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr)); gap:12px}
-.card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; min-width:0; display:flex; flex-direction:column; gap:10px}
-.card h3{margin:0; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700}
-.f{display:flex; flex-direction:column; gap:4px; min-width:0}
-.f label{font-size:.75rem; color:var(--muted)}
-label.chk{display:flex; align-items:center; gap:10px; min-height:40px; cursor:pointer}
-.chk input{width:20px; min-height:0; height:20px; flex:none}
-input,select{font:inherit; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 10px; min-height:40px; width:100%; min-width:0}
-input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-visible + span{outline:2px solid var(--gold); outline-offset:1px}
-.two{display:grid; grid-template-columns:minmax(0,1fr) 104px; gap:8px}
+.screen .cap{display:flex; justify-content:space-between; align-items:center; padding:8px 4px 0; color:var(--dim); font-size:.72rem}
+
+/* сцены */
+.scenes{padding:14px 16px 16px}
+.scenes .row{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+.seg{display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:8px}
+.seg label{cursor:pointer; display:block; position:relative}
+.seg input{position:absolute; opacity:0; pointer-events:none; width:1px; height:1px}
+.seg span{display:flex; align-items:center; justify-content:center; min-height:54px; padding:8px 12px; text-align:center; border-radius:12px; font-weight:600; font-size:.86rem; line-height:1.2;
+  background:rgba(255,255,255,.045); border:1px solid var(--edge); transition:background .15s,border-color .15s,transform .1s}
+.seg label:hover span{background:rgba(255,255,255,.085); border-color:var(--edge2)}
+.seg label:active span{transform:scale(.98)}
+.seg input:focus-visible + span{outline:2px solid var(--ac); outline-offset:2px}
+.seg input:checked + span{background:linear-gradient(180deg,rgba(210,176,120,.22),rgba(210,176,120,.07)); border-color:var(--bronze); color:#fff6e0; box-shadow:0 0 0 1px rgba(210,176,120,.35), 0 8px 22px -10px rgba(210,176,120,.55)}
+.seg input:checked + span::before{content:''; position:absolute; top:9px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--live); box-shadow:0 0 8px var(--live)}
+
+/* вкладки */
+.tabs{display:flex; gap:4px; padding:5px; overflow-x:auto; max-width:100%; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto; font:inherit; font-weight:600; font-size:.84rem; color:var(--muted); background:none; border:0; border-radius:11px; padding:11px 18px; min-height:44px; cursor:pointer; white-space:nowrap; transition:background .15s,color .15s}
+.tabs button:hover{color:var(--text); background:rgba(255,255,255,.05)}
+.tabs button[aria-selected="true"]{color:#fff; background:linear-gradient(180deg,rgba(90,169,255,.28),rgba(90,169,255,.12)); box-shadow:inset 0 0 0 1px rgba(90,169,255,.5)}
+.tabs button:focus-visible{outline:2px solid var(--ac); outline-offset:-2px}
+.pane{padding:18px; display:flex; flex-direction:column; gap:16px; min-width:0}
+.pane > section{display:flex; flex-direction:column; gap:12px; min-width:0}
+.pane > section + section{padding-top:16px; border-top:1px solid var(--edge)}
+.fgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:12px}
+
+/* формы */
+.f{display:flex; flex-direction:column; gap:5px; min-width:0}
+.f label,.lbl{font-size:.74rem; font-weight:500; color:var(--muted)}
+input,select{font:inherit; color:var(--text); background:var(--field); border:1px solid var(--edge); border-radius:var(--r2); padding:9px 12px; min-height:44px; width:100%; min-width:0; transition:border-color .15s, box-shadow .15s}
+input::placeholder{color:var(--dim)}
+input:hover,select:hover{border-color:var(--edge2)}
+input:focus-visible,select:focus-visible{outline:none; border-color:var(--ac); box-shadow:0 0 0 3px rgba(90,169,255,.28)}
+select{appearance:none; -webkit-appearance:none; padding-right:34px; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%; background-size:5px 5px; background-repeat:no-repeat}
+select option{background:#0d1730; color:var(--text)}
+label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:pointer; font-size:.86rem}
+.chk input{width:20px; height:20px; min-height:0; padding:0; flex:none; accent-color:var(--ac)}
+.two{display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px}
 .btns{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-.btn{font:inherit; font-weight:600; font-size:.85rem; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 16px; min-height:42px; cursor:pointer}
-.btn:hover{border-color:var(--gold)}
-.btn.p{background:var(--gold); color:#04122a; border-color:var(--gold)}
-.btn[aria-pressed="true"]{border-color:var(--gold); box-shadow:inset 0 0 0 1px var(--gold)}
-.sc{display:flex; align-items:center; gap:10px}
-.sc output{min-width:2ch; text-align:center; font-weight:800; font-size:1.4rem; font-variant-numeric:tabular-nums}
-.sc .btn{min-width:48px}
-.seg{display:flex; flex-wrap:wrap; gap:6px}
-.seg label{cursor:pointer; display:block; flex:1 1 auto}
-.seg input{position:absolute; opacity:0; pointer-events:none; width:1px; min-height:0}
-.seg span{display:block; text-align:center; padding:11px 12px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; font-size:.82rem; font-weight:600; white-space:nowrap}
-.seg input:checked + span{background:var(--gold); color:#04122a; border-color:var(--gold)}
-.card > .ch{all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; min-height:28px; cursor:pointer; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700}
-.card > .ch:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
-.ch::after{content:''; width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin:-4px 4px 0 0; transition:transform .2s}
-.card.shut > .ch::after{transform:rotate(-45deg); margin:0 4px 0 0}
-.cb{display:flex; flex-direction:column; gap:10px; min-width:0}
-.card.shut{gap:0}
-.card.shut > .cb{display:none}
-.foldbar{display:flex; gap:8px; justify-content:flex-end; margin:0 0 10px}
-.foldbar .btn{min-height:34px; padding:6px 12px; font-size:.75rem}
-.card.wide{grid-column:1 / -1}
+.btn{font:inherit; font-weight:600; font-size:.84rem; color:var(--text); background:rgba(255,255,255,.055); border:1px solid var(--edge); border-radius:var(--r2); padding:8px 16px; min-height:44px; cursor:pointer; transition:background .15s,border-color .15s,transform .1s,box-shadow .15s}
+.btn:hover{background:rgba(255,255,255,.1); border-color:var(--edge2)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible,.sw button:focus-visible,.tabs button:focus-visible{outline:2px solid var(--ac); outline-offset:2px}
+.btn.p{background:linear-gradient(180deg,#72b8ff,var(--ac2)); color:var(--ink); border-color:rgba(255,255,255,.28); font-weight:700; box-shadow:0 10px 22px -10px rgba(63,134,230,.9), inset 0 1px 0 rgba(255,255,255,.35)}
+.btn.p:hover{background:linear-gradient(180deg,#86c3ff,#4a92f0)}
+.btn[aria-pressed="true"]{border-color:var(--bronze); box-shadow:inset 0 0 0 1px var(--bronze)}
+.btn.p[aria-pressed="true"]{background:linear-gradient(180deg,#f0d9a4,var(--bronze)); color:#2a1d06; border-color:rgba(255,255,255,.3); box-shadow:0 10px 22px -10px rgba(210,176,120,.8), inset 0 1px 0 rgba(255,255,255,.4)}
+.btn.ghost{background:none}
+.btn.sm{min-height:36px; padding:5px 12px; font-size:.78rem}
+.btn[data-armed="1"]{border-color:var(--bad); color:var(--bad)}
+
+/* счёт */
+.score{padding:16px; display:flex; flex-direction:column; gap:12px}
+.team{display:flex; flex-direction:column; gap:10px}
+.team .step{display:grid; grid-template-columns:56px minmax(0,1fr) 56px; gap:10px; align-items:center}
+.team .step .btn{min-height:56px; padding:0; font-size:1.5rem; line-height:1}
+.team output{display:block; text-align:center; font:600 4rem/1 var(--f-num); font-variant-numeric:tabular-nums; letter-spacing:.01em}
+.vs{display:flex; align-items:center; gap:10px; color:var(--dim); font-size:.7rem; letter-spacing:.2em}
+.vs::before,.vs::after{content:''; flex:1; height:1px; background:var(--edge)}
+.sc{display:grid; grid-template-columns:56px minmax(0,1fr) 56px; gap:10px; align-items:center}
+.sc .btn{min-height:56px; padding:0; font-size:1.5rem; line-height:1}
+.sc output{display:block; text-align:center; font:600 4rem/1 var(--f-num); font-variant-numeric:tabular-nums}
+
+/* таймер */
+.timer{padding:16px; display:flex; flex-direction:column; gap:12px}
+.clock{font:500 4.2rem/1 var(--f-num); text-align:center; font-variant-numeric:tabular-nums; letter-spacing:.03em; padding:6px 0 2px; background:linear-gradient(180deg,#fff,#c9dcff 60%,#9ec3ff); -webkit-background-clip:text; background-clip:text; color:transparent}
+.clock.run{background:linear-gradient(180deg,#fff6e0,var(--bronze)); -webkit-background-clip:text; background-clip:text}
+.timer .btns .btn{flex:1}
+.mini2{display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px}
+.lt{padding:14px 16px; display:flex; align-items:center; gap:12px}
+.lt .who{min-width:0; flex:1}
+.lt .who b{display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lt .who small{color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+/* команды, сетка */
 .tform{display:grid; grid-template-columns:auto minmax(0,1fr) 104px; gap:10px; align-items:end}
-.tform .thumb{grid-row:span 1}
-.thumb{width:64px; height:64px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); display:grid; place-items:center; overflow:hidden; font-weight:800; font-size:.8rem; color:var(--gold); flex:none}
+.thumb{width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 30% 25%,#27458c,#0a1226); border:1px solid var(--edge2); display:grid; place-items:center; overflow:hidden; font-weight:800; font-size:.8rem; color:var(--bronze); flex:none}
 .thumb img{width:84%; height:84%; object-fit:contain; display:block}
 .tbtns{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .tmsg{margin:0; font-size:.8rem; color:var(--muted); min-height:1.2em}
 .tgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr)); gap:8px}
-.tile{display:flex; align-items:center; gap:10px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px; min-width:0}
+.tile{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.04); border:1px solid var(--edge); border-radius:12px; padding:8px; min-width:0}
 .tile .thumb{width:46px; height:46px; font-size:.7rem}
 .tile .tt{flex:1; min-width:0; display:flex; flex-direction:column}
 .tile .tt b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.88rem}
 .tile .tt small{color:var(--muted)}
-.tile .btn{min-height:34px; padding:4px 10px; font-size:.78rem}
-.bhead{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end}
+.tile .btn{min-height:36px; padding:4px 10px; font-size:.78rem}
+.bhead{display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end}
 .bhead .f{flex:1 1 220px}
-.fmtrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:12px}
+.fmtrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px}
 .bgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:10px}
-.mini{background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:10px; display:flex; flex-direction:column; gap:8px; min-width:0}
-.mini h4{margin:0; font-size:.68rem; color:var(--muted); letter-spacing:.14em; text-transform:uppercase; font-weight:700}
+.mini{background:rgba(255,255,255,.04); border:1px solid var(--edge); border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.mini h4{font-size:.74rem; color:var(--muted); font-weight:600}
 .trow{display:grid; grid-template-columns:minmax(0,1fr) auto auto auto; gap:6px; align-items:center}
-.trow .btn{min-width:40px; padding:6px 10px; min-height:40px}
-.trow output{min-width:1.6ch; text-align:center; font-weight:800; font-size:1.15rem; font-variant-numeric:tabular-nums}
-.trow input{background:var(--ink)}
-.sw{display:flex; gap:8px}
-.sw button{width:40px; height:40px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
-.sw button[aria-pressed="true"]{border-color:#fff}
+.trow .btn{min-width:42px; padding:6px 10px; min-height:42px}
+.trow output{min-width:1.6ch; text-align:center; font:600 1.3rem var(--f-num); font-variant-numeric:tabular-nums}
+.trow input{background:var(--field)}
+.sw{display:flex; gap:10px; flex-wrap:wrap}
+.sw button{width:44px; height:44px; border-radius:50%; border:2px solid rgba(255,255,255,.18); cursor:pointer; padding:0; transition:transform .12s,border-color .12s}
+.sw button:hover{transform:scale(1.07)}
+.sw button[aria-pressed="true"]{border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.18)}
 .hint{margin:0; color:var(--muted); font-size:.78rem}
 .copy{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-.copy code{background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:8px 10px; font-size:.8rem; word-break:break-all}
-.login{max-width:360px; margin:12vh auto 0; display:flex; flex-direction:column; gap:12px}
+.copy code{flex:1 1 220px; background:var(--field); border:1px solid var(--edge); border-radius:var(--r2); padding:11px 12px; font-size:.8rem; word-break:break-all}
+.login{max-width:380px; margin:14vh auto 0; padding:26px; display:flex; flex-direction:column; gap:14px}
+.login h1{font:600 2rem/1 var(--f-brand); letter-spacing:.04em}
 .err{color:var(--bad); font-size:.82rem; min-height:1.2em; margin:0}
-[hidden]{display:none !important}
+
+/* планшет и телефон */
+@media (max-width:1079px){
+  .grid > *,.stage > *{min-width:0}
+  .grid{display:flex; flex-direction:column; gap:14px; padding-top:14px}
+  .stage{display:contents}
+  .screen{order:1} .scenes{order:2} .live{order:3; position:static} .tabs{order:4} .pane{order:5}
+  .live{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:14px}
+  .live .lt{grid-column:1/-1}
+}
+@media (max-width:560px){
+  .bar{padding:8px 12px; gap:8px}
+  .brand small,.conn span:last-child{display:none}
+  .brand b{font-size:1.15rem} .mark{width:26px; height:26px}
+  .onair{font-size:.74rem; padding:5px 10px 5px 9px}
+  .grid{padding:12px 12px 0}
+  .seg{grid-template-columns:repeat(2,1fr)}
+  .team output,.sc output{font-size:3.4rem}
+  .clock{font-size:3.6rem}
+  .pane{padding:14px}
+  .tform{grid-template-columns:auto minmax(0,1fr)} .tform .f:last-child{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 </style>
 <link rel="stylesheet" href="/editor.css">
 </head>
 <body>
 <datalist id="teamNames"></datalist>
 
-<div class="login" id="login" hidden>
-  <h1>Пульт оверлея</h1>
+<div class="login glass" id="login" hidden>
+  <h1>Overlay</h1>
+  <p class="sub">Пульт трансляции. Введите ключ доступа.</p>
   <div class="f"><label for="key">Ключ доступа</label><input id="key" type="password" autocomplete="current-password"></div>
   <button class="btn p" id="enter" type="button">Войти</button>
   <p class="err" id="err" role="alert"></p>
 </div>
 
-<div class="wrap" id="app" hidden>
-  <div class="top">
-    <h1>Пульт оверлея</h1>
-    <div class="status"><span class="dot" id="dot"></span><span id="stxt">Подключаюсь…</span></div>
+<div id="app" hidden>
+<header class="bar">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><div><b>Overlay</b><small>Пульт трансляции</small></div></div>
+  <div class="onair" aria-live="polite"><span class="lamp" aria-hidden="true"></span><span>В эфире: <em id="onairT">—</em></span></div>
+  <div class="barR">
+    <span class="conn"><span class="dot" id="dot"></span><span id="stxt">Подключаюсь…</span></span>
+    <button class="btn p" id="edOpen" type="button">Редактор</button>
   </div>
+</header>
 
-  <div class="preview" id="pv"><iframe id="frame" src="/overlay?lite" title="Предпросмотр оверлея"></iframe></div>
+<main class="grid">
+  <div class="stage">
+    <section class="glass screen" aria-label="Предпросмотр">
+      <div class="preview" id="pv"><iframe id="frame" src="/overlay?lite" title="Предпросмотр оверлея"></iframe></div>
+      <div class="cap"><span>Предпросмотр, облегчённый режим</span><span id="capScene"></span></div>
+    </section>
 
-  <div class="foldbar"><button class="btn" id="foldAll" type="button">Свернуть все</button><button class="btn" id="unfoldAll" type="button">Развернуть все</button></div>
-  <div class="deck">
-    <section class="card">
-      <h3>Сцена</h3>
+    <section class="glass scenes" aria-labelledby="scT">
+      <div class="row"><h2 class="ttl" id="scT">Сцена <small>— переключается сразу в эфир</small></h2></div>
       <div class="seg" role="radiogroup" aria-label="Сцена">
         <label><input type="radio" name="scene" value="game"><span>Игра</span></label>
         <label><input type="radio" name="scene" value="soon"><span>Скоро начнём</span></label>
@@ -123,65 +232,32 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
         <label><input type="radio" name="scene" value="cam"><span>Только вебка</span></label>
         <span id="cseg" style="display:contents"></span>
       </div>
-      <button class="btn p" id="edOpen" type="button">Редактор: сетка, элементы, свои сцены</button>
-      <h3>Стиль</h3>
-      <div class="sw" id="sw">
-        <button type="button" data-a="gold" aria-label="Синий" aria-pressed="false" style="background:#4da3ff"></button>
-        <button type="button" data-a="steel" aria-label="Сталь" aria-pressed="false" style="background:#9db4c9"></button>
-        <button type="button" data-a="amber" aria-label="Золото" aria-pressed="false" style="background:#c9a45c"></button>
-        <button type="button" data-a="rose" aria-label="Рубин" aria-pressed="false" style="background:#e0566c"></button>
-      </div>
     </section>
 
-    <section class="card">
-      <h3>Команды и счёт</h3>
-      <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="5"></div></div>
-      <div class="sc"><button class="btn" id="aMinus" type="button" aria-label="Минус очко команде A">−</button><output id="oA">0</output><button class="btn p" id="aPlus" type="button" aria-label="Плюс очко команде A">+</button></div>
-      <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="5"></div></div>
-      <div class="sc"><button class="btn" id="bMinus" type="button" aria-label="Минус очко команде B">−</button><output id="oB">0</output><button class="btn p" id="bPlus" type="button" aria-label="Плюс очко команде B">+</button></div>
-      <div class="btns"><button class="btn" id="swap" type="button">Поменять местами</button><button class="btn" id="zero" type="button">Сбросить счёт</button></div>
-    </section>
+    <div class="glass tabs" role="tablist" aria-label="Разделы">
+      <button type="button" role="tab" id="tab-match" data-tab="match" aria-controls="pane-match" aria-selected="true">Матч</button>
+      <button type="button" role="tab" id="tab-teams" data-tab="teams" aria-controls="pane-teams" aria-selected="false" tabindex="-1">Команды</button>
+      <button type="button" role="tab" id="tab-bracket" data-tab="bracket" aria-controls="pane-bracket" aria-selected="false" tabindex="-1">Сетка</button>
+      <button type="button" role="tab" id="tab-look" data-tab="look" aria-controls="pane-look" aria-selected="false" tabindex="-1">Оформление</button>
+    </div>
 
-    <section class="card">
-      <h3>Матч</h3>
-      <div class="f"><label for="bo">Формат</label><select id="bo"><option value="1">BO1</option><option value="3">BO3</option><option value="5">BO5</option></select></div>
-      <div class="f"><label for="map">Номер карты</label><select id="map"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-      <div class="f"><label for="tour">Турнир</label><input id="tour" maxlength="28"></div>
-      <div class="f"><label for="stg">Стадия</label><input id="stg" maxlength="28"></div>
-    </section>
+    <div class="glass pane" id="pane-match" role="tabpanel" aria-labelledby="tab-match">
+      <section><h3 class="ttl">Матч</h3><div class="fgrid">
+<div class="f"><label for="bo">Формат</label><select id="bo"><option value="1">BO1</option><option value="3">BO3</option><option value="5">BO5</option></select></div>
+<div class="f"><label for="map">Номер карты</label><select id="map"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+<div class="f"><label for="tour">Турнир</label><input id="tour" maxlength="28"></div>
+<div class="f"><label for="stg">Стадия</label><input id="stg" maxlength="28"></div>
+      </div></section>
+      <section><h3 class="ttl">Ведущий и заставки</h3><div class="fgrid">
+<div class="f"><label for="cast">Имя</label><input id="cast" maxlength="22"></div>
+<div class="f"><label for="role">Должность</label><input id="role" maxlength="26"></div>
+<div class="f"><label for="endText">Текст финальной заставки</label><input id="endText" maxlength="48"></div>
+<div class="f"><label for="social">Соцсеть на заставках</label><input id="social" maxlength="36" placeholder="twitch.tv/ник"></div>
+      </div></section>
+    </div>
 
-    <section class="card">
-      <h3>Плашка комментатора</h3>
-      <div class="f"><label for="cast">Имя</label><input id="cast" maxlength="22"></div>
-      <div class="f"><label for="role">Должность</label><input id="role" maxlength="26"></div>
-      <div class="f"><label for="endText">Текст финальной заставки</label><input id="endText" maxlength="48"></div>
-      <div class="f"><label for="social">Соцсеть на заставках</label><input id="social" maxlength="36" placeholder="twitch.tv/ник"></div>
-      <div class="btns"><button class="btn p" id="ltBtn" type="button" aria-pressed="false">Показать плашку</button></div>
-    </section>
-
-    <section class="card">
-      <h3>Таймер</h3>
-      <div class="f"><label for="label">Подпись</label><input id="label" maxlength="24"></div>
-      <div class="f"><label for="mins">Минут</label><input id="mins" type="number" min="1" max="99"></div>
-      <div class="btns"><button class="btn p" id="tGo" type="button">Старт</button><button class="btn" id="tReset" type="button">Сбросить</button></div>
-    </section>
-
-    <section class="card wide">
-      <h3>Сетка плей-оффа</h3>
-      <div class="bhead">
-        <div class="f"><label for="bTitle">Заголовок на экране</label><input id="bTitle" maxlength="24"></div>
-        <div class="btns"><button class="btn p" id="bShow" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
-      </div>
-      <div class="bhead">
-        <label class="chk"><input type="checkbox" id="bAuto"><span>Авто-переход победителей</span></label>
-      </div>
-      <div class="fmtrow" id="fmtRow"></div>
-      <div class="bgrid" id="bgrid"></div>
-      <p class="hint">Формат (BO) задаётся для каждой стадии отдельно. Когда у команды набрано нужное число побед, она сама встаёт в следующий матч (проигравшие верхней сетки уходят в нижнюю). Если счёт поправить, переход откатывается. Названия и счёт меняются сразу, пока сетка на экране.</p>
-    </section>
-
-    <section class="card wide">
-      <h3>Команды и значки</h3>
+    <div class="glass pane" id="pane-teams" role="tabpanel" aria-labelledby="tab-teams" hidden>
+      <section><h3 class="ttl">Команды и значки</h3>
       <div class="tform">
         <div class="thumb" id="tfPrev" aria-hidden="true"></div>
         <div class="f"><label for="tfName">Название команды</label><input id="tfName" maxlength="28" placeholder="Например, Nova Wolves"></div>
@@ -198,21 +274,78 @@ input:focus-visible,select:focus-visible,.btn:focus-visible,.seg input:focus-vis
       <p class="hint" id="storeMsg"></p>
       <div class="tgrid" id="tList"></div>
       <p class="hint">Значок подставляется, когда в табло или сетке введено название команды из списка или её сокращение (например, NW): начните вводить, и пульт предложит варианты. Лучше PNG с прозрачным фоном.</p>
-    </section>
+    
+      </section>
+    </div>
 
-    <section class="card">
-      <h3>Ссылка для OBS</h3>
+    <div class="glass pane" id="pane-bracket" role="tabpanel" aria-labelledby="tab-bracket" hidden>
+      <section><h3 class="ttl">Сетка плей-оффа</h3>
+      <div class="bhead">
+        <div class="f"><label for="bTitle">Заголовок на экране</label><input id="bTitle" maxlength="24"></div>
+        <div class="btns"><button class="btn p" id="bShow" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
+      </div>
+      <div class="bhead">
+        <label class="chk"><input type="checkbox" id="bAuto"><span>Авто-переход победителей</span></label>
+      </div>
+      <div class="fmtrow" id="fmtRow"></div>
+      <div class="bgrid" id="bgrid"></div>
+      <p class="hint">Формат (BO) задаётся для каждой стадии отдельно. Когда у команды набрано нужное число побед, она сама встаёт в следующий матч (проигравшие верхней сетки уходят в нижнюю). Если счёт поправить, переход откатывается. Названия и счёт меняются сразу, пока сетка на экране.</p>
+    
+      </section>
+    </div>
+
+    <div class="glass pane" id="pane-look" role="tabpanel" aria-labelledby="tab-look" hidden>
+      <section><h3 class="ttl">Цветовой акцент оверлея</h3>
+        <div class="sw" id="sw">
+          <button type="button" data-a="gold" aria-label="Синий" aria-pressed="false" style="background:#4da3ff"></button>
+          <button type="button" data-a="steel" aria-label="Сталь" aria-pressed="false" style="background:#9db4c9"></button>
+          <button type="button" data-a="amber" aria-label="Золото" aria-pressed="false" style="background:#c9a45c"></button>
+          <button type="button" data-a="rose" aria-label="Рубин" aria-pressed="false" style="background:#e0566c"></button>
+        </div>
+        <p class="hint">Расположение и размер элементов, а также свои сцены меняются в редакторе (кнопка вверху справа).</p>
+      </section>
+      <section><h3 class="ttl">Ссылка для OBS</h3>
       <p class="hint">Добавьте источник «Браузер», вставьте эту ссылку, размер 1920 на 1080.</p>
       <div class="copy"><code id="url"></code><button class="btn" id="copyBtn" type="button">Копировать</button></div>
-    </section>
+    
+      </section>
+    </div>
   </div>
+
+  <aside class="live" aria-label="Управление в эфире">
+    <section class="glass score" aria-label="Счёт">
+      <div class="team">
+        <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="5"></div></div>
+        <div class="step"><button class="btn" id="aMinus" type="button" aria-label="Минус очко команде A">−</button><output id="oA" aria-live="polite">0</output><button class="btn p" id="aPlus" type="button" aria-label="Плюс очко команде A">+</button></div>
+      </div>
+      <div class="vs" aria-hidden="true">VS</div>
+      <div class="team">
+        <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="5"></div></div>
+        <div class="step"><button class="btn" id="bMinus" type="button" aria-label="Минус очко команде B">−</button><output id="oB" aria-live="polite">0</output><button class="btn p" id="bPlus" type="button" aria-label="Плюс очко команде B">+</button></div>
+      </div>
+      <div class="btns"><button class="btn sm" id="swap" type="button">Поменять местами</button><button class="btn sm" id="zero" type="button">Сбросить счёт</button></div>
+    </section>
+
+    <section class="glass timer" aria-label="Таймер">
+      <h2 class="ttl">Таймер</h2>
+      <div class="clock" id="clock" role="timer" aria-live="off">05:00</div>
+      <div class="btns"><button class="btn p" id="tGo" type="button">Старт</button><button class="btn" id="tReset" type="button">Сбросить</button></div>
+      <div class="mini2"><div class="f"><label for="label">Подпись на экране</label><input id="label" maxlength="24"></div><div class="f"><label for="mins">Минут</label><input id="mins" type="number" min="1" max="99" inputmode="numeric"></div></div>
+    </section>
+
+    <section class="glass lt" aria-label="Плашка ведущего">
+      <div class="who"><b id="ltName">—</b><small id="ltRole">Плашка ведущего</small></div>
+      <button class="btn p" id="ltBtn" type="button" aria-pressed="false">Показать плашку</button>
+    </section>
+  </aside>
+</main>
 </div>
 
 <script>
 (function(){
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
-var ws = null, st = null, key = '', wait = 500, authed = false, closing = false, seen = false, restoring = false;
+var off = 0, ws = null, st = null, key = '', wait = 500, authed = false, closing = false, seen = false, restoring = false;
 try { key = localStorage.getItem('ctlkey') || ''; } catch (_) {}
 
 function showLogin(msg){ $('app').hidden = true; $('login').hidden = false; $('err').textContent = msg || ''; $('key').focus(); }
@@ -236,7 +369,7 @@ function connect(){
       return;
     }
     if (m.type === 'state'){
-      st = m.state;
+      st = m.state; off = (m.now || Date.now()) - Date.now();
       if (!seen){
         seen = true;
         var savedBoot = LS.get('ctlBoot', '');
@@ -318,32 +451,7 @@ var FMTS = [['pi','Плей-ин'],['ubs','Верх · полуфинал'],['ub
     patch({ bracket: { m: mm } });
   });
 })();
-(function folding(){
-  var KEY = 'ctlfold', DEF_OPEN = { 'Сцена': 1, 'Команды и счёт': 1 }, saved = {};
-  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.deck > .card'));
-  function store(){ try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
-  function setShut(card, name, shut, persist){
-    card.classList.toggle('shut', shut);
-    card.querySelector('.ch').setAttribute('aria-expanded', shut ? 'false' : 'true');
-    if (persist){ saved[name] = shut ? 0 : 1; store(); }
-  }
-  cards.forEach(function(card){
-    var h = card.querySelector('h3'); if (!h) return;
-    var name = h.textContent.trim();
-    var btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'ch'; btn.textContent = name;
-    var body = document.createElement('div'); body.className = 'cb';
-    while (h.nextSibling) body.appendChild(h.nextSibling);
-    card.replaceChild(btn, h); card.appendChild(body);
-    var open = name in saved ? !!saved[name] : !!DEF_OPEN[name];
-    setShut(card, name, !open, false);
-    btn.addEventListener('click', function(){ setShut(card, name, !card.classList.contains('shut'), true); });
-  });
-  function all(shut){ cards.forEach(function(card){ var b = card.querySelector('.ch'); if (b) setShut(card, b.textContent, shut, true); }); }
-  $('foldAll').onclick = function(){ all(true); };
-  $('unfoldAll').onclick = function(){ all(false); };
-})();
+
 var timers = {};
 function setVal(id, v){ var el = $(id); if (document.activeElement !== el) el.value = v; }
 function sync(){
@@ -626,6 +734,47 @@ $('copyBtn').onclick = function(){
   if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){ $('copyBtn').textContent = 'Скопировано'; setTimeout(function(){ $('copyBtn').textContent = 'Копировать'; }, 1500); }, function(){});
 };
 
+/* шапка, часы, вкладки */
+var SCN = { game: 'Игра', soon: 'Скоро начнём', 'break': 'Перерыв', bracket: 'Сетка', end: 'Финал', cam: 'Только вебка' };
+function sceneName(k){
+  if (SCN[k]) return SCN[k];
+  var cs = (st && st.customScenes) || [];
+  for (var i = 0; i < cs.length; i++) if ('c:' + cs[i].id === k) return cs[i].name;
+  return '—';
+}
+function mm(sec){ sec = Math.max(0, sec); var m = Math.floor(sec / 60), x = sec % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
+var lastClock = '';
+function tick(){
+  if (!st) return;
+  var t = st.timer, r = t.run ? Math.max(0, Math.ceil((t.endAt - (Date.now() + off)) / 1000)) : t.rem, txt = mm(r);
+  if (txt !== lastClock){ lastClock = txt; $('clock').textContent = txt; }
+  $('clock').classList.toggle('run', !!t.run);
+  var n = sceneName(st.scene);
+  if ($('onairT').textContent !== n){ $('onairT').textContent = n; $('capScene').textContent = 'Сейчас в эфире: ' + n; }
+  var w = st.cast || '—', ro = st.role || 'Плашка ведущего';
+  if ($('ltName').textContent !== w) $('ltName').textContent = w;
+  if ($('ltRole').textContent !== ro) $('ltRole').textContent = ro;
+}
+setInterval(tick, 250);
+(function tabs(){
+  var btns = Array.prototype.slice.call(document.querySelectorAll('[role=tab]'));
+  function show(id, focus){
+    btns.forEach(function(b){
+      var on = b.dataset.tab === id; b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1;
+      $('pane-' + b.dataset.tab).hidden = !on; if (on && focus) b.focus();
+    });
+    try { localStorage.setItem('ctltab', id); } catch (e) {}
+  }
+  btns.forEach(function(b, i){
+    b.addEventListener('click', function(){ show(b.dataset.tab); });
+    b.addEventListener('keydown', function(e){
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+      e.preventDefault(); show(btns[(i + d + btns.length) % btns.length].dataset.tab, true);
+    });
+  });
+  var saved = 'match'; try { saved = localStorage.getItem('ctltab') || 'match'; } catch (e) {}
+  show(btns.some(function(b){ return b.dataset.tab === saved; }) ? saved : 'match');
+})();
 window.CTL = { get st(){ return st; }, patch: patch };
 $('edOpen').onclick = function(){ if (window.EditorOpen) window.EditorOpen(); };
 if (key) connect(); else showLogin('');

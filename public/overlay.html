@@ -625,6 +625,7 @@ html.edit,html.edit body{background:#121826}
 html.edit .sweep{display:none !important}
 #edl{position:absolute; inset:0; z-index:1000; display:none; --inv:1; touch-action:none; user-select:none; -webkit-user-select:none}
 html.edit #edl{display:block}
+@media (pointer:coarse){.rh{width:calc(30px*var(--inv)); height:calc(30px*var(--inv)); margin:calc(-15px*var(--inv)) 0 0 calc(-15px*var(--inv)); border-radius:calc(8px*var(--inv))} .eh .el{font-size:calc(14px*var(--inv))} #edl{-webkit-touch-callout:none}}
 #edl.grid{background-image:linear-gradient(rgba(255,255,255,.09) calc(1px*var(--inv)),transparent 0),linear-gradient(90deg,rgba(255,255,255,.09) calc(1px*var(--inv)),transparent 0); background-size:var(--g) var(--g)}
 #edl .safe{position:absolute; left:96px; top:54px; right:96px; bottom:54px; border:calc(2px*var(--inv)) dashed rgba(255,255,255,.28); pointer-events:none}
 #edl .cx{position:absolute; background:rgba(255,255,255,.18); pointer-events:none}

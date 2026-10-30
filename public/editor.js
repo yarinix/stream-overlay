@@ -3,7 +3,7 @@
 'use strict';
 var BUILTIN = [['game','Игра'],['soon','Скоро начнём'],['break','Перерыв'],['bracket','Сетка'],['end','Финал'],['cam','Только вебка']];
 var $ = function(id){ return document.getElementById(id); };
-var root, frame, D = null, scene = 'game', undo = [], redo = [], lastSnap = '', dirty = false, ready = false, selKeys = [], insT = 0, nid = 1;
+var zoom = 1, tab = 'l', pan = false, root, frame, D = null, scene = 'game', undo = [], redo = [], lastSnap = '', dirty = false, ready = false, selKeys = [], insT = 0, nid = 1;
 var T = { text: 'Текст', panel: 'Плашка', line: 'Линия', img: 'Картинка', timer: 'Таймер' };
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 function esc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
@@ -44,7 +44,11 @@ function build(){
       '<span class="ed-dirty" id="edDirty"></span>' +
       '<div class="grp"><button class="eb" id="edLive" type="button" title="Применить и показать эту сцену на стриме">В эфир</button><button class="eb p" id="edSave" type="button">Сохранить</button><button class="eb" id="edClose" type="button">Закрыть</button></div>' +
     '</div>' +
-    '<div class="ed-main"><div class="ed-l" id="edL"></div><div class="ed-stage" id="edStage"><iframe id="edFrame" title="Редактор"></iframe></div><div class="ed-ins" id="edI"></div></div>';
+    '<div class="ed-main"><div class="ed-l" id="edL"></div><div class="ed-sw"><div class="ed-stage" id="edStage"><iframe id="edFrame" title="Редактор"></iframe></div>' +
+      '<div class="ed-zm"><button class="eb" id="edZo" type="button" aria-label="Уменьшить">−</button><button class="eb" id="edZf" type="button" aria-label="Вписать">⤢</button><button class="eb" id="edZi" type="button" aria-label="Увеличить">+</button><button class="eb" id="edPan" type="button" aria-label="Двигать вид">✋</button></div></div>' +
+      '<div class="ed-tabs" id="edTabs"><button type="button" data-tab="l">Элементы</button><button type="button" data-tab="i">Свойства</button><button type="button" data-tab="a">Выровнять</button></div>' +
+      '<div class="ed-ins" id="edI"></div><div class="ed-a" id="edA"></div></div>';
+  root.setAttribute('data-tab', tab);
   document.body.appendChild(root);
   frame = $('edFrame');
   var al = $('edAl'), h = '';
@@ -53,10 +57,20 @@ function build(){
   });
   h += '<button class="eb" type="button" data-di="h" title="Распределить по горизонтали (от 3 элементов)">' + ICONS.dh + '</button><button class="eb" type="button" data-di="v" title="Распределить по вертикали (от 3 элементов)">' + ICONS.dv + '</button>';
   al.innerHTML = h;
-  al.onclick = function(e){
+  var pad = '<div class="pad"><i></i><button class="eb" type="button" data-nu="0,-1">↑</button><i></i><button class="eb" type="button" data-nu="-1,0">←</button><button class="eb" type="button" data-nu="0,1">↓</button><button class="eb" type="button" data-nu="1,0">→</button></div>';
+  $('edA').innerHTML = '<h4>Выровнять</h4><div class="als">' + h + '</div><h4>Сдвиг на 1 px</h4><label class="ck"><input type="checkbox" id="edStep10">шаг 10 px</label>' + pad +
+    '<div class="addg"><button class="eb" type="button" data-act="dup">Дублировать</button><button class="eb" type="button" data-act="rm">Удалить / скрыть</button></div>' +
+    '<p class="hint">Выбери элемент на сцене или в списке. Для одного элемента выравнивание идёт по кадру, для нескольких — по рамке выделения.</p>';
+  function onAl(e){
     var b = e.target.closest('button'); if (!b) return; var E = ED(); if (!E) return;
     if (b.dataset.al) E.align(b.dataset.al); else if (b.dataset.di) E.distribute(b.dataset.di);
-  };
+    else if (b.dataset.nu){ var v = b.dataset.nu.split(','), st = $('edStep10') && $('edStep10').checked ? 10 : 1; E.nudge(v[0] * st, v[1] * st); }
+    else if (b.dataset.act === 'dup') dupSel(); else if (b.dataset.act === 'rm') delSel();
+  }
+  al.onclick = onAl; $('edA').onclick = onAl;
+  $('edTabs').onclick = function(e){ var b = e.target.closest('button'); if (b) setTab(b.dataset.tab); };
+  $('edZo').onclick = function(){ setZoom(zoom / 1.4); }; $('edZi').onclick = function(){ setZoom(zoom * 1.4); }; $('edZf').onclick = function(){ setZoom(1); };
+  $('edPan').onclick = function(){ pan = !pan; this.classList.toggle('on', pan); var E = ED(); if (E) E.setPan(pan); };
   $('edScene').onchange = function(){ setScene(this.value); };
   $('edNew').onclick = newSceneDialog;
   $('edUndo').onclick = doUndo; $('edRedo').onclick = doRedo;
@@ -74,10 +88,17 @@ function pushGrid(){
 }
 function fitStage(){
   var st = $('edStage'); if (!st) return;
-  var w = st.clientWidth - 24, h = st.clientHeight - 24, k = Math.min(w / 1920, h / 1080);
+  var w = st.clientWidth - 16, h = st.clientHeight - 16, k = Math.min(w / 1920, h / 1080) * zoom;
   if (k <= 0) return;
   frame.style.width = Math.floor(1920 * k) + 'px'; frame.style.height = Math.floor(1080 * k) + 'px';
 }
+function setZoom(z){
+  var st = $('edStage'), fx = (st.scrollLeft + st.clientWidth / 2) / Math.max(1, st.scrollWidth), fy = (st.scrollTop + st.clientHeight / 2) / Math.max(1, st.scrollHeight);
+  zoom = Math.max(1, Math.min(5, z)); fitStage();
+  st.scrollLeft = fx * st.scrollWidth - st.clientWidth / 2; st.scrollTop = fy * st.scrollHeight - st.clientHeight / 2;
+  var E = ED(); if (E) E.redraw();
+}
+function setTab(t){ tab = t; root.setAttribute('data-tab', t); fitStage(); }
 
 /* ---------- открыть / закрыть / сохранить ---------- */
 function open(){
@@ -85,7 +106,7 @@ function open(){
   if (!root) build();
   D = { layout: clone(C.st.layout || {}), customScenes: clone(C.st.customScenes || []) };
   scene = C.st.scene; if (scene !== 'game' && !isScene(scene)) scene = 'game';
-  undo = []; redo = []; lastSnap = snap(); dirty = false; selKeys = []; ready = false;
+  undo = []; redo = []; lastSnap = snap(); dirty = false; selKeys = []; ready = false; zoom = 1; pan = false; tab = 'l'; root.setAttribute('data-tab', tab); $('edPan').classList.remove('on');
   root.classList.add('on'); document.body.style.overflow = 'hidden';
   frame.onload = function(){ attachFrame(); };
   frame.src = '/overlay?edit&_=' + Date.now();
@@ -106,9 +127,8 @@ function save(){
 }
 function updBar(){
   $('edUndo').disabled = !undo.length; $('edRedo').disabled = !redo.length;
-  $('edDirty').textContent = dirty ? 'Есть несохранённые изменения' : '';
-  var multi = selKeys.length > 1;
-  $('edAl').querySelectorAll('button').forEach(function(b){ b.disabled = !selKeys.length || (b.dataset.di && selKeys.length < 3); });
+  $('edDirty').textContent = dirty ? 'Есть несохранённые изменения' : ''; $('edSave').textContent = dirty ? 'Сохранить •' : 'Сохранить';
+  [$('edAl'), $('edA')].forEach(function(c){ c.querySelectorAll('button').forEach(function(b){ if (b.dataset.al || b.dataset.di || b.dataset.nu || b.dataset.act) b.disabled = !selKeys.length || (b.dataset.di && selKeys.length < 3) || (b.dataset.act === 'dup' && !curCS()); }); });
 }
 function preview(){
   var o = OV(); if (!o) return;
@@ -398,7 +418,7 @@ function I$(p){ var e = document.querySelector('#edI [data-p=' + p + ']'); retur
 
 window.EditorUI = {
   ready: function(){ ready = true; var E = ED(); if (E){ pushGrid(); preview(); fitStage(); renderLeft(); renderIns(); } },
-  onSelect: function(k){ selKeys = k; renderLeft(); renderIns(); updBar(); },
+  onSelect: function(k){ var was = selKeys.length; selKeys = k; renderLeft(); renderIns(); updBar(); if (!was && k.length && tab === 'l' && window.matchMedia('(max-width:980px)').matches) setTab('i'); },
   live: function(){ clearTimeout(insT); insT = setTimeout(function(){ renderIns(); }, 30); },
   changed: function(){ commit(); renderLeft(); }
 };

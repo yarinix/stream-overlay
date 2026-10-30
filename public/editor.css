@@ -1,4 +1,4 @@
-#ed{position:fixed; inset:0; z-index:9999; background:#070d1c; color:#e6eefb; display:none; grid-template-rows:auto 1fr; font:13px/1.4 "Montserrat",system-ui,sans-serif}
+#ed{position:fixed; inset:0; height:100vh; height:100dvh; z-index:9999; background:#070d1c; color:#e6eefb; display:none; grid-template-rows:auto 1fr; font:13px/1.4 "Montserrat",system-ui,sans-serif}
 #ed.on{display:grid}
 #ed *{box-sizing:border-box}
 #ed button,#ed input,#ed select,#ed textarea{font:inherit; color:inherit}
@@ -17,8 +17,9 @@
 .ed-main{display:grid; grid-template-columns:230px minmax(0,1fr) 290px; min-height:0}
 .ed-l,.ed-ins{background:#0b1428; overflow:auto; padding:10px; min-height:0}
 .ed-l{border-right:1px solid #203359} .ed-ins{border-left:1px solid #203359}
-.ed-stage{position:relative; min-width:0; min-height:0; display:grid; place-items:center; background:conic-gradient(#141b2b 25%,#101624 0 50%,#141b2b 0 75%,#101624 0) 0 0/24px 24px; overflow:hidden}
-.ed-stage iframe{border:1px solid #2a4170; background:transparent; display:block}
+.ed-sw{position:relative; min-width:0; min-height:0; display:flex}
+.ed-stage{position:relative; flex:1; min-width:0; min-height:0; display:flex; overflow:auto; -webkit-overflow-scrolling:touch; background:conic-gradient(#141b2b 25%,#101624 0 50%,#141b2b 0 75%,#101624 0) 0 0/24px 24px; overflow:hidden}
+.ed-stage iframe{flex:none; margin:auto; border:1px solid #2a4170; background:transparent; display:block}
 .ed h4{margin:12px 0 6px; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#4da3ff}
 .ed h4:first-child{margin-top:0}
 .ly{display:flex; align-items:center; gap:6px; padding:5px 6px; border-radius:6px; cursor:pointer; border:1px solid transparent}
@@ -46,11 +47,41 @@
 .tpl button{text-align:left; background:#101c36; border:1px solid #203359; border-radius:8px; padding:10px 12px; cursor:pointer}
 .tpl button:hover{border-color:#4da3ff} .tpl b{display:block} .tpl small{color:#8a9bb8}
 .ed-dirty{color:#f4c46a; font-size:12px}
+
+.ed-zm{position:absolute; right:8px; bottom:8px; display:flex; gap:4px}
+.ed-zm .eb{background:rgba(11,20,40,.88); min-width:38px; min-height:38px}
+.ed-tabs,.ed-a{display:none}
+.ed-a{background:#0b1428; padding:10px; overflow:auto}
+.ed-a .als{display:grid; grid-template-columns:repeat(4,1fr); gap:6px}
+.ed-a .pad{display:grid; grid-template-columns:repeat(3,56px); gap:6px; justify-content:center; margin:10px 0}
+.ed-a .pad .eb{min-height:52px; font-size:20px}
+.ed-a .addg .eb{min-height:44px}
 @media (max-width:980px){
-  .ed-main{grid-template-columns:1fr; grid-template-rows:minmax(0,46vh) auto auto; overflow:auto}
-  .ed-l,.ed-ins{border:0; border-top:1px solid #203359; max-height:none}
+  #ed{grid-template-rows:auto minmax(0,1fr)}
+  .ed-bar{gap:6px 8px; padding:6px 8px}
+  .ed-bar > div:nth-child(2){order:1; flex:1 1 100%; min-width:0} .ed-bar > div:nth-child(2) select{flex:1; max-width:none; min-width:0}
+  .ed-bar > div:last-child{order:2}
+  .ed-bar > div:nth-child(1){display:none}
+  .ed-bar > div:nth-child(4),.ed-bar > div:nth-child(6){order:3}
+  .ed-bar .sep,#edAl,#edDirty,.ed-bar > div[style]{display:none}
+  #edSafe,#edSafe + *{display:none} .ed-bar label.ck:last-child{display:none}
+  #edLive{display:none}
+  .eb{min-height:42px; min-width:42px}
+  .ed-main{display:flex; flex-direction:column; overflow:hidden}
+  .ed-sw{order:0; flex:none; height:40dvh; height:40vh; height:40dvh}
+  .ed-tabs{order:1; display:flex; flex:none; background:#0b1428; border-top:1px solid #203359; border-bottom:1px solid #203359}
+  .ed-tabs button{flex:1; min-height:44px; background:none; border:0; border-bottom:3px solid transparent; font-weight:700; font-size:13px; color:#8a9bb8; cursor:pointer}
+  #ed[data-tab=l] .ed-tabs [data-tab=l],#ed[data-tab=i] .ed-tabs [data-tab=i],#ed[data-tab=a] .ed-tabs [data-tab=a]{color:#e6eefb; border-bottom-color:#4da3ff}
+  .ed-l,.ed-ins,.ed-a{order:2; display:none; flex:1; min-height:0; border:0; overflow:auto; padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+  #ed[data-tab=l] .ed-l,#ed[data-tab=i] .ed-ins,#ed[data-tab=a] .ed-a{display:block}
+  .ly{padding:10px 8px; min-height:44px}
+  .ly button{min-width:44px; min-height:40px; font-size:16px}
+  #ed input,#ed select,#ed textarea{font-size:16px !important}
+  .fr{grid-template-columns:1fr 1fr}
+  .chips button{padding:6px 10px; font-size:13px}
+  .addg{grid-template-columns:1fr 1fr}
 }
-#ed input[type=checkbox]{width:16px; height:16px; min-height:0; padding:0; flex:none; accent-color:#4da3ff}
-#ed input[type=color]{width:40px; min-height:34px; height:34px; padding:0}
+#ed input[type=checkbox]{width:18px; height:18px; min-height:0; padding:0; flex:none; accent-color:#4da3ff}
+#ed input[type=color]{width:44px; min-height:36px; height:36px; padding:0}
 #ed input[type=range]{min-height:0; padding:0; border:0; background:none}
-#ed .fld .ck,#ed .ck{min-height:0; gap:6px}
+#ed .ck{min-height:0; gap:6px}

@@ -239,6 +239,11 @@ function distribute(axis){
   apply(); changed('distribute'); live();
 }
 var nudT = 0;
+function nudge(dx, dy){
+  if (!sel.length) return;
+  sel.forEach(function(k){ moveBy(k, dx, dy); });
+  apply(); live(); clearTimeout(nudT); nudT = setTimeout(function(){ changed('nudge'); }, 350);
+}
 function onKey(e){
   var t = e.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return false;
   var st = e.shiftKey ? 10 : (grid.snap && e.ctrlKey ? grid.size : 1), dx = 0, dy = 0;
@@ -255,6 +260,7 @@ document.addEventListener('keydown', function(e){ if (onKey(e)) e.preventDefault
 window.addEventListener('resize', function(){ redraw(); });
 
 window.EDIT = {
+  nudge: nudge, setPan: function(on){ edl.style.pointerEvents = on ? 'none' : ''; },
   draw: draw, redraw: redraw, apply: apply, align: align, distribute: distribute, onKey: onKey,
   select: function(keys){ sel = keys.slice(); notify(); draw(); },
   getSel: function(){ return sel.slice(); }, keys: allKeys, name: name, isOff: isOff, rect: rect,

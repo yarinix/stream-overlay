@@ -116,9 +116,24 @@ function isScene(k){ return BUILTIN.some(function(b){ return b[0] === k; }) || !
 function attachFrame(){
   try { frame.contentDocument.addEventListener('keydown', function(e){ onKey(e, true); }); } catch (e) {}
 }
+function closeNow(){ root.classList.remove('on'); document.body.style.overflow = ''; frame.src = 'about:blank'; dirty = false; }
 function close(){
-  if (dirty && !confirm('Есть несохранённые изменения. Закрыть без сохранения?')) return;
-  root.classList.remove('on'); document.body.style.overflow = ''; frame.src = 'about:blank';
+  if (!dirty){ closeNow(); return; }
+  ask('Есть несохранённые изменения.', [{ t: 'Сохранить и закрыть', cls: 'p', v: 'save' }, { t: 'Закрыть без сохранения', v: 'drop' }, { t: 'Остаться', v: '' }]).then(function(v){
+    if (v === 'save'){ save(); closeNow(); } else if (v === 'drop') closeNow();
+  });
+}
+/* свой диалог вместо confirm/alert: системные окна блокируются на телефонах */
+function ask(msg, btns){
+  return new Promise(function(res){
+    var m = document.createElement('div'); m.className = 'ed-modal'; m.setAttribute('role', 'alertdialog');
+    m.innerHTML = '<div><p style="margin:0 0 14px;font-size:15px"></p><div class="dlg"></div></div>';
+    m.querySelector('p').textContent = msg;
+    var box = m.querySelector('.dlg');
+    btns.forEach(function(b){ var e = document.createElement('button'); e.type = 'button'; e.className = 'eb' + (b.cls ? ' ' + b.cls : ''); e.textContent = b.t; e.onclick = function(){ m.remove(); res(b.v); }; box.appendChild(e); });
+    m.addEventListener('click', function(ev){ if (ev.target === m){ m.remove(); res(''); } });
+    document.body.appendChild(m); box.lastChild.focus();
+  });
 }
 function save(){
   if (!window.CTL) return;
@@ -200,7 +215,7 @@ var TPL = [
   ] }; } }
 ];
 function newSceneDialog(){
-  if (D.customScenes.length >= 12){ alert('Можно создать не больше 12 своих сцен.'); return; }
+  if (D.customScenes.length >= 12){ ask('Можно создать не больше 12 своих сцен.', [{ t: 'Понятно', v: '' }]); return; }
   var m = document.createElement('div'); m.className = 'ed-modal';
   var h = '<div><h3>Новая сцена</h3><div class="fld"><label for="nsName">Название</label><input id="nsName" maxlength="28" value="Моя сцена"></div><div class="tpl">';
   TPL.forEach(function(t){ h += '<button type="button" data-t="' + t.id + '"><b>' + t.name + '</b><small>' + t.desc + '</small></button>'; });
@@ -218,15 +233,18 @@ function newSceneDialog(){
   };
 }
 function delScene(){
-  var c = curCS(); if (!c || !confirm('Удалить сцену «' + c.name + '»?')) return;
-  D.customScenes = D.customScenes.filter(function(x){ return x !== c; }); delete D.layout[scene];
-  commit(); setScene('game');
+  var c = curCS(); if (!c) return;
+  ask('Удалить сцену «' + c.name + '»?', [{ t: 'Удалить', cls: 'p', v: 'y' }, { t: 'Отмена', v: '' }]).then(function(v){
+    if (v !== 'y' || !curCS()) return;
+    D.customScenes = D.customScenes.filter(function(x){ return x !== c; }); delete D.layout[scene];
+    commit(); setScene('game');
+  });
 }
 
 /* ---------- элементы ---------- */
 function addItem(type){
   var c = curCS(); if (!c) return;
-  if (c.items.length >= 80){ alert('Слишком много элементов (максимум 80).'); return; }
+  if (c.items.length >= 80){ ask('Слишком много элементов (максимум 80).', [{ t: 'Понятно', v: '' }]); return; }
   var it = mk(type, { id: uid('i', c.items) });
   c.items.push(it); commit(); preview(); renderLeft(); selectKeys(['i:' + it.id]);
 }
@@ -366,7 +384,9 @@ var NUMK = { x: 1, y: 1, w: 1, h: 1, rot: 1, size: 1, ls: 1, radius: 1, hue: 1, 
 function bindIns(I){
   function dj(id, fn){ var b = $(id); if (b) b.onclick = fn; }
   dj('edDel', delScene); dj('edDup', dupSel); dj('edRm', delSel);
-  dj('edReset', function(){ if (!confirm('Сбросить все правки встроенных элементов на этой сцене?')) return; delete D.layout[scene]; commit(); preview(); renderLeft(); renderIns(); });
+  dj('edReset', function(){
+    ask('Сбросить все правки встроенных элементов на этой сцене?', [{ t: 'Сбросить', cls: 'p', v: 'y' }, { t: 'Отмена', v: '' }]).then(function(v){ if (v !== 'y') return; delete D.layout[scene]; commit(); preview(); renderLeft(); renderIns(); });
+  });
   dj('edRst', function(){ delete lay()[selKeys[0].slice(2)]; commit(); preview(); renderLeft(); renderIns(); });
   I.querySelectorAll('[data-z]').forEach(function(b){ b.onclick = function(){ order(+b.dataset.z); }; });
   I.querySelectorAll('[data-tk]').forEach(function(b){ b.onclick = function(){

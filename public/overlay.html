@@ -623,6 +623,9 @@ body[data-cam="0"] .camwrap{display:none}
 /* режим редактирования */
 html.edit,html.edit body{background:#121826}
 html.edit .sweep{display:none !important}
+html.edit.dragging *,html.edit.dragging *::before,html.edit.dragging *::after{filter:none !important; text-shadow:none !important; box-shadow:none !important; backdrop-filter:none !important}
+html.edit.dragging .bgrain,html.edit.dragging .fogl{display:none !important}
+#edl .gl,#edl .mql{position:absolute; inset:0; pointer-events:none}
 #edl{position:absolute; inset:0; z-index:1000; display:none; --inv:1; touch-action:none; user-select:none; -webkit-user-select:none}
 html.edit #edl{display:block}
 @media (pointer:coarse){.rh{width:calc(30px*var(--inv)); height:calc(30px*var(--inv)); margin:calc(-15px*var(--inv)) 0 0 calc(-15px*var(--inv)); border-radius:calc(8px*var(--inv))} .eh .el{font-size:calc(14px*var(--inv))} #edl{-webkit-touch-callout:none}}
@@ -1104,6 +1107,16 @@ if (EDITING){
     get st(){ return st; }, get k(){ return K; },
     override: function(o){ OVR = o; if (st){ Object.assign(st, o); render(); } },
     render: function(){ if (st) render(); },
+    fast: function(ids){
+      applyLayout(); var sc = curScene(); if (!sc) return;
+      ids.forEach(function(id){
+        var it = null, i; for (i = 0; i < sc.items.length; i++) if (sc.items[i].id === id) it = sc.items[i];
+        var d = $('cscene').querySelector('[data-id="' + id + '"]'); if (!it || !d) return;
+        d.style.left = it.x + 'px'; d.style.top = it.y + 'px'; d.style.width = it.w + 'px'; d.style.height = it.h + 'px';
+        d.style.transform = it.rot ? 'rotate(' + it.rot + 'deg)' : '';
+      });
+      csKey = JSON.stringify(sc);
+    },
     ready: function(){ return !!st; }
   };
   var es = document.createElement('script'); es.src = '/edit.js'; document.body.appendChild(es);

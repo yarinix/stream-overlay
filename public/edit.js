@@ -56,9 +56,25 @@ function draw(){
     }
     h += '</div>';
   });
-  guides.forEach(function(g){ h += g.v != null ? '<div class="gd v" style="left:' + g.v + 'px"></div>' : '<div class="gd h" style="top:' + g.h + 'px"></div>'; });
-  if (drag && drag.mq){ var m = drag.mq; h += '<div class="mq" style="left:' + Math.min(m.x1, m.x2) + 'px;top:' + Math.min(m.y1, m.y2) + 'px;width:' + Math.abs(m.x2 - m.x1) + 'px;height:' + Math.abs(m.y2 - m.y1) + 'px"></div>'; }
-  edl.innerHTML = h;
+  h += '<div class="gl"></div><div class="mql"></div>';
+  edl.innerHTML = h; drawOver();
+}
+function drawOver(){
+  var g = edl.querySelector('.gl'), q = edl.querySelector('.mql'); if (!g) return;
+  var h = '';
+  guides.forEach(function(x){ h += x.v != null ? '<div class="gd v" style="left:' + x.v + 'px"></div>' : '<div class="gd h" style="top:' + x.h + 'px"></div>'; });
+  g.innerHTML = h;
+  h = ''; if (drag && drag.mq){ var m = drag.mq; h = '<div class="mq" style="left:' + Math.min(m.x1, m.x2) + 'px;top:' + Math.min(m.y1, m.y2) + 'px;width:' + Math.abs(m.x2 - m.x1) + 'px;height:' + Math.abs(m.y2 - m.y1) + 'px"></div>'; }
+  q.innerHTML = h;
+}
+/* быстрый путь при перетаскивании: двигаем только затронутые рамки */
+function fastUpdate(keys){
+  O.fast(keys.filter(function(k){ return k.charAt(0) === 'i'; }).map(function(k){ return k.slice(2); }));
+  keys.forEach(function(k){
+    var b = edl.querySelector('[data-k="' + k + '"]'), r = rect(k); if (!b || !r) return;
+    b.style.left = r.x + 'px'; b.style.top = r.y + 'px'; b.style.width = r.w + 'px'; b.style.height = r.h + 'px';
+  });
+  drawOver();
 }
 function redraw(){ if (raf) return; raf = requestAnimationFrame(function(){ raf = 0; draw(); }); }
 function notify(){ var u = ui(); if (u && u.onSelect) u.onSelect(sel.slice()); }
@@ -175,10 +191,16 @@ edl.addEventListener('pointerdown', function(e){
     if (!e.shiftKey) sel = [];
     drag = { mode: 'mq', mq: { x1: p.x, y1: p.y, x2: p.x, y2: p.y }, base: sel.slice() };
   }
+  if (drag.mode !== 'mq') document.documentElement.classList.add('dragging');
   notify(); draw();
 });
+var pend = null, pendRaf = 0;
 edl.addEventListener('pointermove', function(e){
   if (!drag) return;
+  pend = { clientX: e.clientX, clientY: e.clientY, shiftKey: e.shiftKey, altKey: e.altKey };
+  if (!pendRaf) pendRaf = requestAnimationFrame(function(){ pendRaf = 0; var q = pend; pend = null; if (q && drag) onMove(q); });
+});
+function onMove(e){
   var p = pt(e);
   if (drag.mode === 'move'){
     var d = { x: p.x - drag.p0.x, y: p.y - drag.p0.y };
@@ -186,20 +208,20 @@ edl.addEventListener('pointermove', function(e){
     drag.moved = true;
     if (e.shiftKey){ if (Math.abs(d.x) > Math.abs(d.y)) d.y = 0; else d.x = 0; }
     d = snapMove(drag.B, d, drag.tg, e.altKey);
-    applyMove(drag.snap, d); O.render(); redraw(); live();
+    applyMove(drag.snap, d); fastUpdate(drag.keys); live();
   } else if (drag.mode === 'resize'){
-    resize(p, e); O.render(); redraw(); live();
+    resize(p, e); fastUpdate(drag.keys); live();
   } else if (drag.mode === 'mq'){
     var m = drag.mq; m.x2 = p.x; m.y2 = p.y;
     var x1 = Math.min(m.x1, m.x2), x2 = Math.max(m.x1, m.x2), y1 = Math.min(m.y1, m.y2), y2 = Math.max(m.y1, m.y2);
     var hit = allKeys().filter(function(k){ var r = rect(k); return r && r.x < x2 && r.x + r.w > x1 && r.y < y2 && r.y + r.h > y1; });
     sel = drag.base.concat(hit.filter(function(k){ return drag.base.indexOf(k) < 0; }));
-    redraw();
+    drawOver(); edl.querySelectorAll('.eh').forEach(function(b){ b.classList.toggle('on', sel.indexOf(b.dataset.k) >= 0); });
   }
-});
+}
 function end(e){
   if (!drag) return;
-  var d = drag; drag = null; guides = [];
+  var d = drag; drag = null; guides = []; pend = null; document.documentElement.classList.remove('dragging');
   if ((d.mode === 'move' && d.moved) || d.mode === 'resize') changed(d.mode);
   notify(); draw();
 }
@@ -242,7 +264,7 @@ var nudT = 0;
 function nudge(dx, dy){
   if (!sel.length) return;
   sel.forEach(function(k){ moveBy(k, dx, dy); });
-  apply(); live(); clearTimeout(nudT); nudT = setTimeout(function(){ changed('nudge'); }, 350);
+  fastUpdate(sel); live(); clearTimeout(nudT); nudT = setTimeout(function(){ changed('nudge'); }, 350);
 }
 function onKey(e){
   var t = e.target; if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return false;
@@ -253,7 +275,7 @@ function onKey(e){
   else return false;
   if (!sel.length) return true;
   sel.forEach(function(k){ moveBy(k, dx, dy); });
-  apply(); live(); clearTimeout(nudT); nudT = setTimeout(function(){ changed('nudge'); }, 350);
+  fastUpdate(sel); live(); clearTimeout(nudT); nudT = setTimeout(function(){ changed('nudge'); }, 350);
   return true;
 }
 document.addEventListener('keydown', function(e){ if (onKey(e)) e.preventDefault(); });

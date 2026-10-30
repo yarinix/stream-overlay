@@ -392,7 +392,8 @@ function bindIns(I){
     el.addEventListener('change', function(){ upd(); commit(); if (/^(style|src|font|fillOn|borderOn|colorOn)$/.test(el.dataset.p)) renderIns(); renderLeftSoft(); });
   });
 }
-function renderLeftSoft(){ clearTimeout(insT); insT = setTimeout(renderLeft, 60); }
+var lsT = 0;
+function renderLeftSoft(){ clearTimeout(lsT); lsT = setTimeout(renderLeft, 60); }
 function setProp(el){
   var p = el.dataset.p, k = selKeys[0]; if (!k) return;
   var v = el.type === 'checkbox' ? el.checked : el.value;
@@ -414,12 +415,18 @@ function setProp(el){
   }
   preview();
 }
+function syncIns(){
+  if (selKeys.length !== 1) return; var k = selKeys[0], id = k.slice(2), vals = {};
+  if (k.charAt(0) === 'b'){ var e = lay()[id] || {}; vals = { dx: e.dx || 0, dy: e.dy || 0, sc: Math.round((e.sc || 1) * 100) }; }
+  else { var it = item(id); if (!it) return; vals = { x: it.x, y: it.y, w: it.w, h: it.h }; }
+  document.querySelectorAll('#edI [data-p]').forEach(function(el){ if (el !== document.activeElement && vals[el.dataset.p] != null && el.type === 'number') el.value = vals[el.dataset.p]; });
+}
 function I$(p){ var e = document.querySelector('#edI [data-p=' + p + ']'); return e ? e.value : ''; }
 
 window.EditorUI = {
   ready: function(){ ready = true; var E = ED(); if (E){ pushGrid(); preview(); fitStage(); renderLeft(); renderIns(); } },
   onSelect: function(k){ var was = selKeys.length; selKeys = k; renderLeft(); renderIns(); updBar(); if (!was && k.length && tab === 'l' && window.matchMedia('(max-width:980px)').matches) setTab('i'); },
-  live: function(){ clearTimeout(insT); insT = setTimeout(function(){ renderIns(); }, 30); },
+  live: function(){ if (insT) return; insT = setTimeout(function(){ insT = 0; syncIns(); }, 90); },
   changed: function(){ commit(); renderLeft(); }
 };
 window.EditorOpen = open;

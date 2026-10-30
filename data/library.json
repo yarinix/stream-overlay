@@ -1,6 +1,14 @@
 {
  "teams": [
   {
+   "id": "00dc9c87bd",
+   "name": "Team Rey",
+   "tag": "TR",
+   "v": "mvq89ttw",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
    "id": "910b8fc1de",
    "name": "Team Vamos",
    "tag": "VMS",
@@ -17,14 +25,6 @@
    "ext": "png"
   },
   {
-   "id": "00dc9c87bd",
-   "name": "Team Rey",
-   "tag": "TR",
-   "v": "mvq89ttw",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "1aceb5ac1a",
    "name": "Team Flash",
    "tag": "FL",
@@ -33,18 +33,18 @@
    "ext": "png"
   },
   {
-   "id": "57cb1a6239",
-   "name": "Selangor Red Giants",
-   "tag": "SRG",
-   "v": "mvq88dsl",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "c6fb972c8b",
    "name": "Bigetron MY by Vitality",
    "tag": "BTRM",
    "v": "mvq89kh6",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "57cb1a6239",
+   "name": "Selangor Red Giants",
+   "tag": "SRG",
+   "v": "mvq88dsl",
    "mime": "image/png",
    "ext": "png"
   }

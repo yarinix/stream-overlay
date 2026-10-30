@@ -1,14 +1,6 @@
 {
  "teams": [
   {
-   "id": "00dc9c87bd",
-   "name": "Team Rey",
-   "tag": "TR",
-   "v": "mvq89ttw",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "180e21de90",
    "name": "Invictus Gaming",
    "tag": "IG",
@@ -21,6 +13,14 @@
    "name": "Team Flash",
    "tag": "FL",
    "v": "mvq896p1",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "00dc9c87bd",
+   "name": "Team Rey",
+   "tag": "TR",
+   "v": "mvq89ttw",
    "mime": "image/png",
    "ext": "png"
   },

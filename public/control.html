@@ -171,7 +171,8 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
 /* планшет и телефон */
 @media (max-width:1079px){
   .grid > *,.stage > *{min-width:0}
-  .grid{display:flex; flex-direction:column; gap:14px; padding-top:14px}
+  .grid{display:flex; flex-direction:column; align-items:stretch; gap:14px; padding-top:14px}
+  .grid > *{width:100%}
   .stage{display:contents}
   .screen{order:1} .scenes{order:2} .live{order:3; position:static} .tabs{order:4} .pane{order:5}
   .live{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:14px}
@@ -183,7 +184,11 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
   .brand b{font-size:1.15rem} .mark{width:26px; height:26px}
   .onair{font-size:.74rem; padding:5px 10px 5px 9px}
   .grid{padding:12px 12px 0}
-  .seg{grid-template-columns:repeat(2,1fr)}
+  .screen .cap span:first-child{display:none} .screen .cap{justify-content:flex-end}
+  .seg{grid-template-columns:repeat(3,1fr); gap:6px}
+  .seg span{min-height:48px; padding:6px 6px; font-size:.78rem}
+  .seg input:checked + span::before{top:6px; right:6px}
+  .tabs button{padding:10px 12px}
   .team output,.sc output{font-size:3.4rem}
   .clock{font-size:3.6rem}
   .pane{padding:14px}
@@ -238,7 +243,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
       <button type="button" role="tab" id="tab-match" data-tab="match" aria-controls="pane-match" aria-selected="true">Матч</button>
       <button type="button" role="tab" id="tab-teams" data-tab="teams" aria-controls="pane-teams" aria-selected="false" tabindex="-1">Команды</button>
       <button type="button" role="tab" id="tab-bracket" data-tab="bracket" aria-controls="pane-bracket" aria-selected="false" tabindex="-1">Сетка</button>
-      <button type="button" role="tab" id="tab-look" data-tab="look" aria-controls="pane-look" aria-selected="false" tabindex="-1">Оформление</button>
+      <button type="button" role="tab" id="tab-look" data-tab="look" aria-controls="pane-look" aria-selected="false" tabindex="-1">Стиль</button>
     </div>
 
     <div class="glass pane" id="pane-match" role="tabpanel" aria-labelledby="tab-match">

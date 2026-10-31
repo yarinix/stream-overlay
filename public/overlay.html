@@ -815,7 +815,6 @@ function setTitle(el, text){
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
 function curtain(){
   var host = $('curtain'); if (!host || !host.animate) return;
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var a = host.querySelector('.c1'), b = host.querySelector('.c2'), ease = 'cubic-bezier(.65,0,.2,1)';
   host.style.visibility = 'visible';
   if (curtain.t) curtain.t.forEach(function(x){ x.cancel(); });

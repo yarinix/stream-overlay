@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<script>(function(){try{var e=/[?&]edit\b/.test(location.search),q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(e)document.documentElement.classList.add("edit");else if(q||c||f)document.documentElement.classList.add("lite");if(!e&&!q&&!c&&!f){var g=document.createElement("script");g.src="/vendor/gsap.min.js";g.async=true;document.head.appendChild(g)}}catch(e){}})()</script>
+<script>(function(){try{var d=document.documentElement,l=location.search,e=/[?&]edit\b/.test(l),q=/[?&]lite\b/.test(l),fl=/[?&]full\b/.test(l),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window,lite=!e&&(q||((c||f)&&!fl));if(e)d.classList.add("edit");else if(lite)d.classList.add("lite");else{var g=document.createElement("script");g.src="/vendor/gsap.min.js";g.async=true;document.head.appendChild(g)}}catch(x){}})()</script>
 <style>
 :root{color-scheme:dark}
 @font-face{font-family:"Forum";src:url(/fonts/forum.woff) format("woff");font-display:block}

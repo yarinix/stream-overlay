@@ -185,7 +185,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
   .onair{flex:1; min-width:0; overflow:hidden} .onair span:last-child{overflow:hidden; text-overflow:ellipsis}
   .onair{font-size:.74rem; padding:5px 10px 5px 9px}
   .grid{padding:12px 12px 0}
-  .screen .cap span:first-child{display:none} .screen .cap{justify-content:flex-end}
+  .screen .cap small{display:none}
   .seg{grid-template-columns:repeat(3,1fr); gap:6px}
   .seg span{min-height:48px; padding:6px 6px; font-size:.78rem}
   .seg input:checked + span::after{top:6px; right:6px}
@@ -268,7 +268,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
   <div class="stage">
     <section class="glass screen" aria-label="Предпросмотр">
       <div class="preview" id="pv"><iframe id="frame" src="/overlay?lite" title="Предпросмотр оверлея"></iframe></div>
-      <div class="cap"><span>Предпросмотр, облегчённый режим</span><span id="capScene"></span></div>
+      <div class="cap"><label class="chk" style="min-height:32px;gap:8px"><input type="checkbox" id="pvFx"><span>Анимации в предпросмотре <small style="color:var(--dim)">(тяжелее для устройства)</small></span></label><span id="capScene"></span></div>
     </section>
 
     <section class="glass scenes" aria-labelledby="scT">
@@ -824,6 +824,14 @@ setInterval(tick, 250);
   });
   var saved = 'match'; try { saved = localStorage.getItem('ctltab') || 'match'; } catch (e) {}
   show(btns.some(function(b){ return b.dataset.tab === saved; }) ? saved : 'match');
+})();
+(function previewFx(){
+  var on = null; try { on = localStorage.getItem('ctlfx'); } catch (e) {}
+  if (on === null) on = (window.matchMedia && matchMedia('(pointer:fine)').matches) ? '1' : '0';
+  $('pvFx').checked = on === '1';
+  function apply(){ var u = $('pvFx').checked ? '/overlay?full' : '/overlay?lite'; if ($('frame').getAttribute('src') !== u) $('frame').src = u; }
+  $('pvFx').addEventListener('change', function(){ try { localStorage.setItem('ctlfx', this.checked ? '1' : '0'); } catch (e) {} apply(); });
+  apply();
 })();
 window.CTL = { get st(){ return st; }, patch: patch };
 $('edOpen').onclick = function(){ if (window.EditorOpen) window.EditorOpen(); };

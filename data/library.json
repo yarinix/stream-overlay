@@ -9,18 +9,18 @@
    "ext": "png"
   },
   {
-   "id": "00dc9c87bd",
-   "name": "Team Rey",
-   "tag": "TR",
-   "v": "mvq89ttw",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "910b8fc1de",
    "name": "Team Vamos",
    "tag": "VMS",
    "v": "mvq87p94",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "00dc9c87bd",
+   "name": "Team Rey",
+   "tag": "TR",
+   "v": "mvq89ttw",
    "mime": "image/png",
    "ext": "png"
   },

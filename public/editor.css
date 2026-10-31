@@ -86,3 +86,4 @@
 #ed input[type=range]{min-height:0; padding:0; border:0; background:none}
 #ed .ck{min-height:0; gap:6px}
 .ed-modal .dlg{display:flex; flex-direction:column; gap:8px} .ed-modal .dlg .eb{min-height:44px}
+.eb[data-ic]{gap:6px} .eb[data-ic]:empty{padding:0}

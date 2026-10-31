@@ -34,7 +34,7 @@ function build(){
       '<div class="grp"><b style="letter-spacing:.14em;text-transform:uppercase;font-size:12px">Редактор</b></div>' +
       '<div class="grp"><select id="edScene" aria-label="Сцена"></select><button class="eb" id="edNew" type="button" title="Создать свою сцену">+ Сцена</button></div>' +
       '<div class="sep"></div>' +
-      '<div class="grp"><button class="eb" id="edUndo" type="button" title="Отменить (Ctrl+Z)">↶</button><button class="eb" id="edRedo" type="button" title="Повторить (Ctrl+Y)">↷</button></div>' +
+      '<div class="grp"><button class="eb" id="edUndo" data-ic="undo-2" type="button" title="Отменить (Ctrl+Z)" aria-label="Отменить"></button><button class="eb" id="edRedo" data-ic="redo-2" type="button" title="Повторить (Ctrl+Y)" aria-label="Повторить"></button></div>' +
       '<div class="sep"></div>' +
       '<div class="grp"><button class="eb on" id="edGrid" type="button" title="Показать сетку">Сетка</button><select id="edGs" aria-label="Шаг сетки"><option>10</option><option selected>20</option><option>40</option><option>60</option><option>80</option></select>' +
       '<label class="ck"><input type="checkbox" id="edSnap" checked>Привязка</label><label class="ck"><input type="checkbox" id="edSafe" checked>Безопасная зона</label></div>' +
@@ -42,7 +42,7 @@ function build(){
       '<div class="grp" id="edAl"></div>' +
       '<div style="flex:1"></div>' +
       '<span class="ed-dirty" id="edDirty"></span>' +
-      '<div class="grp"><button class="eb" id="edLive" type="button" title="Применить и показать эту сцену на стриме">В эфир</button><button class="eb p" id="edSave" type="button">Сохранить</button><button class="eb" id="edClose" type="button">Закрыть</button></div>' +
+      '<div class="grp"><button class="eb" id="edLive" data-ic="radio" type="button" title="Применить и показать эту сцену на стриме">В эфир</button><button class="eb p" id="edSave" data-ic="save" type="button">Сохранить</button><button class="eb" id="edClose" data-ic="x" type="button">Закрыть</button></div>' +
     '</div>' +
     '<div class="ed-main"><div class="ed-l" id="edL"></div><div class="ed-sw"><div class="ed-stage" id="edStage"><iframe id="edFrame" title="Редактор"></iframe></div>' +
       '<div class="ed-zm"><button class="eb" id="edZo" type="button" aria-label="Уменьшить">−</button><button class="eb" id="edZf" type="button" aria-label="Вписать">⤢</button><button class="eb" id="edZi" type="button" aria-label="Увеличить">+</button><button class="eb" id="edPan" type="button" aria-label="Двигать вид">✋</button></div></div>' +

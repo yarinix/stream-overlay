@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Оверлей</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<script>(function(){try{var e=/[?&]edit\b/.test(location.search),q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(e)document.documentElement.classList.add("edit");else if(q||c||f)document.documentElement.classList.add("lite")}catch(e){}})()</script>
+<script>(function(){try{var e=/[?&]edit\b/.test(location.search),q=/[?&]lite\b/.test(location.search),c=window.matchMedia&&matchMedia("(pointer:coarse)").matches,f=window.top!==window;if(e)document.documentElement.classList.add("edit");else if(q||c||f)document.documentElement.classList.add("lite");if(!e&&!q&&!c&&!f){var g=document.createElement("script");g.src="/vendor/gsap.min.js";g.async=true;document.head.appendChild(g)}}catch(e){}})()</script>
 <style>
 :root{color-scheme:dark}
 @font-face{font-family:"Forum";src:url(/fonts/forum.woff) format("woff");font-display:block}
@@ -805,7 +805,15 @@ function setTitle(el, text){
   el.setAttribute('aria-label', text);
 }
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
-function bump(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+function bump(el){
+  var g = window.gsap;
+  if (g){
+    g.killTweensOf(el);
+    g.fromTo(el, { scale: 0.5, opacity: 0.15 }, { scale: 1, opacity: 1, duration: 0.8, ease: 'elastic.out(1,0.5)', clearProps: 'transform,opacity' });
+    return;
+  }
+  el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+}
 function remaining(){
   var t = st.timer;
   return t.run ? Math.max(0, Math.ceil((t.endAt - (Date.now() + offset)) / 1000)) : t.rem;
@@ -836,7 +844,11 @@ function render(){
   $('lt').classList.toggle('on', !!st.lt || EDITING);
   $('tLabel').textContent = st.label;
   if (prevScene !== null && st.scene !== prevScene){
-    var sw = $('sweep'); sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
+    var sw = $('sweep'), g = window.gsap;
+    if (g){
+      g.killTweensOf(sw);
+      g.timeline().set(sw, { x: -420, opacity: 0 }).to(sw, { opacity: 1, duration: 0.18 }, 0).to(sw, { x: 2000, duration: 1.05, ease: 'power3.inOut' }, 0).to(sw, { opacity: 0, duration: 0.25 }, 0.8);
+    } else { sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); }
   }
   prevScene = st.scene;
   var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';
@@ -1087,6 +1099,8 @@ function renderCustom(){
     if (/^#/.test(sc.bg)) bg.style.background = sc.bg; else if (sc.bg !== 'none') bg.style.backgroundImage = 'url(/img/royal-' + sc.bg + '.jpg)';
     host.appendChild(bg);
     sc.items.forEach(function(it){ host.appendChild(buildItem(it)); });
+    var g = window.gsap, els = host.querySelectorAll('.ci');
+    if (g && !EDITING && els.length) g.from(els, { opacity: 0, y: 30, duration: 0.85, stagger: 0.08, ease: 'power3.out', delay: 0.1 });
   }
   fillCustom();
 }

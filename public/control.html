@@ -72,7 +72,7 @@ h1,h2,h3,h4{margin:0}
 .seg label:active span{transform:scale(.98)}
 .seg input:focus-visible + span{outline:2px solid var(--ac); outline-offset:2px}
 .seg input:checked + span{background:linear-gradient(180deg,rgba(210,176,120,.22),rgba(210,176,120,.07)); border-color:var(--bronze); color:#fff6e0; box-shadow:0 0 0 1px rgba(210,176,120,.35), 0 8px 22px -10px rgba(210,176,120,.55)}
-.seg input:checked + span::before{content:''; position:absolute; top:9px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--live); box-shadow:0 0 8px var(--live)}
+.seg input:checked + span::after{content:''; position:absolute; top:9px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--live); box-shadow:0 0 8px var(--live)}
 
 /* вкладки */
 .tabs{display:flex; gap:4px; padding:5px; overflow-x:auto; max-width:100%; scrollbar-width:none}
@@ -180,20 +180,65 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
 }
 @media (max-width:560px){
   .bar{padding:8px 12px; gap:8px}
-  .brand small,.conn span:last-child{display:none}
-  .brand b{font-size:1.15rem} .mark{width:26px; height:26px}
+  .brand small,.conn span:last-child,.brand b{display:none}
+  .mark{width:30px; height:30px}
+  .onair{flex:1; min-width:0; overflow:hidden} .onair span:last-child{overflow:hidden; text-overflow:ellipsis}
   .onair{font-size:.74rem; padding:5px 10px 5px 9px}
   .grid{padding:12px 12px 0}
   .screen .cap span:first-child{display:none} .screen .cap{justify-content:flex-end}
   .seg{grid-template-columns:repeat(3,1fr); gap:6px}
   .seg span{min-height:48px; padding:6px 6px; font-size:.78rem}
-  .seg input:checked + span::before{top:6px; right:6px}
+  .seg input:checked + span::after{top:6px; right:6px}
   .tabs button{padding:10px 12px}
   .team output,.sc output{font-size:3.4rem}
   .clock{font-size:3.6rem}
   .pane{padding:14px}
   .tform{grid-template-columns:auto minmax(0,1fr)} .tform .f:last-child{grid-column:1/-1}
 }
+/* иконки Lucide (ISC), маской: цвет берут у текста */
+[data-ic]::before{content:''; display:inline-block; flex:none; width:1.2em; height:1.2em; background:currentColor; vertical-align:-.2em;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain}
+.btn[data-ic]{display:inline-flex; align-items:center; justify-content:center; gap:8px}
+.btn[data-ic]:empty::before,.btn[data-ic].only::before{width:1.5em; height:1.5em}
+[data-ic="play"]::before{-webkit-mask-image:url(/img/ic/play.svg); mask-image:url(/img/ic/play.svg)}
+[data-ic="pause"]::before{-webkit-mask-image:url(/img/ic/pause.svg); mask-image:url(/img/ic/pause.svg)}
+[data-ic="rotate-ccw"]::before{-webkit-mask-image:url(/img/ic/rotate-ccw.svg); mask-image:url(/img/ic/rotate-ccw.svg)}
+[data-ic="plus"]::before{-webkit-mask-image:url(/img/ic/plus.svg); mask-image:url(/img/ic/plus.svg)}
+[data-ic="minus"]::before{-webkit-mask-image:url(/img/ic/minus.svg); mask-image:url(/img/ic/minus.svg)}
+[data-ic="arrow-left-right"]::before{-webkit-mask-image:url(/img/ic/arrow-left-right.svg); mask-image:url(/img/ic/arrow-left-right.svg)}
+[data-ic="eye"]::before{-webkit-mask-image:url(/img/ic/eye.svg); mask-image:url(/img/ic/eye.svg)}
+[data-ic="eye-off"]::before{-webkit-mask-image:url(/img/ic/eye-off.svg); mask-image:url(/img/ic/eye-off.svg)}
+[data-ic="pencil-ruler"]::before{-webkit-mask-image:url(/img/ic/pencil-ruler.svg); mask-image:url(/img/ic/pencil-ruler.svg)}
+[data-ic="copy"]::before{-webkit-mask-image:url(/img/ic/copy.svg); mask-image:url(/img/ic/copy.svg)}
+[data-ic="check"]::before{-webkit-mask-image:url(/img/ic/check.svg); mask-image:url(/img/ic/check.svg)}
+[data-ic="users"]::before{-webkit-mask-image:url(/img/ic/users.svg); mask-image:url(/img/ic/users.svg)}
+[data-ic="trophy"]::before{-webkit-mask-image:url(/img/ic/trophy.svg); mask-image:url(/img/ic/trophy.svg)}
+[data-ic="timer"]::before{-webkit-mask-image:url(/img/ic/timer.svg); mask-image:url(/img/ic/timer.svg)}
+[data-ic="user-round"]::before{-webkit-mask-image:url(/img/ic/user-round.svg); mask-image:url(/img/ic/user-round.svg)}
+[data-ic="monitor-play"]::before{-webkit-mask-image:url(/img/ic/monitor-play.svg); mask-image:url(/img/ic/monitor-play.svg)}
+[data-ic="radio"]::before{-webkit-mask-image:url(/img/ic/radio.svg); mask-image:url(/img/ic/radio.svg)}
+[data-ic="palette"]::before{-webkit-mask-image:url(/img/ic/palette.svg); mask-image:url(/img/ic/palette.svg)}
+[data-ic="undo-2"]::before{-webkit-mask-image:url(/img/ic/undo-2.svg); mask-image:url(/img/ic/undo-2.svg)}
+[data-ic="redo-2"]::before{-webkit-mask-image:url(/img/ic/redo-2.svg); mask-image:url(/img/ic/redo-2.svg)}
+[data-ic="save"]::before{-webkit-mask-image:url(/img/ic/save.svg); mask-image:url(/img/ic/save.svg)}
+[data-ic="x"]::before{-webkit-mask-image:url(/img/ic/x.svg); mask-image:url(/img/ic/x.svg)}
+[data-ic="trash"]::before{-webkit-mask-image:url(/img/ic/trash.svg); mask-image:url(/img/ic/trash.svg)}
+[data-ic="sliders-horizontal"]::before{-webkit-mask-image:url(/img/ic/sliders-horizontal.svg); mask-image:url(/img/ic/sliders-horizontal.svg)}
+[data-ic="gamepad-2"]::before{-webkit-mask-image:url(/img/ic/gamepad-2.svg); mask-image:url(/img/ic/gamepad-2.svg)}
+[data-ic="hourglass"]::before{-webkit-mask-image:url(/img/ic/hourglass.svg); mask-image:url(/img/ic/hourglass.svg)}
+[data-ic="coffee"]::before{-webkit-mask-image:url(/img/ic/coffee.svg); mask-image:url(/img/ic/coffee.svg)}
+[data-ic="network"]::before{-webkit-mask-image:url(/img/ic/network.svg); mask-image:url(/img/ic/network.svg)}
+[data-ic="flag"]::before{-webkit-mask-image:url(/img/ic/flag.svg); mask-image:url(/img/ic/flag.svg)}
+[data-ic="video"]::before{-webkit-mask-image:url(/img/ic/video.svg); mask-image:url(/img/ic/video.svg)}
+[data-ic="clapperboard"]::before{-webkit-mask-image:url(/img/ic/clapperboard.svg); mask-image:url(/img/ic/clapperboard.svg)}
+[data-ic="layout-grid"]::before{-webkit-mask-image:url(/img/ic/layout-grid.svg); mask-image:url(/img/ic/layout-grid.svg)}
+/* плитки сцен и вкладки с иконками */
+.seg span{flex-direction:column; gap:6px}
+.seg span[data-ic]::before{width:1.35em; height:1.35em; opacity:.85; vertical-align:0}
+.seg input:checked + span[data-ic]::before{opacity:1; background:var(--bronze)}
+.tabs button[data-ic]{display:flex; align-items:center; justify-content:center; gap:8px}
+.seg span::before{margin:0}
+@media (max-width:560px){.seg span[data-ic]::before{width:1.2em; height:1.2em} .tabs button[data-ic]::before{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 </style>
 <link rel="stylesheet" href="/editor.css">
@@ -215,7 +260,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
   <div class="onair" aria-live="polite"><span class="lamp" aria-hidden="true"></span><span>В эфире: <em id="onairT">—</em></span></div>
   <div class="barR">
     <span class="conn"><span class="dot" id="dot"></span><span id="stxt">Подключаюсь…</span></span>
-    <button class="btn p" id="edOpen" type="button">Редактор</button>
+    <button class="btn p" id="edOpen" data-ic="pencil-ruler" type="button">Редактор</button>
   </div>
 </header>
 
@@ -229,21 +274,21 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
     <section class="glass scenes" aria-labelledby="scT">
       <div class="row"><h2 class="ttl" id="scT">Сцена <small>— переключается сразу в эфир</small></h2></div>
       <div class="seg" role="radiogroup" aria-label="Сцена">
-        <label><input type="radio" name="scene" value="game"><span>Игра</span></label>
-        <label><input type="radio" name="scene" value="soon"><span>Скоро начнём</span></label>
-        <label><input type="radio" name="scene" value="break"><span>Перерыв</span></label>
-        <label><input type="radio" name="scene" value="bracket"><span>Сетка</span></label>
-        <label><input type="radio" name="scene" value="end"><span>Финал</span></label>
-        <label><input type="radio" name="scene" value="cam"><span>Только вебка</span></label>
+        <label><input type="radio" name="scene" value="game"><span data-ic="gamepad-2">Игра</span></label>
+        <label><input type="radio" name="scene" value="soon"><span data-ic="hourglass">Скоро начнём</span></label>
+        <label><input type="radio" name="scene" value="break"><span data-ic="coffee">Перерыв</span></label>
+        <label><input type="radio" name="scene" value="bracket"><span data-ic="network">Сетка</span></label>
+        <label><input type="radio" name="scene" value="end"><span data-ic="flag">Финал</span></label>
+        <label><input type="radio" name="scene" value="cam"><span data-ic="video">Только вебка</span></label>
         <span id="cseg" style="display:contents"></span>
       </div>
     </section>
 
     <div class="glass tabs" role="tablist" aria-label="Разделы">
-      <button type="button" role="tab" id="tab-match" data-tab="match" aria-controls="pane-match" aria-selected="true">Матч</button>
-      <button type="button" role="tab" id="tab-teams" data-tab="teams" aria-controls="pane-teams" aria-selected="false" tabindex="-1">Команды</button>
-      <button type="button" role="tab" id="tab-bracket" data-tab="bracket" aria-controls="pane-bracket" aria-selected="false" tabindex="-1">Сетка</button>
-      <button type="button" role="tab" id="tab-look" data-tab="look" aria-controls="pane-look" aria-selected="false" tabindex="-1">Стиль</button>
+      <button type="button" role="tab" id="tab-match" data-ic="sliders-horizontal" data-tab="match" aria-controls="pane-match" aria-selected="true">Матч</button>
+      <button type="button" role="tab" id="tab-teams" data-ic="users" data-tab="teams" aria-controls="pane-teams" aria-selected="false" tabindex="-1">Команды</button>
+      <button type="button" role="tab" id="tab-bracket" data-ic="network" data-tab="bracket" aria-controls="pane-bracket" aria-selected="false" tabindex="-1">Сетка</button>
+      <button type="button" role="tab" id="tab-look" data-ic="palette" data-tab="look" aria-controls="pane-look" aria-selected="false" tabindex="-1">Стиль</button>
     </div>
 
     <div class="glass pane" id="pane-match" role="tabpanel" aria-labelledby="tab-match">
@@ -272,7 +317,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
         <button class="btn" id="tfPick" type="button">Выбрать значок</button>
         <input id="tfFile" type="file" accept="image/*" hidden>
         <button class="btn" id="tfClear" type="button" hidden>Убрать значок</button>
-        <button class="btn p" id="tfSave" type="button">Сохранить команду</button>
+        <button class="btn p" id="tfSave" data-ic="save" type="button">Сохранить команду</button>
         <button class="btn" id="tfNew" type="button" hidden>Отмена</button>
       </div>
       <p class="tmsg" id="tfMsg" role="status"></p>
@@ -287,7 +332,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
       <section><h3 class="ttl">Сетка плей-оффа</h3>
       <div class="bhead">
         <div class="f"><label for="bTitle">Заголовок на экране</label><input id="bTitle" maxlength="24"></div>
-        <div class="btns"><button class="btn p" id="bShow" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
+        <div class="btns"><button class="btn p" id="bShow" data-ic="monitor-play" type="button">Показать в эфире</button><button class="btn" id="bReset" type="button" data-armed="0">Очистить сетку</button></div>
       </div>
       <div class="bhead">
         <label class="chk"><input type="checkbox" id="bAuto"><span>Авто-переход победителей</span></label>
@@ -311,7 +356,7 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
       </section>
       <section><h3 class="ttl">Ссылка для OBS</h3>
       <p class="hint">Добавьте источник «Браузер», вставьте эту ссылку, размер 1920 на 1080.</p>
-      <div class="copy"><code id="url"></code><button class="btn" id="copyBtn" type="button">Копировать</button></div>
+      <div class="copy"><code id="url"></code><button class="btn" id="copyBtn" data-ic="copy" type="button">Копировать</button></div>
     
       </section>
     </div>
@@ -321,26 +366,26 @@ label.chk{display:flex; align-items:center; gap:10px; min-height:44px; cursor:po
     <section class="glass score" aria-label="Счёт">
       <div class="team">
         <div class="two"><div class="f"><label for="nameA">Команда A</label><input id="nameA" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagA">Тег</label><input id="tagA" maxlength="5"></div></div>
-        <div class="step"><button class="btn" id="aMinus" type="button" aria-label="Минус очко команде A">−</button><output id="oA" aria-live="polite">0</output><button class="btn p" id="aPlus" type="button" aria-label="Плюс очко команде A">+</button></div>
+        <div class="step"><button class="btn" id="aMinus" data-ic="minus" type="button" aria-label="Минус очко команде A"></button><output id="oA" aria-live="polite">0</output><button class="btn p" id="aPlus" data-ic="plus" type="button" aria-label="Плюс очко команде A"></button></div>
       </div>
       <div class="vs" aria-hidden="true">VS</div>
       <div class="team">
         <div class="two"><div class="f"><label for="nameB">Команда B</label><input id="nameB" maxlength="28" list="teamNames" autocomplete="off"></div><div class="f"><label for="tagB">Тег</label><input id="tagB" maxlength="5"></div></div>
-        <div class="step"><button class="btn" id="bMinus" type="button" aria-label="Минус очко команде B">−</button><output id="oB" aria-live="polite">0</output><button class="btn p" id="bPlus" type="button" aria-label="Плюс очко команде B">+</button></div>
+        <div class="step"><button class="btn" id="bMinus" data-ic="minus" type="button" aria-label="Минус очко команде B"></button><output id="oB" aria-live="polite">0</output><button class="btn p" id="bPlus" data-ic="plus" type="button" aria-label="Плюс очко команде B"></button></div>
       </div>
-      <div class="btns"><button class="btn sm" id="swap" type="button">Поменять местами</button><button class="btn sm" id="zero" type="button">Сбросить счёт</button></div>
+      <div class="btns"><button class="btn sm" id="swap" data-ic="arrow-left-right" type="button">Поменять местами</button><button class="btn sm" id="zero" data-ic="rotate-ccw" type="button">Сбросить счёт</button></div>
     </section>
 
     <section class="glass timer" aria-label="Таймер">
       <h2 class="ttl">Таймер</h2>
       <div class="clock" id="clock" role="timer" aria-live="off">05:00</div>
-      <div class="btns"><button class="btn p" id="tGo" type="button">Старт</button><button class="btn" id="tReset" type="button">Сбросить</button></div>
+      <div class="btns"><button class="btn p" id="tGo" data-ic="play" type="button">Старт</button><button class="btn" id="tReset" data-ic="rotate-ccw" type="button">Сбросить</button></div>
       <div class="mini2"><div class="f"><label for="label">Подпись на экране</label><input id="label" maxlength="24"></div><div class="f"><label for="mins">Минут</label><input id="mins" type="number" min="1" max="99" inputmode="numeric"></div></div>
     </section>
 
     <section class="glass lt" aria-label="Плашка ведущего">
       <div class="who"><b id="ltName">—</b><small id="ltRole">Плашка ведущего</small></div>
-      <button class="btn p" id="ltBtn" type="button" aria-pressed="false">Показать плашку</button>
+      <button class="btn p" id="ltBtn" data-ic="eye" type="button" aria-pressed="false">Показать плашку</button>
     </section>
   </aside>
 </main>
@@ -467,7 +512,7 @@ function sync(){
   var cs = st.customScenes || [], csig = cs.map(function(c){ return c.id + ':' + c.name; }).join('|');
   if (csig !== sync.csig){
     sync.csig = csig;
-    $('cseg').innerHTML = cs.map(function(c){ return '<label><input type="radio" name="scene" value="c:' + c.id + '"><span></span></label>'; }).join('');
+    $('cseg').innerHTML = cs.map(function(c){ return '<label><input type="radio" name="scene" value="c:' + c.id + '"><span data-ic="clapperboard"></span></label>'; }).join('');
     [].forEach.call($('cseg').querySelectorAll('span'), function(sp, i){ sp.textContent = cs[i].name; });
   }
   document.querySelectorAll('input[name=scene]').forEach(function(r){ r.checked = r.value === st.scene; });
@@ -483,9 +528,9 @@ function sync(){
     });
   }
   document.querySelectorAll('#sw button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.a === st.accent ? 'true' : 'false'); });
-  $('ltBtn').textContent = st.lt ? 'Скрыть плашку' : 'Показать плашку';
+  $('ltBtn').textContent = st.lt ? 'Скрыть плашку' : 'Показать плашку'; $('ltBtn').dataset.ic = st.lt ? 'eye-off' : 'eye';
   $('ltBtn').setAttribute('aria-pressed', st.lt ? 'true' : 'false');
-  $('tGo').textContent = st.timer.run ? 'Пауза' : 'Старт';
+  $('tGo').textContent = st.timer.run ? 'Пауза' : 'Старт'; $('tGo').dataset.ic = st.timer.run ? 'pause' : 'play';
 }
 
 function typed(id, fn){
@@ -736,7 +781,7 @@ function showStore(info){
 $('url').textContent = location.origin + '/overlay';
 $('copyBtn').onclick = function(){
   var t = $('url').textContent;
-  if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){ $('copyBtn').textContent = 'Скопировано'; setTimeout(function(){ $('copyBtn').textContent = 'Копировать'; }, 1500); }, function(){});
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(function(){ $('copyBtn').textContent = 'Скопировано'; $('copyBtn').dataset.ic = 'check'; setTimeout(function(){ $('copyBtn').textContent = 'Копировать'; $('copyBtn').dataset.ic = 'copy'; }, 1500); }, function(){});
 };
 
 /* шапка, часы, вкладки */

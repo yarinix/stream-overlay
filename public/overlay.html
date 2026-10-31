@@ -815,14 +815,14 @@ function setTitle(el, text){
   el.setAttribute('aria-label', text);
 }
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
-(function(){ try{ new Image().src = '/img/curtain-tex.png'; }catch(e){} })();
+(function(){ try{ ['curtain-tex.png','royal-soon.jpg','royal-break.jpg','royal-end.jpg','royal-bracket.jpg'].forEach(function(n){ var i = new Image(); i.src = '/img/' + n; if (i.decode) i.decode().catch(function(){}); }); }catch(e){} })();
 function curtain(){
   var host = $('curtain'); if (!host || !host.animate) return;
   var a = host.querySelector('.c1'), b = host.querySelector('.c2'), ease = 'cubic-bezier(.65,0,.2,1)';
   host.style.visibility = 'visible';
   if (curtain.t) curtain.t.forEach(function(x){ x.cancel(); });
-  var k = [{ transform: 'translate3d(-102%,0,0)', offset: 0, easing: ease }, { transform: 'translate3d(0,0,0)', offset: .42 }, { transform: 'translate3d(0,0,0)', offset: .5, easing: ease }, { transform: 'translate3d(102%,0,0)', offset: 1 }];
-  var B = b.animate(k, { duration: 1100, easing: 'linear', fill: 'both' });
+  var k = [{ transform: 'translate3d(-102%,0,0)', offset: 0, easing: ease }, { transform: 'translate3d(0,0,0)', offset: .36 }, { transform: 'translate3d(0,0,0)', offset: .58, easing: ease }, { transform: 'translate3d(102%,0,0)', offset: 1 }];
+  var B = b.animate(k, { duration: 1400, easing: 'linear', fill: 'both' });
   curtain.t = [B];
   B.onfinish = function(){ host.style.visibility = 'hidden'; };
 }
@@ -1157,7 +1157,7 @@ function connect(){
   ws.onmessage = function(e){
     var m; try { m = JSON.parse(e.data); } catch (_) { return; }
     if (m.type === 'state'){ st = m.state; if (OVR) Object.assign(st, OVR); offset = m.now - Date.now(); wait = 500;
-      if (!EDITING && !render.w && prevScene !== null && st.scene !== prevScene && st.scene !== 'cam' && window.Element && Element.prototype.animate){ curtain(); render.w = 1; setTimeout(function(){ requestAnimationFrame(function(){ render.w = 0; render(); }); }, 460); }
+      if (!EDITING && !render.w && prevScene !== null && st.scene !== prevScene && st.scene !== 'cam' && window.Element && Element.prototype.animate){ curtain(); render.w = 1; setTimeout(function(){ requestAnimationFrame(function(){ render.w = 0; render(); }); }, 480); }
       else if (!render.w){ render(); } }
   };
   ws.onclose = function(){ setTimeout(connect, wait); wait = Math.min(wait * 2, 8000); };

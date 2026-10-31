@@ -627,8 +627,10 @@ html.edit,html.edit body{background:#121826}
 /* шторка при смене сцены */
 #curtain{position:absolute; inset:0; z-index:50; pointer-events:none; overflow:hidden; visibility:hidden}
 #curtain i{position:absolute; top:-2px; bottom:-2px; left:0; width:100%; will-change:transform}
-#curtain .c1{background:linear-gradient(90deg,transparent 0,rgba(90,169,255,.0) 70%,rgba(90,169,255,.55) 94%,rgba(244,229,184,.95) 100%)}
-#curtain .c2{background:linear-gradient(90deg,#040a1c 0,#07122e 70%,#0b1c46 100%); box-shadow:12px 0 40px rgba(77,163,255,.35); border-right:3px solid rgba(244,229,184,.8)}
+#curtain .c1{background:linear-gradient(90deg,transparent 0,rgba(90,169,255,0) 90%,rgba(90,169,255,.3) 98%,rgba(244,229,184,.7) 100%)}
+#curtain .c2{background:url(/img/curtain-tex.png) 0 0/256px 256px, radial-gradient(120% 90% at 85% 50%,rgba(40,90,190,.35),transparent 60%), linear-gradient(90deg,#030818 0,#071331 65%,#0d2150 100%); border-right:3px solid rgba(244,229,184,.85)}
+#curtain .c2::after{content:''; position:absolute; top:0; bottom:0; right:0; width:140px; background:linear-gradient(90deg,transparent,rgba(77,163,255,.28)); }
+#curtain i{backface-visibility:hidden; transform:translate3d(-102%,0,0)}
 html.edit #curtain{display:none}
 html.edit .sweep{display:none !important}
 html.edit.dragging *,html.edit.dragging *::before,html.edit.dragging *::after{filter:none !important; text-shadow:none !important; box-shadow:none !important; backdrop-filter:none !important}
@@ -813,13 +815,14 @@ function setTitle(el, text){
   el.setAttribute('aria-label', text);
 }
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
+(function(){ try{ new Image().src = '/img/curtain-tex.png'; }catch(e){} })();
 function curtain(){
   var host = $('curtain'); if (!host || !host.animate) return;
   var a = host.querySelector('.c1'), b = host.querySelector('.c2'), ease = 'cubic-bezier(.65,0,.2,1)';
   host.style.visibility = 'visible';
   if (curtain.t) curtain.t.forEach(function(x){ x.cancel(); });
-  var k = [{ transform: 'translateX(-102%)', offset: 0 }, { transform: 'translateX(0)', offset: .44 }, { transform: 'translateX(0)', offset: .5 }, { transform: 'translateX(102%)', offset: 1 }];
-  var A = a.animate(k, { duration: 1100, easing: ease, fill: 'both' });
+  var k = [{ transform: 'translate3d(-102%,0,0)', offset: 0 }, { transform: 'translate3d(0,0,0)', offset: .44 }, { transform: 'translate3d(0,0,0)', offset: .5 }, { transform: 'translate3d(102%,0,0)', offset: 1 }];
+  var A = a.animate(k, { duration: 1000, easing: ease, fill: 'both' });
   var B = b.animate(k, { duration: 1100, easing: ease, fill: 'both', delay: 0 });
   curtain.t = [A, B];
   B.onfinish = function(){ host.style.visibility = 'hidden'; };
@@ -1155,7 +1158,7 @@ function connect(){
   ws.onmessage = function(e){
     var m; try { m = JSON.parse(e.data); } catch (_) { return; }
     if (m.type === 'state'){ st = m.state; if (OVR) Object.assign(st, OVR); offset = m.now - Date.now(); wait = 500;
-      if (!EDITING && !render.w && prevScene !== null && st.scene !== prevScene && st.scene !== 'cam' && window.Element && Element.prototype.animate){ curtain(); render.w = 1; setTimeout(function(){ render.w = 0; render(); }, 480); }
+      if (!EDITING && !render.w && prevScene !== null && st.scene !== prevScene && st.scene !== 'cam' && window.Element && Element.prototype.animate){ curtain(); render.w = 1; setTimeout(function(){ requestAnimationFrame(function(){ render.w = 0; render(); }); }, 470); }
       else if (!render.w){ render(); } }
   };
   ws.onclose = function(){ setTimeout(connect, wait); wait = Math.min(wait * 2, 8000); };

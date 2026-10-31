@@ -2,7 +2,7 @@
  "a": {
   "name": "Team Rey",
   "tag": "TR",
-  "score": 0,
+  "score": 1,
   "teamId": "00dc9c87bd"
  },
  "b": {
@@ -21,7 +21,7 @@
  "endText": "Увидимся на следующей трансляции",
  "label": "До начала драфта",
  "lt": false,
- "scene": "soon",
+ "scene": "game",
  "accent": "gold",
  "preset": "royal",
  "layout": {

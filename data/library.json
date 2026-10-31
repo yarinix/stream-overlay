@@ -1,22 +1,6 @@
 {
  "teams": [
   {
-   "id": "1aceb5ac1a",
-   "name": "Team Flash",
-   "tag": "FL",
-   "v": "mvq896p1",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
-   "id": "910b8fc1de",
-   "name": "Team Vamos",
-   "tag": "VMS",
-   "v": "mvq87p94",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "00dc9c87bd",
    "name": "Team Rey",
    "tag": "TR",
@@ -29,6 +13,22 @@
    "name": "Invictus Gaming",
    "tag": "IG",
    "v": "mvq88sep",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "1aceb5ac1a",
+   "name": "Team Flash",
+   "tag": "FL",
+   "v": "mvq896p1",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "910b8fc1de",
+   "name": "Team Vamos",
+   "tag": "VMS",
+   "v": "mvq87p94",
    "mime": "image/png",
    "ext": "png"
   },

@@ -818,9 +818,9 @@ function curtain(){
   var a = host.querySelector('.c1'), b = host.querySelector('.c2'), ease = 'cubic-bezier(.65,0,.2,1)';
   host.style.visibility = 'visible';
   if (curtain.t) curtain.t.forEach(function(x){ x.cancel(); });
-  var k = [{ transform: 'translateX(0)' }, { transform: 'translateX(102%)' }];
-  var A = a.animate(k, { duration: 850, easing: ease, fill: 'both' });
-  var B = b.animate(k, { duration: 1000, easing: ease, fill: 'both' });
+  var k = [{ transform: 'translateX(-102%)', offset: 0 }, { transform: 'translateX(0)', offset: .44 }, { transform: 'translateX(0)', offset: .5 }, { transform: 'translateX(102%)', offset: 1 }];
+  var A = a.animate(k, { duration: 1100, easing: ease, fill: 'both' });
+  var B = b.animate(k, { duration: 1100, easing: ease, fill: 'both', delay: 0 });
   curtain.t = [A, B];
   B.onfinish = function(){ host.style.visibility = 'hidden'; };
 }
@@ -862,9 +862,6 @@ function render(){
   $('camName').textContent = st.cast; $('ltName').textContent = st.cast; $('ltRole').textContent = st.role;
   $('lt').classList.toggle('on', !!st.lt || EDITING);
   $('tLabel').textContent = st.label;
-  if (prevScene !== null && st.scene !== prevScene){
-    if (!EDITING && st.scene !== 'cam') curtain();
-  }
   prevScene = st.scene;
   var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';
   $('scene').classList.toggle('on', sceneOn); $('sart').classList.toggle('on', sceneOn);
@@ -1157,7 +1154,9 @@ function connect(){
   var ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
   ws.onmessage = function(e){
     var m; try { m = JSON.parse(e.data); } catch (_) { return; }
-    if (m.type === 'state'){ st = m.state; if (OVR) Object.assign(st, OVR); offset = m.now - Date.now(); wait = 500; render(); }
+    if (m.type === 'state'){ st = m.state; if (OVR) Object.assign(st, OVR); offset = m.now - Date.now(); wait = 500;
+      if (!EDITING && !render.w && prevScene !== null && st.scene !== prevScene && st.scene !== 'cam' && window.Element && Element.prototype.animate){ curtain(); render.w = 1; setTimeout(function(){ render.w = 0; render(); }, 480); }
+      else if (!render.w){ render(); } }
   };
   ws.onclose = function(){ setTimeout(connect, wait); wait = Math.min(wait * 2, 8000); };
   ws.onerror = function(){ try { ws.close(); } catch (_) {} };

@@ -623,6 +623,13 @@ body[data-cam="0"] .camwrap{display:none}
 .ci.cut{--cut:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
 /* режим редактирования */
 html.edit,html.edit body{background:#121826}
+
+/* шторка при смене сцены */
+#curtain{position:absolute; inset:0; z-index:50; pointer-events:none; overflow:hidden; visibility:hidden}
+#curtain i{position:absolute; top:-2px; bottom:-2px; left:0; width:100%; will-change:transform}
+#curtain .c1{background:linear-gradient(90deg,transparent 0,rgba(90,169,255,.0) 70%,rgba(90,169,255,.55) 94%,rgba(244,229,184,.95) 100%)}
+#curtain .c2{background:linear-gradient(90deg,#040a1c 0,#07122e 70%,#0b1c46 100%); box-shadow:12px 0 40px rgba(77,163,255,.35); border-right:3px solid rgba(244,229,184,.8)}
+html.edit #curtain{display:none}
 html.edit .sweep{display:none !important}
 html.edit.dragging *,html.edit.dragging *::before,html.edit.dragging *::after{filter:none !important; text-shadow:none !important; box-shadow:none !important; backdrop-filter:none !important}
 html.edit.dragging .bgrain,html.edit.dragging .fogl{display:none !important}
@@ -766,6 +773,7 @@ html.edit .lhide{opacity:.28 !important; visibility:visible !important}
   <div class="scene" id="scene"><h2 id="scTitle"></h2><div class="sub" id="scSub"></div><div class="line"></div><div class="big" id="scTime">05:00</div><div class="res" id="scRes"></div><div class="bkp" id="bkp"><div class="bkl" id="bkLA"></div><span class="bkn" id="bkNA"></span><b class="bks" id="bkSA"></b><i class="bkd">:</i><b class="bks" id="bkSB"></b><span class="bkn r" id="bkNB"></span><div class="bkl" id="bkLB"></div></div><div class="soc" id="soc"><b></b><span id="socT"></span></div></div>
   <div id="cscene"></div>
   <div class="sweep" id="sweep"></div>
+  <div id="curtain" aria-hidden="true"><i class="c1"></i><i class="c2"></i></div>
   <div id="edl"></div>
 </div>
 <script>
@@ -805,6 +813,18 @@ function setTitle(el, text){
   el.setAttribute('aria-label', text);
 }
 function mmss(s){ s = Math.max(0, s); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
+function curtain(){
+  var host = $('curtain'); if (!host || !host.animate) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var a = host.querySelector('.c1'), b = host.querySelector('.c2'), ease = 'cubic-bezier(.65,0,.2,1)';
+  host.style.visibility = 'visible';
+  if (curtain.t) curtain.t.forEach(function(x){ x.cancel(); });
+  var k = [{ transform: 'translateX(0)' }, { transform: 'translateX(102%)' }];
+  var A = a.animate(k, { duration: 850, easing: ease, fill: 'both' });
+  var B = b.animate(k, { duration: 1000, easing: ease, fill: 'both' });
+  curtain.t = [A, B];
+  B.onfinish = function(){ host.style.visibility = 'hidden'; };
+}
 function bump(el){
   var g = window.gsap;
   if (g){
@@ -844,11 +864,7 @@ function render(){
   $('lt').classList.toggle('on', !!st.lt || EDITING);
   $('tLabel').textContent = st.label;
   if (prevScene !== null && st.scene !== prevScene){
-    var sw = $('sweep'), g = window.gsap;
-    if (g){
-      g.killTweensOf(sw);
-      g.timeline().set(sw, { x: -420, opacity: 0 }).to(sw, { opacity: 1, duration: 0.18 }, 0).to(sw, { x: 2000, duration: 1.05, ease: 'power3.inOut' }, 0).to(sw, { opacity: 0, duration: 0.25 }, 0.8);
-    } else { sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); }
+    if (!EDITING && st.scene !== 'cam') curtain();
   }
   prevScene = st.scene;
   var sceneOn = st.scene === 'soon' || st.scene === 'break' || st.scene === 'end';

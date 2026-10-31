@@ -33,18 +33,18 @@
    "ext": "png"
   },
   {
-   "id": "c6fb972c8b",
-   "name": "Bigetron MY by Vitality",
-   "tag": "BTRM",
-   "v": "mvq89kh6",
-   "mime": "image/png",
-   "ext": "png"
-  },
-  {
    "id": "57cb1a6239",
    "name": "Selangor Red Giants",
    "tag": "SRG",
    "v": "mvq88dsl",
+   "mime": "image/png",
+   "ext": "png"
+  },
+  {
+   "id": "c6fb972c8b",
+   "name": "Bigetron MY by Vitality",
+   "tag": "BTRM",
+   "v": "mvq89kh6",
    "mime": "image/png",
    "ext": "png"
   }

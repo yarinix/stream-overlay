@@ -21,7 +21,7 @@
  "endText": "Увидимся на следующей трансляции",
  "label": "До начала драфта",
  "lt": false,
- "scene": "cam",
+ "scene": "break",
  "accent": "gold",
  "preset": "royal",
  "layout": {
